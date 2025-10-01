@@ -30,7 +30,15 @@ def WSonWorld(handler, d):
 
 '''
     In WSonLogin, we accept the login packet from the dataserver, which tells us whether or not the user is authenticated in the Dataserver, and if so,
-    sends back their stored userdata
+    sends back their stored userdata. We then move the client to the players list because they are authed, and tell them and all the other players the event
+    that just occured.
+
+    Packet Looks Like:
+    
+        d = {'username': data["username"],'color': data["color"],'message': 'EXISTS','userdata': player,'session_id': data["session_id"]}
+    OR
+        d = {'username': data["username"],'message': 'NOT','session_id': data["session_id"]}}
+
 '''
 def WSonLogin(handler, d):
     
@@ -54,51 +62,45 @@ def WSonLogin(handler, d):
         handler.csm.clients.pop(session_id)
         handler.csm.players[session_id] = client
         client.is_authed = True
-        client.player = Player(200, 200, client.name, client.session_id, color) #hmm
-        client.data = userdata
 
+        client.x = 200
+        client.y = 200
+        client.username = username
+        client.session_id = session_id
+        client.color = color
+        client.userdata = userdata
+        
 
 
 
         client.send('world', handler.world.getWorldString())
-        #we also want to tell them about all the other players in the world, they need, players x, y, session_id, username, and color
-        #print(f"sending them the client data!")
-        #print(f"number of players: {len(handler.csm.players)}")
-        
 
-
-        #alright, we also want to tell the client they are okay to be logged in
         dataToSend = {"auth":"ok"}
-        client.send('loginVerify', dataToSend)   #this is working
+        client.send('loginVerify', dataToSend)
 
-        for session_id, player in handler.csm.players.items():
-            
-            #print(f"{client.session_id} =? {player.session_id}")
-            if session_id == client.session_id: #client is the one who just logged in, tell everyone else someone just logged in
-                continue
-            print(f"{player.data}")
-
-            # print(f"sending world data for {player.username}")
-            da = {
-                "username": player.player.username,
-                "x": player.player.x,
-                "y": player.player.y,
-                "session_id": player.player.session_id,
-                "color": player.player.color
-            }
-            client.send("onOtherPlayer", da)
-            #okay so we just told the client about this player, tell this player about the client
-            da = {
-                "username": client.player.username,
-                "x": client.player.x,
-                "y": client.player.y,
-                "session_id": client.player.session_id,
-                "color": client.player.color
-            }
-            player.send("login", da)
+        for sessID, player in handler.csm.players.items():
+            #here we are looping through all the clients, and if they didnt just log in, tell them
+            #someone just logged in, and tell the person who just logged in they exist
+            if sessID != session_id:
+                da = {
+                    "username": player.username,
+                    "x": player.x,
+                    "y": player.y,
+                    "session_id": player.session_id,
+                    "color": player.color
+                }
+                client.send("onOtherPlayer", da)
+                da = {
+                    "username": client.username,
+                    "x": client.x,
+                    "y": client.y,
+                    "session_id": client.session_id,
+                    "color": client.color
+                }
+                player.send("login", da)
 
     else:
-        print(f"{d["username"]} is NOT in the database!")
+        print(f"{username} is NOT in the database!")
         #then kick whoever tried to connect as me
         #alright, we also want to tell the client they are okay to be logged in
         dataToSend = {"auth":"fail"}
