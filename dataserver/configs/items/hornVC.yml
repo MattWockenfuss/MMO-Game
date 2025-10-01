@@ -1,0 +1,10 @@
+name: "Horn of Vancouver"
+lore-blurb: "By sea, land and air"
+
+Tag-List: ["craftable", "summon"]
+Damage: 0
+Is-Premium: False
+Cooldown: 60
+
+
+Sprite: "HornVC.png"

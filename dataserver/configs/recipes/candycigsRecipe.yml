@@ -1,0 +1,6 @@
+name: "Candy Cigarettes"
+Primary-resource: "mana"
+Start-quantity: 12
+Pr-quantity: 50
+Ingredient-list: ["Fallowsweet", "Molesem cigarette"]
+Ingredient-quantity: 2

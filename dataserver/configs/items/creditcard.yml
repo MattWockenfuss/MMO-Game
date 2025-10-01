@@ -1,0 +1,10 @@
+name: "Credit Card"
+lore-blurb: "A little plastic grenade; handle with care."
+
+Tag-List: ["craftable", "utility"]
+Damage: 0
+Is-Premium: False
+Cooldown: 0
+
+
+Sprite: "Credit Card.png"

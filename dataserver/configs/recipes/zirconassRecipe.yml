@@ -1,0 +1,6 @@
+name: "Zircon Ass"
+Primary-resource: "mana"
+Start-quantity: 1
+Pr-quantity: 750
+Ingredient-list: ["zircon ore", "Myrtle flower"]
+Ingredient-quantity: 4

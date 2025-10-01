@@ -1,0 +1,13 @@
+name: "Slime"
+lore-blurb: "A Sticky Specimen"
+
+Base-Health: 100
+Base-Attack: 12
+Base-Attack-Speed: 0.5
+Base-Dodge-Chance: 0.05
+Base-Critical-Chance: 0
+
+Base-Movement-Speed: 1
+Base-Vision-Radius: 3
+
+Sprite: "slime.png"

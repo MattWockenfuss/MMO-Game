@@ -1,0 +1,13 @@
+name: "Snake"
+lore-blurb: "Life isn't just about passing on your data. We can leave behind much more than just config files."
+
+Base-Health: 110
+Base-Attack: 80
+Base-Attack-Speed: 0.3
+Base-Dodge-Chance: 0.4
+Base-Critical-Chance: 0.3
+
+Base-Movement-Speed: 0.7
+Base-Vision-Radius: 1
+
+Sprite: "Snake.png"

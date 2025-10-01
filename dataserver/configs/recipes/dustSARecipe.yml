@@ -1,0 +1,6 @@
+name: "Dust of Seasonal Allergies"
+Primary-resource: "mana"
+Start-quantity: 12
+Pr-quantity: 300
+Ingredient-list: ["Molesem cigarette", "Myrtle Flower"]
+Ingredient-quantity: 3

@@ -1,0 +1,13 @@
+name: "USB Giant"
+lore-blurb: "Second in the Data Ordening; subservient only to Cloud Giants."
+
+Base-Health: 800
+Base-Attack: 110
+Base-Attack-Speed: 0.05
+Base-Dodge-Chance: 0.05
+Base-Critical-Chance: 0.5
+
+Base-Movement-Speed: 0.4
+Base-Vision-Radius: 10
+
+Sprite: "USB Giant.png"

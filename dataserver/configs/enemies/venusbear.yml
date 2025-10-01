@@ -1,0 +1,13 @@
+name: "Venus Bear"
+lore-blurb: "Diminutive humanoids from a time long ago, and a place far far away."
+
+Base-Health: 110
+Base-Attack: 70
+Base-Attack-Speed: 0.3
+Base-Dodge-Chance: 0.5
+Base-Critical-Chance: 0.2
+
+Base-Movement-Speed: 0.6
+Base-Vision-Radius: 2
+
+Sprite: "Venus Bear.png"

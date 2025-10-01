@@ -1,0 +1,10 @@
+name: "Klila"
+lore-blurb: "A crown of ether-light shone forth"
+
+Tag-List: ["craftable", "jewelry", "ring"]
+Damage: 0
+Is-Premium: False
+Cooldown: 0
+
+
+Sprite: "Klila.png"

@@ -1,0 +1,44 @@
+export class AssetManager{
+    constructor(handler){
+        this.handler = handler;
+        this.images  = new Map();
+        this.assets = 
+        [
+            {name: 1, url: "./static/assets/grass.png"},
+            {name: 2, url: "./static/assets/sand.png"},
+            {name: 3, url: "./static/assets/stone-floor.png"},
+            {name: 4, url: "./static/assets/stone-wall.png"},
+            {name: 5, url: "./static/assets/void.png"},
+            {name: 6, url: "./static/assets/water.png"},
+            {name: 7, url: "./static/assets/wood-floor.png"},
+            {name: 8, url: "./static/assets/wood-wall.png"} 
+        ]
+
+    }
+
+    
+
+    loadImage(name, url){
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                this.images.set(name, img);
+                resolve(img);
+            };
+            img.onerror = () => reject(new Error(`Failed to load ${url}`));
+            img.src = url;
+        });
+    }
+
+    async loadAll(){
+        const promises = this.assets.map(item => this.loadImage(item.name, item.url));
+        await Promise.all(promises);
+        return this;
+    }
+
+    get(name){
+        return this.images.get(name);
+    }
+
+
+}

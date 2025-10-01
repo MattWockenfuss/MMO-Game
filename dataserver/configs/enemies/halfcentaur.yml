@@ -1,0 +1,13 @@
+name: "Half-Centaur"
+lore-blurb: "The smallest denomination of centaur ever minted. Object of many a cowboy coin collector."
+
+Base-Health: 100
+Base-Attack: 20
+Base-Attack-Speed: 1
+Base-Dodge-Chance: 0.05
+Base-Critical-Chance: 0.4
+
+Base-Movement-Speed: 0.15
+Base-Vision-Radius: 2
+
+Sprite: "Half-Centaur.png"

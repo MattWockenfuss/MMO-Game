@@ -1,0 +1,14 @@
+
+
+#used to set a specific listen address, 127.0.0.1 means only local machines can connect
+# 0.0.0.0 means anyone can connect and a specific address means that all traffic must flow through that address
+listenAddress: "0.0.0.0"
+myPort: 8002
+
+#the IP and port of the data server
+DataServer-IP: "127.0.0.1"
+DataServer-Port: 8001
+
+#Server ID and World Type, world type details what I should be so the server can boot up
+Server-ID: 1
+World-Type: "Forest"

@@ -1,0 +1,6 @@
+name: "Stone Floor"
+id: 3
+lore-blurb: "this is stone floor tile"
+is-Solid: False
+map-color: "#6b6464"
+Sprite: "stone-floor.png"

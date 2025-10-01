@@ -1,0 +1,13 @@
+name: "Geleton"
+lore-blurb: "Rakshasa"
+
+Base-Health: 10000
+Base-Attack: 125
+Base-Attack-Speed: 0.01
+Base-Dodge-Chance: 1
+Base-Critical-Chance: 1
+
+Base-Movement-Speed: 0.1
+Base-Vision-Radius: 10
+
+Sprite: "slime.png"

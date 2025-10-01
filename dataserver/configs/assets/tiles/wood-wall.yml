@@ -1,0 +1,6 @@
+name: "Wood Wall"
+id: 8
+lore-blurb: "*bonk* *bonk* *bonk*"
+is-Solid: True
+map-color: "#663931"
+Sprite: "wood-wall.png"

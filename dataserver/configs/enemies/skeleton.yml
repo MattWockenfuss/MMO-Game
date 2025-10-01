@@ -1,0 +1,13 @@
+name: "Skeleton"
+lore-blurb: "ooooooo"
+
+Base-Health: 200
+Base-Attack: 40
+Base-Attack-Speed: 0.1
+Base-Dodge-Chance: 0.1
+Base-Critical-Chance: 0.2
+
+Base-Movement-Speed: 0.3
+Base-Vision-Radius: 2
+
+Sprite: "slime.png"

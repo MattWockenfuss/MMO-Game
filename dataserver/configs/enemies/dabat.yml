@@ -1,0 +1,13 @@
+name: "Da Bat"
+lore-blurb: "This MMO needs a hero…"
+
+Base-Health: 92
+Base-Attack: 39
+Base-Attack-Speed: 0.3
+Base-Dodge-Chance: 0.3
+Base-Critical-Chance: 0.33
+
+Base-Movement-Speed: 0.3
+Base-Vision-Radius: 2
+
+Sprite: "Da Bat.png"

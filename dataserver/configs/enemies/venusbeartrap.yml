@@ -1,0 +1,13 @@
+name: "Venus Beartrap"
+lore-blurb: "Used to catch Venus Bears."
+
+Base-Health: 20
+Base-Attack: 150
+Base-Attack-Speed: 0.8
+Base-Dodge-Chance: 0.0
+Base-Critical-Chance: 0.90
+
+Base-Movement-Speed: 0.0
+Base-Vision-Radius: 0
+
+Sprite: "Venus Beartrap.png"
