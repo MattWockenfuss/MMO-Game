@@ -10,16 +10,32 @@ class ClientSocketManager:
         self.clients = {}
         self.players = {}  #clients whom have been authenticated, remember, ids or keys are unique across both lists
         self.server = None
+        self._cleaned = set()
+        self._clean_lock = asyncio.Lock()
         #this is a dictionary of all the ClientSockets
         #they need to be verified by username before they are let in
         #key is their userID and value is the ClientSocket object
 
 
     
-    def cleanup(self, client):
-        #remove the client from either of our lists
+    async def cleanup(self, client, code = 1000, reason = "Unknown"):
+        #first check if we alreadu cleaned this guy, if we did, return
+        sessID = client.session_id
+        async with self._clean_lock:
+            if sessID in self._cleaned:
+                return
+            self._cleaned.add(sessID)
+
+
         self.clients.pop(client.session_id, None)
         self.players.pop(client.session_id, None)
+        #broadcast to everyone that a client lost connnection, was disconnected, etc...
+        d = {
+                "session_id": client.session_id,
+                "code": code,
+                "reason": reason
+        }
+        self.broadcast("Disconnect", d)
 
 
     def kick(self, session_id, code = 1008, reason = "You've been kicked!"):
@@ -40,14 +56,13 @@ class ClientSocketManager:
             asyncio.create_task(self._forceDisconnect(player, code, reason))
                     
 
-    async def _forceDisconnect(self, client, code = 1001, reason = "Forced Disconnect"):
+    async def _forceDisconnect(self, client, code = 1000, reason = "Forced Disconnect"):
         try:
-            client.send("disconnect", {"reason": reason})
             await client.ws.close(code=code, reason=reason)
         except Exception as e:
             print(f"[ERROR] Trying to Disconnect {client.session_id}, {repr(e)}")
         finally:
-            self.cleanup(client)
+            await self.cleanup(client, code=code, reason=reason)
 
 
 
@@ -78,7 +93,7 @@ class ClientSocketManager:
             print(f"[Error] Handling Receiving and Sending for {key} {repr(e)}")
         finally:
             await client.ws.wait_closed()
-            self.cleanup(client)
+            await self.cleanup(client)
 
     async def start(self, ListenHost, Port, pingInterval, pingTimeout):
         self.ListenHost = ListenHost
@@ -86,7 +101,9 @@ class ClientSocketManager:
         self.server = await serve(self.handleConnection, self.ListenHost, self.Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
         await self.server.serve_forever()
         
-        
+    def broadcast(self, type, data):
+        for sessID, player in list(self.players.items()):
+            player.send(type, data)
 
     async def stop(self):
         self.server.close()
