@@ -43,9 +43,6 @@ class ClientSocketManager:
     async def _forceDisconnect(self, client, code = 1001, reason = "Forced Disconnect"):
         try:
             client.send("disconnect", {"reason": reason})
-        except Exception:
-            pass
-        try:
             await client.ws.close(code=code, reason=reason)
         except Exception as e:
             print(f"[ERROR] Trying to Disconnect {client.session_id}, {repr(e)}")
@@ -77,14 +74,16 @@ class ClientSocketManager:
                 tg.create_task(client.handleSend())
         except (wsExceptions.ConnectionClosedOK, wsExceptions.ConnectionClosedError) as e:
             print(f"Client {client.id} disconnected!: {e.code} {e.reason}")
+        except Exception as e:
+            print(f"[Error] Handling Receiving and Sending for {key} {repr(e)}")
         finally:
+            await client.ws.wait_closed()
             self.cleanup(client)
 
-    async def start(self, ListenHost, Port):
+    async def start(self, ListenHost, Port, pingInterval, pingTimeout):
         self.ListenHost = ListenHost
         self.Port = Port
-        print(f"{ListenHost} : port={Port} and is type {type(ListenHost)}:{type(Port)}")
-        self.server = await serve(self.handleConnection, self.ListenHost, self.Port)
+        self.server = await serve(self.handleConnection, self.ListenHost, self.Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
         await self.server.serve_forever()
         
         

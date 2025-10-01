@@ -24,9 +24,8 @@ class Terminal:
                 msg = None
 
             self.task = None
-            
-
-            #print(f"You typed: {msg}")
+            if msg is None or "":
+                return
 
             cmd, *args = msg.split()
 

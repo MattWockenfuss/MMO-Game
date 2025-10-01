@@ -58,18 +58,16 @@ class ClientSocket():
                 msg = await self.outbound.get()
                 #print(f"Sending {msg}")
                 await self.ws.send(msg)
-        except(ConnectionClosedOK, ConnectionClosedError):
-            print("Connection Error!")
-            return
-        except asyncio.CancelledError:
-            print("handleSend cancelled by TaskGroup")
-            # choose pass or re-raise; see notes below
+        except ConnectionClosedOK:
+            print(f"[{self.session_id}]'s session was closed gracefully")
+            raise
+        except ConnectionClosedError:
+            print(f"[ERROR] Sending {self.session_id} a msg")
             raise
         except Exception as e:
-            print(f"Unexpected Error in handleSend(), {repr(e)}")
-        finally:
-            print("Awaiting Close!")
-            await self.ws.wait_closed()
+            print(f"[UNEXPECTED ERROR] Sending {self.session_id} a msg, {repr(e)}")
+            raise
+            
 
 
     async def handleReceive(self): 
@@ -83,15 +81,11 @@ class ClientSocket():
                 if decoded.get("type") != "move":
                     print(f"[SESS-ID:{self.session_id}  {self.ip}:{self.port}] MSG: {msg}")
                 self.inbound.put_nowait(decoded)
-
-
-
-                #handle packet info
-                #move packet
-                #alex takes damage
-                #pranav kills a monster
-                #matt picks up an item
-
-                #add to the queue
-        except (ConnectionClosedOK, ConnectionClosedError) as e:
-            return
+        except ConnectionClosedOK:
+            raise
+        except ConnectionClosedError:
+            print(f"[ERROR] Receiving {self.session_id} a msg")
+            raise
+        except Exception as e:
+            print(f"[UNEXPECTED ERROR] Receiving {self.session_id} a msg, {repr(e)}")
+            raise
