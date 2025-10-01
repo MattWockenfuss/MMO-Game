@@ -3,6 +3,12 @@ import gameloop from "./GameLoop.js";
 
 console.log("Loaded app.js")
 
+
+
+
+
+
+
 const form = document.getElementById("loginForm");
 
 form.addEventListener("submit", async (event) => {

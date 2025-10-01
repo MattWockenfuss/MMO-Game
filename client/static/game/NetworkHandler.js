@@ -2,6 +2,9 @@ export default class NetworkHandler{
     constructor(ipport){
         this.ws = new WebSocket(`ws://${ipport}/`);
         this.inbound = [];
+        window.addEventListener('beforeunload', () => {
+            try { ws.close(1001, "leaving page"); } catch {}
+        });
         
         this.ws.onopen = () => {
             console.log("Connected to World Server!");

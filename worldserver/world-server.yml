@@ -4,6 +4,8 @@
 # 0.0.0.0 means anyone can connect and a specific address means that all traffic must flow through that address
 listenAddress: "0.0.0.0"
 myPort: 8002
+pingInterval: 20      #how often to send a ping
+pingTimeout: 20       #how long it waits for a response
 
 #the IP and port of the data server
 DataServer-IP: "127.0.0.1"
