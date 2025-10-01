@@ -1,0 +1,6 @@
+name: "Credit Card"
+Primary-resource: "gold"
+Start-quantity: 1
+Pr-quantity: 500
+Ingredient-list: ["Bat Diner’s Club Card", "zircon ore"]
+Ingredient-quantity: 2

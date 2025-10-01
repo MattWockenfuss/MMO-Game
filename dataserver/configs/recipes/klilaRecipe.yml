@@ -1,0 +1,6 @@
+name: "Klila"
+Primary-resource: mana
+Start-quantity: 1
+Pr-quantity: 777
+Ingredient-list: ["Myrtle Flower"]
+Ingredient-quantity: 9

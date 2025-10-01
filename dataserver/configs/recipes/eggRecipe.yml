@@ -1,0 +1,6 @@
+name: "egg"
+Primary-resource: "mana"
+Start-quantity: 1
+Pr-quantity: 750
+Ingredient-list: ["ZIP File", "Pirate treasure", "Zircon ore", "Molesem cigarette", "Flying Shield warranty", "Cyber crystal", "Myrtle Flower", "Fallowsweet", "Bat Diner's Club Card", "Concurrency"]
+Ingredient-quantity: 1

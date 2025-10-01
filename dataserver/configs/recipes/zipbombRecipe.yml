@@ -1,0 +1,6 @@
+name: "ZIP Bomb"
+Primary-resource: XP
+start-quantity: 6
+pr-quantity: 42
+Ingredient-list: ["Myrtle flower", "concurrency"]
+Ingredient-quantity: 4

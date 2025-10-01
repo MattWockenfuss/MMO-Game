@@ -1,0 +1,7 @@
+World-Name: "Test World"
+Tile-Map: "test.png"
+# This is the test world
+
+
+
+World-Entrance-Color: "#33cc33"

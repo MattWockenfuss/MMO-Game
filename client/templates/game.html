@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+    <head>
+        <meta charset = "UTF-8">
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+        <title>Client</title>
+        <link rel="stylesheet" href="./static/styles.css">
+        <script type="module" src="./static/app.js"></script>
+    </head>
+    <body>
+        <div id="login">
+            <form action="/loginSubmit" method="post" class="form" id="loginForm">
+                <h1>Sign in</h1>
+                <label>Username</label>
+                <input name="username" autocomplete="username" placeholder="Pranav" required>
+                
+                <label>Password</label>
+                <input name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+                
+                <label>Server IP and port</label>
+                <input name="ipport" inputmode="decimal" placeholder="127.0.0.1:8002" value="127.0.0.1:8002" required>
+                
+                <label>Player Color</label>
+                <div class="row">
+                    <input name="color" type="color" class="color" value="#22d3ee">
+                    <small id="cv">#22d3ee</small>
+                </div>
+                <button>Continue</button>
+            </form>
+        </div>
+        <div id="game" hidden>
+            <p>This is a complex client page.</p>
+            <canvas id="myCanvas"></canvas>
+        </div>
+    </body>
+</html>

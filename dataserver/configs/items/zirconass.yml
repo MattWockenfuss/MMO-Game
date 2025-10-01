@@ -1,0 +1,10 @@
+name: "Zircon Ass"
+lore-blurb: "Ass being a synonym for ‘donkey’"
+
+Tag-List: ["craftable", "summon"]
+Damage: 0
+Is-Premium: False
+Cooldown: 120
+
+
+Sprite: "ZirconAss.png"

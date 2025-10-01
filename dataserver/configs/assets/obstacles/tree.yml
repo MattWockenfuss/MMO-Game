@@ -1,0 +1,7 @@
+name: "Tree"
+lore-blurb: "this is a tree"
+
+onCollision: "smallDamage"
+onDrop: {
+  wood: 0.1
+}

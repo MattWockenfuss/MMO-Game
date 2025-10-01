@@ -1,0 +1,6 @@
+name: "Stone Wall"
+id: 4
+lore-blurb: "stone wall"
+is-Solid: True
+map-color: "#616161"
+Sprite: "stone-wall.png"

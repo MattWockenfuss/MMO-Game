@@ -1,0 +1,13 @@
+name: "Flying Shield"
+lore-blurb: "Natural prey of the Walking Sword."
+
+Base-Health: 800
+Base-Attack: 5
+Base-Attack-Speed: 0.04
+Base-Dodge-Chance: 0.0
+Base-Critical-Chance: 0.02
+
+Base-Movement-Speed: 0.2
+Base-Vision-Radius: 4
+
+Sprite: "Flying Shield.png"

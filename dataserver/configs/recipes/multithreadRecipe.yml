@@ -1,0 +1,6 @@
+name: "Multithread"
+Primary-resource: "xp"
+start-quantity: 1
+Pr-quantity: 500
+Ingredient-list: ["concurrency", "cyber crystal"]
+Ingredient-quantity: 4

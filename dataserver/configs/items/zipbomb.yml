@@ -1,0 +1,7 @@
+name: "ZIP Bomb"
+lore-blurb: "When you come to a fork in the road, pipe it"
+
+Tag-List: ["craftable", "weapon", "consumable"]
+Damage: 30
+Is-Premium: False
+Cooldown: 60

@@ -1,0 +1,10 @@
+name: "Candy Cigarettes"
+lore-blurb: "Because chewing gum is a disgusting habit."
+
+Tag-List: ["craftable", "utility", "consumable"]
+Damage: 0
+Is-Premium: False
+Cooldown: 30
+
+
+Sprite: "CandyCigarettes.png"

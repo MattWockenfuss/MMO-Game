@@ -1,0 +1,13 @@
+name: "Rust Monster"
+lore-blurb: "A general-purpose programming monster the size of a small pony. Descriptions of its gentle behavior and feminine grace have been greatly exaggerated"
+
+Base-Health: 270
+Base-Attack: 50
+Base-Attack-Speed: 0.1
+Base-Dodge-Chance: 0.1
+Base-Critical-Chance: 0.2
+
+Base-Movement-Speed: 0.4
+Base-Vision-Radius: 5
+
+Sprite: "Rust Monster.png"

@@ -1,0 +1,6 @@
+name: "Horn of Vancouver"
+Primary-resource: "gold"
+Start-quantity: 1
+Pr-quantity: 650
+Ingredient-list: ["Pirate treasure"]
+Ingredient-quantity: 4

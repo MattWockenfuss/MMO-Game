@@ -1,0 +1,10 @@
+name: "Lossless Algorithm"
+lore-blurb: "It also removes noise!"
+
+Tag-List: ["craftable", "utility"]
+Damage: 0
+Is-Premium: False
+Cooldown: 0
+
+
+Sprite: "LosslessAlgorithm.png"

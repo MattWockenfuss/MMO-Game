@@ -1,0 +1,13 @@
+name: "Miner Genasi"
+lore-blurb: "Offspring of an Excavation Genie and a mortal; compelled to mine endlessly."
+
+Base-Health: 350
+Base-Attack: 25
+Base-Attack-Speed: 0.6
+Base-Dodge-Chance: 0.3
+Base-Critical-Chance: 0.2
+
+Base-Movement-Speed: 0.2
+Base-Vision-Radius: 5
+
+Sprite: "Miner Genasi.png"

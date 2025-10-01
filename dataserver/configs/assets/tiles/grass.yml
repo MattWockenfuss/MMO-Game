@@ -1,0 +1,6 @@
+name: "Grass Tile"
+id: 1
+lore-blurb: "grass"
+is-Solid: False
+map-color: "#6abe30"
+Sprite: "grass.png"

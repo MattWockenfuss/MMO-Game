@@ -1,0 +1,10 @@
+name: "Dust of Seasonal Allergies"
+lore-blurb: "Those who nose"
+
+Tag-List: ["craftable", "consumable"]
+Damage: 15
+Is-Premium: False
+Cooldown: 45
+
+
+Sprite: "DustSA.png"

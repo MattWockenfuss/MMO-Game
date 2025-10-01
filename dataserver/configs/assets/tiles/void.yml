@@ -1,0 +1,6 @@
+name: "Void Tile"
+id: 5
+lore-blurb: "the error tile if u will"
+is-Solid: True
+map-color: "#000000"
+Sprite: "void.png"

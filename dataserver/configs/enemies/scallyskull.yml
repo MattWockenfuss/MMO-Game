@@ -1,0 +1,13 @@
+name: "Scallyskull"
+lore-blurb: "Intelligent and vigilant, an undead lookout fashioned from the remains of a dead first mate."
+
+Base-Health: 70
+Base-Attack: 20
+Base-Attack-Speed: 0.2
+Base-Dodge-Chance: 0.4
+Base-Critical-Chance: 0.2
+
+Base-Movement-Speed: 0.3
+Base-Vision-Radius: 1
+
+Sprite: "Scallyskull.png"

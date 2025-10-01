@@ -1,0 +1,6 @@
+name: "Lossless Algorithm"
+Primary-resource: "xp"
+Start-quantity: 1
+Pr-quantity: 1000
+Ingredient-list: ["ZIP File", "Cyber crystal"]
+Ingredient-quantity: 3
