@@ -4,7 +4,6 @@ import websockets.exceptions as wsExceptions
 import random, string
 
 from clientsocket import ClientSocket
-from player import Player
 
 class ClientSocketManager:
     def __init__(self):
@@ -19,27 +18,37 @@ class ClientSocketManager:
     
     def cleanup(self, client):
         #remove the client from either of our lists
-        if hasattr(client, "id"):
-            self.clients.pop(client.id, None)
-        if hasattr(client, "session_id") and client.session_id: #by saying and client.session_id, we are asking if its truthy, as in,                     
-            self.players.pop(client.session_id, None)      #is client.session_id not None, not empty string
+        self.clients.pop(client.session_id, None)
+        self.players.pop(client.session_id, None)
 
 
-    def kickClient(self, playerUsername, code = 1008, reason = "Auth Failed"):
-        for players in list(self.players.values()):
-            if players.player.username == playerUsername:
-                    print(f"Kicking {players.player.session_id}")
-                    asyncio.create_task(self._forceDisconnect(players, code, reason))
+    def kick(self, session_id, code = 1008, reason = "You've been kicked!"):
+        client = self.clients.get(session_id, None)
+        player = self.players.get(session_id, None)
+        
+        if client is None and player is None:
+            print(f"[ERROR] Trying to Kick SESSID:{session_id}")
+            return
+        
+        
+        if client is not None:
+            print(f"Kicking Client SESSID:{session_id}")
+            asyncio.create_task(self._forceDisconnect(client, code, reason))
+
+        if player is not None:
+            print(f"Kicking Player: {player.username}@{session_id}")
+            asyncio.create_task(self._forceDisconnect(player, code, reason))
+                    
+
     async def _forceDisconnect(self, client, code = 1001, reason = "Forced Disconnect"):
         try:
             client.send("disconnect", {"reason": reason})
         except Exception:
             pass
-        
         try:
             await client.ws.close(code=code, reason=reason)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[ERROR] Trying to Disconnect {client.session_id}, {repr(e)}")
         finally:
             self.cleanup(client)
 

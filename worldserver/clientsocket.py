@@ -12,6 +12,7 @@ import json
 import asyncio
 import WSCPacketHandler as ph
 
+
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 
 class ClientSocket():
@@ -49,10 +50,28 @@ class ClientSocket():
             'data': data
         }
         self.outbound.put_nowait(json.dumps(p))
+
+
     async def handleSend(self):
-        while True:
-            msg = await self.outbound.get()
-            await self.ws.send(msg)
+        try:
+            while True:
+                msg = await self.outbound.get()
+                #print(f"Sending {msg}")
+                await self.ws.send(msg)
+        except(ConnectionClosedOK, ConnectionClosedError):
+            print("Connection Error!")
+            return
+        except asyncio.CancelledError:
+            print("handleSend cancelled by TaskGroup")
+            # choose pass or re-raise; see notes below
+            raise
+        except Exception as e:
+            print(f"Unexpected Error in handleSend(), {repr(e)}")
+        finally:
+            print("Awaiting Close!")
+            await self.ws.wait_closed()
+
+
     async def handleReceive(self): 
         try:
             async for msg in self.ws:
@@ -62,7 +81,7 @@ class ClientSocket():
                 decoded = json.loads(msg)
                 #print(json.dumps(decoded, indent=4))  #json.dumps takes in a JSON object, so we have to load it first
                 if decoded.get("type") != "move":
-                    print(f"[{self.ip}:{self.port}] ID: {self.id} MSG: {msg}")
+                    print(f"[SESS-ID:{self.session_id}  {self.ip}:{self.port}] MSG: {msg}")
                 self.inbound.put_nowait(decoded)
 
 

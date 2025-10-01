@@ -56,19 +56,19 @@ class Terminal:
                     print(f"There are no players on the server!")
                 else:
                     print(f"logged in: {len(handler.csm.players)} players")
-                    for key, player in list(handler.csm.players.items()):
+                    for sessID, player in list(handler.csm.players.items()):
                         print(" " * 4, end="")
-                        print(f"{key} {player.name} ", end="")
-                        print(f"{player.data} ")
+                        print(f"{sessID} {player.username} ", end="")
+                        print(f"{player.userdata} ")
 
             if cmd == "sockets":
                 if len(handler.csm.clients.items()) == 0:
                     print(f"There are no clients on the server!")
                 else:
                     print(f"logged in: {len(handler.csm.clients)} clients")
-                    for key, client in list(handler.csm.clients.items()):
+                    for sessID, client in list(handler.csm.clients.items()):
                         print(" " * 4, end="")
-                        print(f"{key} {client} ")
+                        print(f"{sessID} {client} ")
 
             if cmd == "kick":
                 if len(args) == 0:
