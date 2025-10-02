@@ -28,7 +28,7 @@ export class PacketHandler{
 
     onLogin(data){
         //this packet is the login of other players
-        this.handler.EM.addEntity(new OtherPlayer(data.x, data.y, data.session_id, data.username, data.color));
+        this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
 
     onMove(data){
@@ -53,7 +53,7 @@ export class PacketHandler{
         console.log(data.session_id);
         console.log(data.color);
 
-        this.handler.EM.addEntity(new OtherPlayer(data.x, data.y, data.session_id, data.username, data.color));
+        this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
     onDisconnect(data){
         //{"type": "Disconnect", "data": {"session_id": "2vYQJ6OP", "code": 1000, "reason": "Kicked by Console!"}}

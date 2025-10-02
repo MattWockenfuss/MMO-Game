@@ -1,25 +1,61 @@
 export class World{ 
     constructor(handler){
         this.handler = handler;
+        this.worldName = null;
         this.worldData = null;
-        this.worldWidth = null;
+        this.worldWidth = null; // in tiles
+        this.worldHeight = null; //in tiles
+        this.worldPixelWidth = null;
+        this.worldPixelHeight = null;
+        
+        this.size = 64;
 
+        this.CANVAS_WIDTH = 1500;
+        this.CANVAS_HEIGHT = 640;
 
+        //camera offsets
+        this.xOffset = null;
+        this.yOffset = null;
     }
     tick(){
+        //tile animations will go here?
+        //also recalculate offsets based on player pos
+        //console.log(`${this.handler.player.x}, ${this.handler.player.y}`);
+        //we need to clamp the x and y offsets
+        //so the x and y offsets are where we should start rendering the world so that our position is adjusted
+        //we then clamp it so that when we get to the sides or corners, it doesnt let us see the background
+
+        const maxXOffset = this.worldPixelWidth - (this.CANVAS_WIDTH);
+        const maxYOffset = this.worldPixelHeight - (this.CANVAS_HEIGHT);
+        
+        this.xOffset = this.handler.player.x - (this.CANVAS_WIDTH / 2);
+        this.yOffset = this.handler.player.y - (this.CANVAS_HEIGHT / 2);
+
+        this.xOffset = Math.max(0, Math.min(this.xOffset, maxXOffset));
+        this.yOffset = Math.max(0, Math.min(this.yOffset, maxYOffset));
+
+
 
     }
     render(ctx){
-        let size = 64;
         if(this.worldData != null){
-            for(let row = 0; row < (this.worldData.length / this.worldWidth); row++){
+            for(let row = 0; row < this.worldHeight; row++){
                 for(let x = 0; x < this.worldWidth; x++){
+                    //alright, so we are looping through the world, where do we want to render? start at the offset, or rather, subtract the offset?
+                    
                     let id = this.worldData[(row * this.worldWidth) + x]
-                    if (this.handler.AM.get(this.worldData[(row * this.worldWidth) + x])) ctx.drawImage(this.handler.AM.get(id), x * size, row * size, size, size)
+                    if (this.handler.AM.get(this.worldData[(row * this.worldWidth) + x])){
+                        let renderX = (x * this.size) - this.xOffset;
+                        let renderY = (row * this.size) - this.yOffset
+                        //console.log(`${x},${row} => ${startX},${startY}`);
+                        ctx.drawImage(this.handler.AM.get(id), renderX, renderY, this.size, this.size)
+                    } 
                     
                 }
             }
         }
+
+
     }
     setWorldData(data){
         //okay so we can set the world data in this function, everything about it
@@ -30,23 +66,24 @@ export class World{
         console.log("Trying to decode world data!")
         //okay
         var decoded = atob(data["world-data"]);
+        this.worldName = data["World-Name"]
         console.log(decoded);
         var bytes = new Int8Array(decoded.length);
         for(let i = 0; i < decoded.length; i++){
             //console.log(decoded.charCodeAt(i));
             bytes[i] = decoded.charCodeAt(i);
         }
-        console.log("setting class vars")
+        //console.log("setting class vars")
         this.worldData = bytes;
         this.worldWidth = data["world-width"]
-        //console.log(`${decoded}`);
-        //console.log(`${bytes}`);
-        //console.log(`World width = ${data['world-width']}`)
-        //okay now we have the data stores in bytes array
+        this.worldHeight = Math.floor(this.worldData.length / this.worldWidth); //essentially turns into an integer
+        this.worldPixelWidth = this.worldWidth * this.size;
+        this.worldPixelHeight = this.worldHeight * this.size;
+        console.log(`Loaded World: ${this.worldName} ${this.worldWidth}x${this.worldHeight}`);
     }
     printWorldData(){
-        console.log("in the print function!")
-        for(let row = 0; row < (this.worldData.length / this.worldWidth); row++){
+        //console.log("in the print function!")
+        for(let row = 0; row < this.worldHeight; row++){
             //now we get and print the row
             let builderString = "";
             for(let x = 0; x < this.worldWidth; x++){

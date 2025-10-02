@@ -112,13 +112,25 @@ class GameEngine{
         this.ctx.fillRect(0, 0, 220, (7 * gap) + 8);
 
         this.ctx.fillStyle = "black";
-        this.ctx.fillText("Ticks: " + this.ticks, 8, 8 + (1 * gap));
+        //this.ctx.fillText("Ticks: " + this.ticks, 8, 8 + (1 * gap));
         this.ctx.fillText("TicksLastSecond: " + this.ticksLastSecond, 8, 8 + (2 * gap));
-        this.ctx.fillText("tickTimer: " + this.tickTimer.toFixed(1), 8, 8 + (3 * gap));
-        this.ctx.fillText("dt: " + this.dt.toFixed(1), 8, 8 + (4 * gap));
-        this.ctx.fillText("st: " + this.st.toFixed(1), 8, 8 + (5 * gap));
-        this.ctx.fillText("timer3: " + this.timer3.toFixed(1), 8, 8 + (6 * gap));
+        this.ctx.fillText("st: " + (this.st).toFixed(1), 8, 8 + (3 * gap));
+        
+        if(this.handler.player !== null && this.handler.player !== undefined){
+            this.ctx.fillText("x: " + (this.handler.player.x).toFixed(1), 8, 8 + (5 * gap));
+            this.ctx.fillText("y: " + (this.handler.player.y).toFixed(1), 8, 8 + (6 * gap));
+        }
+        if(this.handler.world !== null && this.handler.world !== undefined){
+            if(this.handler.world.xOffset !== null && this.handler.world.yOffset !== undefined){
+                this.ctx.fillText("xOffset: " + (this.handler.world.xOffset).toFixed(1), 8, 8 + (7 * gap));
+                this.ctx.fillText("yOffset: " + (this.handler.world.yOffset).toFixed(1), 8, 8 + (8 * gap));
+            }
+        }
 
+
+        //this.ctx.fillText("timer3: " + this.timer3.toFixed(1), 8, 8 + (6 * gap));
+        //this.ctx.fillText("tickTimer: " + this.tickTimer.toFixed(1), 8, 8 + (3 * gap));
+        //this.ctx.fillText("dt: " + this.dt.toFixed(1), 8, 8 + (4 * gap));
 
         
 
