@@ -39,9 +39,19 @@ export class World{
     }
     render(ctx){
         if(this.worldData != null){
-            for(let row = 0; row < this.worldHeight; row++){
-                for(let x = 0; x < this.worldWidth; x++){
-                    //alright, so we are looping through the world, where do we want to render? start at the offset, or rather, subtract the offset?
+
+            //alright, so we are looping through the world, and its laggy because its trying to render all of the tiles at once
+            //lets define startx and startys in tiles
+            //remember we have playerX and playerY, and the screensize is constant
+            
+            let startX = Math.max(0, Math.floor(this.xOffset / this.size) + 0);
+            let startY = Math.max(0, Math.floor(this.yOffset / this.size) + 0);
+            let endX = Math.min(Math.floor((this.xOffset + this.CANVAS_WIDTH) / this.size) + 1, this.worldWidth);
+            let endY = Math.min(Math.floor((this.yOffset + this.CANVAS_HEIGHT) / this.size) + 1, this.worldHeight);
+
+            for(let row = startY; row < endY; row++){
+                for(let x = startX; x < endX; x++){
+
                     
                     let id = this.worldData[(row * this.worldWidth) + x]
                     if (this.handler.AM.get(this.worldData[(row * this.worldWidth) + x])){
