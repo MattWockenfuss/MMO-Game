@@ -3,6 +3,8 @@ export class Player {
         this.handler = handler;
         this.x = 200;
         this.y = 200;
+        this.renderX = 0;
+        this.renderY = 0;
         this.speed = 5;
         this.toggleG = false;
         this.name = myname;
@@ -48,17 +50,22 @@ export class Player {
             // this.handler.net.send("login", {"username": name});
             this.toggleG = false;
         }
+
+
+        //instead of rendering at direct center, render at our x my xOffset
+        this.renderX = this.x - this.handler.world.xOffset;
+        this.renderY = this.y - this.handler.world.yOffset;
     }
 
 
     render(ctx){
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, 40, 40);
+        ctx.fillRect(this.renderX - 20, this.renderY - 20, 40, 40);
 
         if(this.name != null){
             ctx.fillStyle = "black";
             ctx.font = "bold 20px monospace";
-            ctx.fillText(this.name, this.x, this.y - 5);
+            ctx.fillText(this.name, this.renderX - 20, this.renderY - 20 - 5);
         }
     }
 

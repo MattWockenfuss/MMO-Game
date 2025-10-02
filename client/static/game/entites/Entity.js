@@ -1,5 +1,6 @@
 export class Entity {
-    constructor(){
+    constructor(handler){
+        this.handler = handler;
         console.log("New Entity created!");
     }
 }
