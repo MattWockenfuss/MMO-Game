@@ -3,12 +3,13 @@ export class Tile {
     static tileWidth = 64;  //all tiles have the same width
     static tilePixelWidth = 16;  //like in the actual files
 
-    constructor(handler, ID, name, isSolid, animationSpeed = 60){
+    constructor(handler, ID, name, isSolid, loreBlurb, animationSpeed = 60){
         //what does every tile type have?
         this.ID = ID; //how you access the sprite for this tile
         this.handler = handler;
         this.name = name;  
         this.isSolid = isSolid;
+        this.loreBlurb = loreBlurb
         //i need to be able to dynamically tell what kind of tile something is, like is it animated or not?
         //maybe we create the tiles in the assets?
         //if its animated, pass an object, detailing the animation speed in ticksPerFrame
@@ -25,6 +26,8 @@ export class Tile {
             this.animationSpeed = animationSpeed;
             this.animationIndex = 0;
             this.animationI = 0;
+        }else{
+            console.log(`Created a new Tile#${this.ID}, isSolid: ${this.isSolid} lore:${this.loreBlurb}`);
         }
         
 

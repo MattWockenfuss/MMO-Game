@@ -9,10 +9,9 @@ export class AssetManager{
             {name: 3, url: "./static/assets/stone-floor.png"},
             {name: 4, url: "./static/assets/stone-wall.png"},
             {name: 5, url: "./static/assets/void.png"},
-            {name: 6, url: "./static/assets/water.png"},
+            {name: 6, url: "./static/assets/darker-blue.png"},
             {name: 7, url: "./static/assets/wood-floor.png"},
-            {name: 8, url: "./static/assets/wood-wall.png"},
-            {name: 9, url: "./static/assets/darker-blue.png"}
+            {name: 8, url: "./static/assets/wood-wall.png"}
         ]
 
     }

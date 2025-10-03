@@ -51,7 +51,10 @@ async def DSonWorld(handler, data, ws):
         if world.get("World-Name") == data["World-Name"]:
             data = {
                 "type":"world",
-                "data": world
+                "data": {
+                    "world": world,
+                    "tiles": handler.configs["tiles"]
+                }
             }
             await ws.send(json.dumps(data))
             break

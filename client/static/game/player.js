@@ -36,7 +36,6 @@ export class Player {
         if(moved){
             this.handler.net.send("move", p);
         }
-        
 
 
         if(this.handler.IM.down.has('KeyG')){

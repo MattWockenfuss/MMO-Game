@@ -4,6 +4,7 @@
 import websockets
 import asyncio
 import json
+import reprlib
 
 import WSDPacketHandler as ph
 
@@ -51,8 +52,11 @@ class DataServerClient:
         self.outbound.put_nowait(json.dumps(packet))
 
     async def receiver(self):
+        myrepr = reprlib.Repr()
+        myrepr.maxstring = 100
+
         async for msg in self.ws:
-            print(f"[FROM DS]: {msg}")
+            print(f"[FROM DS]: {myrepr.repr(msg)}")
             await self.inbound.put(msg)
             
 

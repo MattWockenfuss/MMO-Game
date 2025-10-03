@@ -1,3 +1,4 @@
+import base64
 '''
 every world is going to have a 2d array of tile ids to store world data?
 
@@ -5,10 +6,12 @@ every world is going to have a 2d array of tile ids to store world data?
 
 class World:
     def __init__(self):
-        self.worldData = bytes()
+        #read from the dataserver's world yml file, loaded in from JSON, can do .get("World-Name"), etc...
+        self.worldDict = {}
+        self.tilesDict = {}
+        self.worldData = bytes() #decoded into tile IDs
         self.width = 0
         self.height = 0
-        self.worldString = ""
 
     def tick(self, handler):
         pass
@@ -24,19 +27,24 @@ class World:
                 print(f"{self.worldData[idx]} ", end="")
             print("")
 
+        #alright lets print the tiles to match
+        print(f"Where,")
+        for tile in self.tilesDict:
+            print(f'{tile.get("id")} >> "{tile.get("name")}"')
 
 
+    def setWorldData(self, d):
+        #these are both dictionaries
+        world = d.get("world")
+        tiles = d.get("tiles")
 
-    def getWorldData(self):
-        return self.worldData
-    
-    def setWorldString(self, string):
-        #this function takes the string from the dataserver and stores it so we can send it to clients
-        self.worldString = string
-    def getWorldString(self): return self.worldString
+        worldData = world.get("world-data")
+        self.worldData = base64.b64decode(worldData)
+        self.width = world.get("world-width")
+        self.height = len(self.worldData) // self.width   # using // is integer division
 
-    def setWorldData(self, byteData, width):
-        self.worldData = byteData
-        self.width = width
-        self.height = len(byteData) // width   # using // is integer division
+        self.worldDict = world
+        self.tilesDict = tiles
+        print(f"World Name: {self.worldDict.get("World-Name")}")
+        self.printWorldData()
 
