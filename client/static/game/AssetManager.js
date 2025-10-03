@@ -2,7 +2,7 @@ export class AssetManager{
     constructor(handler){
         this.handler = handler;
         this.images  = new Map();
-        this.assets = 
+        this.toLoad = 
         [
             {name: 1, url: "./static/assets/grass.png"},
             {name: 2, url: "./static/assets/sand.png"},
@@ -11,7 +11,8 @@ export class AssetManager{
             {name: 5, url: "./static/assets/void.png"},
             {name: 6, url: "./static/assets/water.png"},
             {name: 7, url: "./static/assets/wood-floor.png"},
-            {name: 8, url: "./static/assets/wood-wall.png"} 
+            {name: 8, url: "./static/assets/wood-wall.png"},
+            {name: 9, url: "./static/assets/darker-blue.png"}
         ]
 
     }
@@ -31,7 +32,7 @@ export class AssetManager{
     }
 
     async loadAll(){
-        const promises = this.assets.map(item => this.loadImage(item.name, item.url));
+        const promises = this.toLoad.map(item => this.loadImage(item.name, item.url));
         await Promise.all(promises);
         return this;
     }

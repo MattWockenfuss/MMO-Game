@@ -14,6 +14,9 @@ class GameEngine{
     init(networkhandler, myname, mycolor){
         //first create a handler for everyone to use, passing in net
         this.handler = new Handler();
+        
+
+
         let player = new Player(this.handler, myname, mycolor);
         let world = new World(this.handler);
         let entityManager = new EntityManager(this.handler);
@@ -21,14 +24,16 @@ class GameEngine{
         let assetManager = new AssetManager(this.handler);
         this.handler.init(networkhandler, player, world, entityManager, inputManager, assetManager);
         
-        this.PH = new PacketHandler(this.handler);
-
-
         //now lets try loading the images
-        const loadingAssets = this.handler.AM.loadAll();
+        const loadingAssets = assetManager.loadAll();
         loadingAssets.then(() => {
             this.startGame();
         });
+
+        this.PH = new PacketHandler(this.handler);
+
+
+
     }
     startGame(){
         this.canvas = document.getElementById("myCanvas");
