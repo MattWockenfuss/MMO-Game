@@ -12,16 +12,20 @@ import { PacketHandler } from "./game/PacketHandler.js";
 
 class GameEngine{
     init(networkhandler, myname, mycolor){
-        //first create a handler for everyone to use, passing in net
+        this._rafID = 0;
+        this._listeners = [];
+        this._trackedSocket = null;
+        this._onSocketClose = null;
+        this._dead = false;
+
         this.handler = new Handler();
         
-
-
         let player = new Player(this.handler, myname, mycolor);
         let world = new World(this.handler);
         let entityManager = new EntityManager(this.handler);
         let inputManager = new InputManager(this.handler);
         let assetManager = new AssetManager(this.handler);
+
         this.handler.init(networkhandler, player, world, entityManager, inputManager, assetManager);
         
         //now lets try loading the images
@@ -31,10 +35,33 @@ class GameEngine{
         });
 
         this.PH = new PacketHandler(this.handler);
+        this.net = networkhandler;
+        this._unsubscribeNetworkClose?.()
+        this._unsubscribeNetworkClose = this.net.subscribeOnClose((e) => {
+            this.stop();
+            let msgBox = document.getElementById("msg");
+            msgBox.style.visibility = "visible";
+            msgBox.textContent = `${e.code} ${e.reason}`;
+        });
 
 
 
     }
+    on = (el, ev, cb, opts) => {
+        el.addEventListener(ev, cb, opts);
+        this._listeners.push([el, ev, cb, opts]);
+        //el = element, ev = event, cb = callback, and opts = options
+        console.log(`Now Tracking "${el}.${ev} and calling ${cb}"`);
+        return cb;
+    }
+    offAll(){
+        for(const [el, ev, cb, opts] of this._listeners){
+            el.removeEventListener(ev, cb, opts);
+        }
+        this._listeners.length = 0;
+    }
+
+
     startGame(){
         this.canvas = document.getElementById("myCanvas");
         this.ctx = this.canvas.getContext("2d");
@@ -63,10 +90,11 @@ class GameEngine{
 
         };
 
-        window.addEventListener("resize", () => {
+        this.on(window, "resize", (e) => {
             centerCanvas();
             resizeFix();
         });
+        this.handler.IM.attachListeners(this.canvas, this.on);
 
         centerCanvas();
         resizeFix();
@@ -87,7 +115,8 @@ class GameEngine{
 
         this.last = performance.now();  //current time in ms
         this.gameLoopFunction = this.gameLoop.bind(this);
-        requestAnimationFrame(this.gameLoopFunction);
+        this._rafID = requestAnimationFrame(this.gameLoopFunction);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
 
@@ -100,6 +129,8 @@ class GameEngine{
     }
 
     render(){
+        if (!this.ctx || !this.canvas) return;
+
         this.ctx.fillStyle = "white";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -143,6 +174,8 @@ class GameEngine{
 
 
     gameLoop(now){
+        if(this._dead) return;
+
         this.dt = now - this.last;  //time since last frame in ms
         //okay how would i solve this problem?
         //okay so i know about how often i want them to activate, every MSPT
@@ -173,8 +206,42 @@ class GameEngine{
         this.render();
         
         this.dt = 0;
-        requestAnimationFrame(this.gameLoopFunction);
+        this._rafID = requestAnimationFrame(this.gameLoopFunction);
     }
+
+    stop = () => {
+        /*
+            This is the stop game function, we stop the animation frame, close all of the eventListeners we have attached as we were keeping track of them
+            and keep track of a private variable _dead which
+        */
+        const game = document.getElementById("game");
+        const loginFormDiv = document.getElementById("login");
+        const loginForm = document.getElementById("loginForm");
+
+        game.hidden = true;
+        loginFormDiv.hidden = false;
+        loginForm.reset();
+
+
+        //now for the killing
+        if(this._dead) return;
+        this._dead = true;
+
+        this._unsubscribeNetworkClose?.();
+        this._unsubscribeNetworkClose = null;
+
+        if(this._rafID){
+            cancelAnimationFrame(this._rafID);
+            this._rafID = 0;
+        }
+        this.offAll();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx = null;
+        this.canvas = null;
+        this.handler = null;
+        console.log(`STOPPED GAME LOOP!!!!!!!!!!!!`);
+    }
+
 }
 
 

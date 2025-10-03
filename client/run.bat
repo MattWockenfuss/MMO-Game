@@ -14,12 +14,12 @@ IF NOT EXIST ".venv\" (
     .venv\Scripts\activate
     python -m pip install --upgrade pip
     pip install fastapi[standard]
-    fastapi dev app.py
+    fastapi dev app.py --host 0.0.0.0 --port 8000
     pause
 ) ELSE (
     .venv\Scripts\activate
     echo "Python Virtual Environment (.venv) ALREADY EXISTS"
-    fastapi dev app.py
+    fastapi dev app.py --host 0.0.0.0 --port 8000
     pause
 )
 
