@@ -78,4 +78,8 @@ export class Tile {
             ctx.drawImage(this.handler.AM.get(this.ID), renderX, renderY, Tile.tileWidth, Tile.tileWidth);
         }
     }
+    renderDebug(ctx, renderX, renderY){
+        ctx.fillStyle = "Red";
+        ctx.fillRect(renderX, renderY, Tile.tileWidth, Tile.tileWidth);
+    }
 }

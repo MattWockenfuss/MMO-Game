@@ -56,6 +56,11 @@ export class World{
             let endX = Math.min(Math.floor((this.xOffset + this.CANVAS_WIDTH) / Tile.tileWidth) + 1, this.worldWidth);
             let endY = Math.min(Math.floor((this.yOffset + this.CANVAS_HEIGHT) / Tile.tileWidth) + 1, this.worldHeight);
 
+            //okay lets also cast our mouse coords to world coords, get the tile at that location, and highlight it
+            //okay so xOffset + mouseX / Tile.tileWidth truncated?
+            let tileX = Math.trunc((this.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
+            let tileY = Math.trunc((this.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
+            console.log(`Checking ${tileX}, ${tileY}`);
             for(let row = startY; row < endY; row++){
                 for(let x = startX; x < endX; x++){
                     let renderX = (x * Tile.tileWidth) - this.xOffset;
@@ -63,9 +68,20 @@ export class World{
                     //what ever the id is, render that tile
                     
                     let id = this.worldData[(row * this.worldWidth) + x]
-                    this.tileMap.get(id).render(ctx, renderX, renderY);   
+                    this.tileMap.get(id).render(ctx, renderX, renderY);
+                    
+                    if(x == tileX && row == tileY){
+                        this.tileMap.get(id).renderDebug(ctx, renderX, renderY);
+                    }
+                    
+
                 }
             }
+
+            
+
+
+
         }
 
 
@@ -100,17 +116,6 @@ export class World{
         for(let tile of tilesdata){
             this.tileMap.set(tile.id, new Tile(this.handler, tile.id, tile.name, tile["is-Solid"], tile["lore-blurb"]))
         }
-
-        // this.tileMap.set(1, new Tile(this.handler, 1, "grass", false));
-        // this.tileMap.set(2, new Tile(this.handler, 2, "sand", false));
-        // this.tileMap.set(3, new Tile(this.handler, 3, "stone-floor", false));
-        // this.tileMap.set(4, new Tile(this.handler, 4, "stone-wall", false));
-        // this.tileMap.set(5, new Tile(this.handler, 5, "void", false));
-        // this.tileMap.set(6, new Tile(this.handler, 9, "water", false, 20));
-        // this.tileMap.set(7, new Tile(this.handler, 7, "wood-floor", false));
-        // this.tileMap.set(8, new Tile(this.handler, 8, "wood-wall", false));
-
-
         console.log(`Loaded World: ${this.worldName} ${this.worldWidth}x${this.worldHeight}`);
     }
     printWorldData(){
