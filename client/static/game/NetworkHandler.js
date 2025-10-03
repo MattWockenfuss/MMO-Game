@@ -2,9 +2,13 @@ export default class NetworkHandler{
     constructor(ipport){
         this.ws = new WebSocket(`ws://${ipport}/`);
         this.inbound = [];
-        window.addEventListener('beforeunload', () => {
-            try { ws.close(1001, "leaving page"); } catch {}
-        });
+        this._closeSubscribers = new Set();
+
+        this._onWSClose = (e) => {
+            for(const cb of this._closeSubscribers){
+                cb(e);
+            }
+        }
         
         this.ws.onopen = () => {
             console.log("Connected to World Server!");
@@ -26,18 +30,24 @@ export default class NetworkHandler{
             console.error("[ERROR] ")
         }
         this.ws.onclose = (event) => {
-            console.log(`Disconnected   Reason: ${JSON.stringify(event)}`);
+            this._onWSClose(event);
 
-            const game = document.getElementById("game");
-            const loginFormDiv = document.getElementById("login");
-            const loginForm = document.getElementById("loginForm");
 
-            game.hidden = true;
-            loginFormDiv.hidden = false;
-            loginForm.reset();
 
             //in here 'transfer' back to login page, stop game loop, etc..., reset everything
             //display the reason on screen
+        }
+    }
+    subscribeOnClose(cb){
+        this._closeSubscribers.add(cb);
+        // return an unsubscribe if we want? this is a crazy pattern i need to think about this
+        return () => this._closeSubscribers.delete(cb);
+    }
+    close(code = 1000, reason = 'Client Quit'){
+        try {
+            this.ws.close(code, reason);
+        } catch {
+            console.log(`ERROR TRYING TO CLOSE SOCKET ${code}, ${reason}`);
         }
     }
     waitForOpen(timeout = 2000){

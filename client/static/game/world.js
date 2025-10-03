@@ -58,7 +58,6 @@ export class World{
 
             for(let row = startY; row < endY; row++){
                 for(let x = startX; x < endX; x++){
-
                     let renderX = (x * Tile.tileWidth) - this.xOffset;
                     let renderY = (row * Tile.tileWidth) - this.yOffset
                     //what ever the id is, render that tile
