@@ -163,6 +163,9 @@ class GameEngine{
             }
         }
 
+        this.ctx.fillText("mouseX: " + (this.handler.IM.mouseX).toFixed(1), 8, 8 + (9 * gap));
+        this.ctx.fillText("mouseY: " + (this.handler.IM.mouseY).toFixed(1), 8, 8 + (10 * gap));
+
 
         //this.ctx.fillText("timer3: " + this.timer3.toFixed(1), 8, 8 + (6 * gap));
         //this.ctx.fillText("tickTimer: " + this.tickTimer.toFixed(1), 8, 8 + (3 * gap));
