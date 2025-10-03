@@ -72,38 +72,43 @@ export class World{
     }
     setWorldData(data){
         //okay so we can set the world data in this function, everything about it
+        let worlddata = data.world;
+        let tilesdata = data.tiles;
+
         for(const key of Object.keys(data)){
             console.log(`${key} : ${data[key]}`)
         }
-        //AQIDBAUGBwgICAECAgICAgICBwcBAQEBAQQEBAcHAQEBBgYGBgQDAwEBAQYGBgYEAwM= is the world data right now
-        console.log("Trying to decode world data!")
-        //okay
-        var decoded = atob(data["world-data"]);
-        this.worldName = data["World-Name"]
-        console.log(decoded);
+        
+        
+
+        var decoded = atob(worlddata["world-data"]);
         var bytes = new Int8Array(decoded.length);
         for(let i = 0; i < decoded.length; i++){
-            //console.log(decoded.charCodeAt(i));
             bytes[i] = decoded.charCodeAt(i);
         }
-        //console.log("setting class vars")
+
+
+        this.worldName = worlddata["World-Name"]
         this.worldData = bytes;
-        this.worldWidth = data["world-width"]
+        this.worldWidth = worlddata["world-width"]
         this.worldHeight = Math.floor(this.worldData.length / this.worldWidth); //essentially turns into an integer
         this.worldPixelWidth = this.worldWidth * Tile.tileWidth;
         this.worldPixelHeight = this.worldHeight * Tile.tileWidth;
-        //alright, so we also are going to eventually program in the ability to add tiles, so we can send tiles to the server and add them to the dictionary
-        //hmmm
-        //map of ids to tile objects
 
-        this.tileMap.set(1, new Tile(this.handler, 1, "grass", false));
-        this.tileMap.set(2, new Tile(this.handler, 2, "sand", false));
-        this.tileMap.set(3, new Tile(this.handler, 3, "stone-floor", false));
-        this.tileMap.set(4, new Tile(this.handler, 4, "stone-wall", false));
-        this.tileMap.set(5, new Tile(this.handler, 5, "void", false));
-        this.tileMap.set(6, new Tile(this.handler, 9, "water", false, 20));
-        this.tileMap.set(7, new Tile(this.handler, 7, "wood-floor", false));
-        this.tileMap.set(8, new Tile(this.handler, 8, "wood-wall", false));
+
+        console.log(tilesdata)
+        for(let tile of tilesdata){
+            this.tileMap.set(tile.id, new Tile(this.handler, tile.id, tile.name, tile["is-Solid"], tile["lore-blurb"]))
+        }
+
+        // this.tileMap.set(1, new Tile(this.handler, 1, "grass", false));
+        // this.tileMap.set(2, new Tile(this.handler, 2, "sand", false));
+        // this.tileMap.set(3, new Tile(this.handler, 3, "stone-floor", false));
+        // this.tileMap.set(4, new Tile(this.handler, 4, "stone-wall", false));
+        // this.tileMap.set(5, new Tile(this.handler, 5, "void", false));
+        // this.tileMap.set(6, new Tile(this.handler, 9, "water", false, 20));
+        // this.tileMap.set(7, new Tile(this.handler, 7, "wood-floor", false));
+        // this.tileMap.set(8, new Tile(this.handler, 8, "wood-wall", false));
 
 
         console.log(`Loaded World: ${this.worldName} ${this.worldWidth}x${this.worldHeight}`);

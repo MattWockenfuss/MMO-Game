@@ -1,5 +1,5 @@
 import json
-import base64
+
 '''
 This file lists all the functions that handle packets for the world server from the
 DATA SERVER
@@ -18,13 +18,28 @@ testpacket = {
                 'world-width': 3
             }
 }
-    
+#       We just received the world data from the data server, store in world, also parse and decode the data, 
+#       setting the width and height of the world as well,
+#       type = "world" data = {World-Name:"", Tile-Map:"", World-Entrance-Color:"", world-data:"", world-width:""}
+#       type = "tiles" data = {name:"", id:"", lore-blurb:"", is-Solid:"", map-color:"", Sprite:""}
 def WSonWorld(handler, d):
-    #print(f"world data: {d["world-data"]}")
-    handler.world.setWorldData(base64.b64decode(d["world-data"]), d["world-width"])
-    handler.world.printWorldData()
-    handler.world.setWorldString(d)
-    #print(handler.world.getWorldData())
+    # print(d)
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("world"))
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("tiles"))
+
+    # for tile in d.get("tiles"):
+    #     print(tile)
+
+
+    # worldName =           d.get("world").get("World-Name")
+    # tileMap =             d.get("world").get("Tile-Map")
+    # worldEntranceColor =  d.get("world").get("World-Entrance-Color")
+    # worldData =           d.get("world").get("world-data")
+    # worldWidth =          d.get("world").get("world-width")
+
+    handler.world.setWorldData(d)
 
 
 
@@ -72,8 +87,11 @@ def WSonLogin(handler, d):
         
 
 
-
-        client.send('world', handler.world.getWorldString())
+        p = {
+            "world": handler.world.worldDict,
+            "tiles": handler.world.tilesDict
+        }
+        client.send('world', p)
 
         dataToSend = {"auth":"ok"}
         client.send('loginVerify', dataToSend)
