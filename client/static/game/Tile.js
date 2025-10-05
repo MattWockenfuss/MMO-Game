@@ -70,16 +70,18 @@ export class Tile {
         
         if(this.frames > 1){
             ctx.drawImage(this.handler.AM.get(this.ID), this.animationIndex * Tile.tilePixelWidth, 0, 16, 16, renderX, renderY, Tile.tileWidth, Tile.tileWidth);
-
-            //ctx.font = "16px monospace";
-            //ctx.fillStyle = "black";
-            //ctx.fillText(`${this.animationIndex}`, renderX + 2, renderY + 16);
         }else{
             ctx.drawImage(this.handler.AM.get(this.ID), renderX, renderY, Tile.tileWidth, Tile.tileWidth);
         }
     }
     renderDebug(ctx, renderX, renderY){
-        ctx.fillStyle = "Red";
-        ctx.fillRect(renderX, renderY, Tile.tileWidth, Tile.tileWidth);
+        ctx.fillStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(renderX + 1, renderY + 1, Tile.tileWidth - 2, Tile.tileWidth - 2);
+        if(this.frames > 1){
+            ctx.font = "16px monospace";
+            ctx.fillStyle = "black";
+            ctx.fillText(`${this.animationIndex}`, renderX + 2, renderY + 16);
+        }
     }
 }

@@ -58,33 +58,21 @@ export class World{
 
             //okay lets also cast our mouse coords to world coords, get the tile at that location, and highlight it
             //okay so xOffset + mouseX / Tile.tileWidth truncated?
-            let tileX = Math.trunc((this.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
-            let tileY = Math.trunc((this.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
-            console.log(`Checking ${tileX}, ${tileY}`);
+
+
             for(let row = startY; row < endY; row++){
                 for(let x = startX; x < endX; x++){
-                    let renderX = (x * Tile.tileWidth) - this.xOffset;
-                    let renderY = (row * Tile.tileWidth) - this.yOffset
-                    //what ever the id is, render that tile
                     
+                    let renderX = (x * Tile.tileWidth) - this.xOffset;
+                    let renderY = (row * Tile.tileWidth) - this.yOffset;
+
                     let id = this.worldData[(row * this.worldWidth) + x]
                     this.tileMap.get(id).render(ctx, renderX, renderY);
-                    
-                    if(x == tileX && row == tileY){
-                        this.tileMap.get(id).renderDebug(ctx, renderX, renderY);
-                    }
-                    
-
                 }
             }
 
-            
-
-
-
         }
-
-
+        
     }
     setWorldData(data){
         //okay so we can set the world data in this function, everything about it

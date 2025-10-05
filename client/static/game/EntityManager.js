@@ -6,13 +6,13 @@ export class EntityManager{
         this.entities = [];
     }
     tick(){
-        for(let i = 0; i < this.entities.length; i++){
-            this.entities[i].tick();
+        for(const entity in this.entities){
+            entity.tick();
         }
     }
     render(ctx){
-        for(let i = 0; i < this.entities.length; i++){
-            this.entities[i].render(ctx);
+        for(const entity in this.entities){
+            entity.render(ctx);
         }
     }
 

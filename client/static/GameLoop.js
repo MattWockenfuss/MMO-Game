@@ -7,8 +7,7 @@ import { EntityManager } from "./game/EntityManager.js";
 import { InputManager } from "./game/InputManager.js";
 import { AssetManager } from "./game/AssetManager.js";
 import { PacketHandler } from "./game/PacketHandler.js";
-
-
+import { DebugMenu } from "./game/DebugMenu.js";
 
 class GameEngine{
     init(networkhandler, myname, mycolor){
@@ -25,8 +24,9 @@ class GameEngine{
         let entityManager = new EntityManager(this.handler);
         let inputManager = new InputManager(this.handler);
         let assetManager = new AssetManager(this.handler);
+        let debugMenu = new DebugMenu(this.handler);
 
-        this.handler.init(networkhandler, player, world, entityManager, inputManager, assetManager);
+        this.handler.init(networkhandler, player, world, entityManager, inputManager, assetManager, debugMenu);
         
         //now lets try loading the images
         const loadingAssets = assetManager.loadAll();
@@ -137,42 +137,7 @@ class GameEngine{
         this.handler.world.render(this.ctx);
         this.handler.EM.render(this.ctx);
         this.handler.player.render(this.ctx);
-
-        this.ctx.fillStyle = "black";
-        this.ctx.font = "bold italic 24px Comic Sans MS";
-        this.ctx.font = " 20px monospace";
-
-
-        let gap = 20;
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-        this.ctx.fillRect(0, 0, 220, (7 * gap) + 8);
-
-        this.ctx.fillStyle = "black";
-        //this.ctx.fillText("Ticks: " + this.ticks, 8, 8 + (1 * gap));
-        this.ctx.fillText("TicksLastSecond: " + this.ticksLastSecond, 8, 8 + (2 * gap));
-        this.ctx.fillText("st: " + (this.st).toFixed(1), 8, 8 + (3 * gap));
-        
-        if(this.handler.player !== null && this.handler.player !== undefined){
-            this.ctx.fillText("x: " + (this.handler.player.x).toFixed(1), 8, 8 + (5 * gap));
-            this.ctx.fillText("y: " + (this.handler.player.y).toFixed(1), 8, 8 + (6 * gap));
-        }
-        if(this.handler.world !== null && this.handler.world !== undefined){
-            if(this.handler.world.xOffset !== null && this.handler.world.yOffset !== undefined){
-                this.ctx.fillText("xOffset: " + (this.handler.world.xOffset).toFixed(1), 8, 8 + (7 * gap));
-                this.ctx.fillText("yOffset: " + (this.handler.world.yOffset).toFixed(1), 8, 8 + (8 * gap));
-            }
-        }
-
-        this.ctx.fillText("mouseX: " + (this.handler.IM.mouseX).toFixed(1), 8, 8 + (9 * gap));
-        this.ctx.fillText("mouseY: " + (this.handler.IM.mouseY).toFixed(1), 8, 8 + (10 * gap));
-
-
-        //this.ctx.fillText("timer3: " + this.timer3.toFixed(1), 8, 8 + (6 * gap));
-        //this.ctx.fillText("tickTimer: " + this.tickTimer.toFixed(1), 8, 8 + (3 * gap));
-        //this.ctx.fillText("dt: " + this.dt.toFixed(1), 8, 8 + (4 * gap));
-
-        
-
+        this.handler.debug.render(this.ctx, this.ticksLastSecond);
     }
 
 
