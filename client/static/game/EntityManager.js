@@ -6,12 +6,12 @@ export class EntityManager{
         this.entities = [];
     }
     tick(){
-        for(const entity in this.entities){
+        for(const entity of this.entities){
             entity.tick();
         }
     }
     render(ctx){
-        for(const entity in this.entities){
+        for(const entity of this.entities){
             entity.render(ctx);
         }
     }

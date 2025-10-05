@@ -1,7 +1,7 @@
 console.log("Loading GameLoop.js!");
 
 import { Handler } from "./game/handler.js";
-import { Player } from "./game/player.js";
+import { Player } from "./game/entites/player.js";
 import { World } from "./game/world.js";
 import { EntityManager } from "./game/EntityManager.js";
 import { InputManager } from "./game/InputManager.js";
@@ -27,7 +27,9 @@ class GameEngine{
         let debugMenu = new DebugMenu(this.handler);
 
         this.handler.init(networkhandler, player, world, entityManager, inputManager, assetManager, debugMenu);
-        
+        this.handler.EM.addEntity(player);    
+
+    
         //now lets try loading the images
         const loadingAssets = assetManager.loadAll();
         loadingAssets.then(() => {
@@ -122,8 +124,7 @@ class GameEngine{
 
     tick(){
         this.PH.processInbound();
-
-        this.handler.player.tick();
+        
         this.handler.world.tick();
         this.handler.EM.tick();
     }
@@ -136,7 +137,6 @@ class GameEngine{
 
         this.handler.world.render(this.ctx);
         this.handler.EM.render(this.ctx);
-        this.handler.player.render(this.ctx);
         this.handler.debug.render(this.ctx, this.ticksLastSecond);
     }
 

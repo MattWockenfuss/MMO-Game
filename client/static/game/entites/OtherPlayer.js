@@ -4,7 +4,7 @@ export class OtherPlayer extends Entity{
     static PLAYER_WIDTH = 40;
     static PLAYER_HEIGHT = 40;
     constructor(handler, x, y, session_id, username, color){
-        super(handler, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+        super(handler, x, y, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.session_id = session_id;
         this.username = username;
         this.color = color;

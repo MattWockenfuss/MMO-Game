@@ -69,9 +69,12 @@ export class DebugMenu {
 
 
         //alright now we want to check for entities, first loop through all of them, check for hover
-        for(const entity in this.handler.EM.entities){
+        for(const entity of this.handler.EM.entities){
             //okay, so every entity is going to have an x, y, width, and height, render their hitbox if you will
-            
+            entity.renderDebug(ctx);
+            //alright so player is now on the list
+            //now check for mouse on hover
+            // and do something appropriate
         }
 
 

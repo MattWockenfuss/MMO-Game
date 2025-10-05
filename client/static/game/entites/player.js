@@ -1,8 +1,9 @@
-export class Player {
+import { Entity } from "./Entity.js";
+import { OtherPlayer } from "./OtherPlayer.js";
+
+export class Player extends Entity{
     constructor(handler, myname, mycolor){
-        this.handler = handler;
-        this.x = 200;
-        this.y = 200;
+        super(handler, 200, 200, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.renderX = 0;
         this.renderY = 0;
         this.speed = 5;
@@ -59,7 +60,7 @@ export class Player {
 
     render(ctx){
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.renderX - 20, this.renderY - 20, 40, 40);
+        ctx.fillRect(this.renderX - 20, this.renderY - 20, this.width, this.height);
 
         if(this.name != null){
             ctx.fillStyle = "black";
