@@ -15,6 +15,7 @@ export class PacketHandler{
     
     processInbound(){
         for(const packet of this.handler.net.inbound) {
+            console.log(packet.data);
             const handler = this.packetMap[packet.type];
             if(handler){
                 handler(packet.data);
