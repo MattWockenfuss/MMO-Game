@@ -8,6 +8,8 @@
 
 */
 
+import { OtherPlayer } from "./entites/OtherPlayer.js";
+import { Player } from "./entites/player.js";
 import { Tile } from "./Tile.js";
 
 
@@ -49,12 +51,12 @@ export class DebugMenu {
 
         
 
-        if(Tile.tileWidth != null){
-            let tileX = Math.trunc((this.handler.world.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
-            let tileY = Math.trunc((this.handler.world.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
+        // if(Tile.tileWidth != null){
+        //     let tileX = Math.trunc((this.handler.world.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
+        //     let tileY = Math.trunc((this.handler.world.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
 
-            ctx.fillText(`${tileX}, ${tileY}`, this.handler.IM.mouseX, this.handler.IM.mouseY);
-        }
+        //     ctx.fillText(`${tileX}, ${tileY}`, this.handler.IM.mouseX, this.handler.IM.mouseY);
+        // }
 
         // if(this.handler.IM.down.has("leftMouseBTN")){
         //     console.log("canvas.width:", this.canvas.width, "canvas.height:", this.canvas.height);
@@ -66,24 +68,52 @@ export class DebugMenu {
         //ctx.fillRect(this.handler.IM.mouseX, this.handler.IM.mouseY, 2, 2);
         
 
+        let mouseX = this.handler.world.xOffset + this.handler.IM.mouseX;
+        let mouseY = this.handler.world.yOffset + this.handler.IM.mouseY;
+        
+        //alright, so we are hovering over a tile, lets render some tile data
+        ctx.fillStyle = "#E6E6FA";
+        let CANVAS_WIDTH = 1500;
+        let CANVAS_HEIGHT = 640;
+        let width = 300;
+        let height = 120;
+        ctx.fillRect(CANVAS_WIDTH - width, 0, width, height);
+        ctx.lineWidth = 2;
+        ctx.fillStyle = "black";
+        ctx.strokeRect(CANVAS_WIDTH - width + 1, 0 + 1, width - 2, height - 2);
+        //alright, draw the properties of this tile
+
 
 
         //alright now we want to check for entities, first loop through all of them, check for hover
         for(const entity of this.handler.EM.entities){
-            //okay, so every entity is going to have an x, y, width, and height, render their hitbox if you will
-            entity.renderDebug(ctx);
-            //alright so player is now on the list
-            //now check for mouse on hover
-            // and do something appropriate
+            //console.log(`${entity.x} < ${mouseX} < ${entity.x + entity.width}`);
+            if(entity.x < mouseX && mouseX < (entity.x + entity.width)){
+                if(entity.y < mouseY && mouseY < (entity.y + entity.height)){
+                    entity.renderDebug(ctx);
+
+                    ctx.font = "16px monospace";
+                    ctx.fillStyle = "black";
+                    //alright now render entity properties
+                    ctx.fillText(`EntityType: ${entity.constructor.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
+                    ctx.fillText(`(x,y): (${entity.x},${entity.y})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
+                    if(entity instanceof OtherPlayer || entity instanceof Player){
+                        ctx.fillText(`Name: ${entity.username}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
+                        ctx.fillText(`Color: ${entity.color}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
+                        if(entity instanceof OtherPlayer){
+                            ctx.fillText(`SessID: ${entity.session_id}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
+                        }
+                    }
+                    return;
+                }
+            }
+        
         }
-
-
-
 
         if(this.handler.world.worldData != null){
             //alright now lets move the render world wailia to here
-            let tileX = Math.trunc((this.handler.world.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
-            let tileY = Math.trunc((this.handler.world.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
+            let tileX = Math.trunc(mouseX / Tile.tileWidth);
+            let tileY = Math.trunc(mouseY / Tile.tileWidth);
             //console.log(`Checking ${tileX}, ${tileY}`);
 
             let id = this.handler.world.worldData[tileY * this.handler.world.worldWidth + tileX];
@@ -93,25 +123,14 @@ export class DebugMenu {
             let renderY = (tileY * Tile.tileWidth) - this.handler.world.yOffset;
             tile.renderDebug(ctx, renderX, renderY);
 
-            //alright, so we are hovering over a tile, lets render some tile data
-            ctx.fillStyle = "#E6E6FA";
-            let CANVAS_WIDTH = 1500;
-            let CANVAS_HEIGHT = 640;
-            let width = 300;
-            let height = 90;
-            ctx.fillRect(CANVAS_WIDTH - width, 0, width, height);
-            ctx.lineWidth = 2;
-            ctx.fillStyle = "black";
-            ctx.strokeRect(CANVAS_WIDTH - width + 1, 0 + 1, width - 2, height - 2);
-            //ctx.font = " 20px monospace";
-            
-            //alright, draw the properties of this tile
             ctx.font = "16px monospace";
             ctx.fillStyle = "black";
+
             ctx.fillText(`name: ${tile.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
-            ctx.fillText(`ID: ${tile.ID}`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
-            ctx.fillText(`isSolid: ${tile.isSolid}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
-            ctx.fillText(`loreBlurb: ${tile.loreBlurb}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
+            ctx.fillText(`(x,y): (${tileX},${tileY})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
+            ctx.fillText(`ID: ${tile.ID}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
+            ctx.fillText(`isSolid: ${tile.isSolid}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
+            ctx.fillText(`loreBlurb: ${tile.loreBlurb}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
         }
 
     }

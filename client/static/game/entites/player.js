@@ -8,7 +8,7 @@ export class Player extends Entity{
         this.renderY = 0;
         this.speed = 5;
         this.toggleG = false;
-        this.name = myname;
+        this.username = myname;
         this.color = mycolor;
     }
 
@@ -60,12 +60,12 @@ export class Player extends Entity{
 
     render(ctx){
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.renderX - 20, this.renderY - 20, this.width, this.height);
+        ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
 
-        if(this.name != null){
+        if(this.username != null){
             ctx.fillStyle = "black";
             ctx.font = "bold 20px monospace";
-            ctx.fillText(this.name, this.renderX - 20, this.renderY - 20 - 5);
+            ctx.fillText(this.username, this.renderX, this.renderY - 5);
         }
     }
 
