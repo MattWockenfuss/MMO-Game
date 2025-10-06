@@ -19,11 +19,11 @@ export class OtherPlayer extends Entity{
 
     render(ctx){
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.renderX - 20, this.renderY - 20, this.width, this.height);
+        ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
 
         ctx.fillStyle = "black";
         ctx.font = "bold 20px monospace";
-        ctx.fillText(this.username, this.renderX - 20, this.renderY - 20 - 5);
+        ctx.fillText(this.username, this.renderX, this.renderY - 5);
     }
 
 }
