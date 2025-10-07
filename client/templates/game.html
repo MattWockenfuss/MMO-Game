@@ -12,20 +12,23 @@
         <div id="login">
             <div id="msg">This is a Message</div>
             <form action="/loginSubmit" method="post" class="form" id="loginForm">
-                <h1>Sign in</h1>
+                <div id="formtitle">Log in</div>
                 <label>Username</label>
                 <input name="username" autocomplete="username" placeholder="Pranav" required>
                 
                 <label>Password</label>
-                <input name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+                <input name="password" type="password" autocomplete="current-password" placeholder="••••••••" readonly>
                 
                 <label>Server IP and port</label>
-                <input name="ipport" inputmode="decimal" placeholder="127.0.0.1:8002" value="127.0.0.1:8002" required>
-                
+                <select id="choices" name="choices">
+                    <option value="161.35.137.150:8002" selected>Official Server</option>
+                    <option value="127.0.0.1:8002">Localhost</option>
+                </select>
+
                 <label>Player Color</label>
                 <div class="row">
-                    <input name="color" type="color" class="color" value="#22d3ee">
-                    <small id="cv">#22d3ee</small>
+                    <input name="color" type="color" class="color" value="#3968d5">
+                    <p id="cv">#3968d5</p>
                 </div>
                 <button>Continue</button>
             </form>
