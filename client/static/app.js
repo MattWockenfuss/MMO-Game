@@ -47,14 +47,14 @@ form.addEventListener("submit", async (event) => {
     console.log(`REPLY:    ${JSON.stringify(reply)}`);
 
     const game = document.getElementById("game");
-    const loginForm = document.getElementById("login");
+    const loginPage = document.getElementById("loginPage");
 
     if (reply.data.auth === 'ok') {
         //then move to world server(hide login)
         //start game loop and read world
         console.log("Authentication Successful: Logging In!");
         game.hidden = false;
-        loginForm.hidden = true;
+        loginPage.hidden = true;
 
         //alright, now we need to start the game loop, passing through the
         //network handler

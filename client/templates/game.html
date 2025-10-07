@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
     <head>
         <meta charset = "UTF-8">
         <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
@@ -9,29 +8,53 @@
         <script type="module" src="./static/app.js"></script>
     </head>
     <body>
-        <div id="login">
-            <div id="msg">This is a Message</div>
-            <form action="/loginSubmit" method="post" class="form" id="loginForm">
-                <div id="formtitle">Log in</div>
-                <label>Username</label>
-                <input name="username" autocomplete="username" placeholder="Pranav" required>
-                
-                <label>Password</label>
-                <input name="password" type="password" autocomplete="current-password" placeholder="••••••••" readonly>
-                
-                <label>Server IP and port</label>
-                <select id="choices" name="choices">
-                    <option value="161.35.137.150:8002" selected>Official Server</option>
-                    <option value="127.0.0.1:8002">Localhost</option>
-                </select>
+        <div id="loginPage">
+            <div id="loginFrame">
+                <div id="msg">This is a Message</div>
+                <form action="/loginSubmit" method="post" class="form" id="loginForm">
+                    <div id="formtitle">Log in</div>
+                    <label>Username</label>
+                    <input name="username" autocomplete="username" placeholder="Pranav" required>
+                    
+                    <label>Password</label>
+                    <input name="password" type="password" autocomplete="current-password" placeholder="••••••••" readonly>
+                    
+                    <label>Server IP and port</label>
+                    <select id="choices" name="choices">
+                        <option value="161.35.137.150:8002" selected>Official Server</option>
+                        <option value="127.0.0.1:8002">Localhost</option>
+                    </select>
 
-                <label>Player Color</label>
-                <div class="row">
-                    <input name="color" type="color" class="color" value="#3968d5">
-                    <p id="cv">#3968d5</p>
+                    <label>Player Color</label>
+                    <div class="row">
+                        <input name="color" type="color" class="color" value="#3968d5">
+                        <p id="cv">#3968d5</p>
+                    </div>
+                    <button>Continue</button>
+                </form>
+            </div>
+            <div id="usernames">
+                <div id="usernamesTitle">Usernames</div>
+                <div id="listOfNames">
+                    Abigail<br>
+                    Alex<br>
+                    Angelo<br>
+                    Bosit<br>
+                    Broderick<br>
+                    Carter<br>
+                    Fabian<br>
+                    Hussain<br>
+                    Ian<br>
+                    Liam<br>
+                    Lucas<br>
+                    Matt<br>
+                    MattB<br>
+                    MattR<br>
+                    Pranav<br>
+                    ProfMaccanti<br>
+                    Yann<br>
                 </div>
-                <button>Continue</button>
-            </form>
+            </div>
         </div>
         <div id="game" hidden>
             <p>This is a complex client page.</p>
