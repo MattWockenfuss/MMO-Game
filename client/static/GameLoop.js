@@ -183,11 +183,11 @@ class GameEngine{
             and keep track of a private variable _dead which
         */
         const game = document.getElementById("game");
-        const loginFormDiv = document.getElementById("login");
+        const loginPage = document.getElementById("loginPage");
         const loginForm = document.getElementById("loginForm");
 
         game.hidden = true;
-        loginFormDiv.hidden = false;
+        loginPage.hidden = false;
         loginForm.reset();
 
 
