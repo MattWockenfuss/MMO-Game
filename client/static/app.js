@@ -3,7 +3,17 @@ import gameloop from "./GameLoop.js";
 
 console.log("Loaded app.js")
 
+const colorInput = document.querySelector('.color');
+const colorValue = document.getElementById('cv');
 
+function updateColor() {
+    colorValue.textContent = colorInput.value;
+    colorValue.style.color = colorInput.value;
+}
+
+colorInput.addEventListener('input', updateColor);
+
+updateColor();
 
 
 
@@ -15,7 +25,7 @@ form.addEventListener("submit", async (event) => {
     event.preventDefault();//prevents the sending the user to /submitLogin and sending it to backend
     //also the auto transfer to new page
     
-    const ipport = form.ipport.value;
+    const ipport = form.choices.value;
 
     const data = {
         "username": form.username.value,

@@ -1,0 +1,4 @@
+
+# the ** at the front means it will ignore any directory called .venv anywhere in this folder or subfolders
+**/.venv/
+**/__pycache__/
