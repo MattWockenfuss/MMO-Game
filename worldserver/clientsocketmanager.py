@@ -4,44 +4,65 @@ import websockets.exceptions as wsExceptions
 import random, string
 
 from clientsocket import ClientSocket
-from player import Player
 
 class ClientSocketManager:
     def __init__(self):
         self.clients = {}
         self.players = {}  #clients whom have been authenticated, remember, ids or keys are unique across both lists
         self.server = None
+        self._cleaned = set()
+        self._clean_lock = asyncio.Lock()
         #this is a dictionary of all the ClientSockets
         #they need to be verified by username before they are let in
         #key is their userID and value is the ClientSocket object
 
 
     
-    def cleanup(self, client):
-        #remove the client from either of our lists
-        if hasattr(client, "id"):
-            self.clients.pop(client.id, None)
-        if hasattr(client, "session_id") and client.session_id: #by saying and client.session_id, we are asking if its truthy, as in,                     
-            self.players.pop(client.session_id, None)      #is client.session_id not None, not empty string
+    async def cleanup(self, client, code = 1000, reason = "Unknown"):
+        #first check if we alreadu cleaned this guy, if we did, return
+        sessID = client.session_id
+        async with self._clean_lock:
+            if sessID in self._cleaned:
+                return
+            self._cleaned.add(sessID)
 
 
-    def kickClient(self, playerUsername, code = 1008, reason = "Auth Failed"):
-        for players in list(self.players.values()):
-            if players.player.username == playerUsername:
-                    print(f"Kicking {players.player.session_id}")
-                    asyncio.create_task(self._forceDisconnect(players, code, reason))
-    async def _forceDisconnect(self, client, code = 1001, reason = "Forced Disconnect"):
-        try:
-            client.send("disconnect", {"reason": reason})
-        except Exception:
-            pass
+        self.clients.pop(client.session_id, None)
+        self.players.pop(client.session_id, None)
+        #broadcast to everyone that a client lost connnection, was disconnected, etc...
+        d = {
+                "session_id": client.session_id,
+                "code": code,
+                "reason": reason
+        }
+        self.broadcast("Disconnect", d)
+
+
+    def kick(self, session_id, code = 1008, reason = "You've been kicked!"):
+        client = self.clients.get(session_id, None)
+        player = self.players.get(session_id, None)
         
+        if client is None and player is None:
+            print(f"[ERROR] Trying to Kick SESSID:{session_id}")
+            return
+        
+        
+        if client is not None:
+            print(f"Kicking Client SESSID:{session_id}")
+            asyncio.create_task(self._forceDisconnect(client, code, reason))
+
+        if player is not None:
+            print(f"Kicking Player: {player.username}@{session_id}")
+            asyncio.create_task(self._forceDisconnect(player, code, reason))
+                    
+
+    async def _forceDisconnect(self, client, code = 1000, reason = "Forced Disconnect"):
         try:
             await client.ws.close(code=code, reason=reason)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[ERROR] Trying to Disconnect {client.session_id}, {repr(e)}")
         finally:
-            self.cleanup(client)
+            await self.cleanup(client, code=code, reason=reason)
 
 
 
@@ -68,17 +89,21 @@ class ClientSocketManager:
                 tg.create_task(client.handleSend())
         except (wsExceptions.ConnectionClosedOK, wsExceptions.ConnectionClosedError) as e:
             print(f"Client {client.id} disconnected!: {e.code} {e.reason}")
+        except Exception as e:
+            print(f"[Error] Handling Receiving and Sending for {key} {repr(e)}")
         finally:
-            self.cleanup(client)
+            await client.ws.wait_closed()
+            await self.cleanup(client)
 
-    async def start(self, ListenHost, Port):
+    async def start(self, ListenHost, Port, pingInterval, pingTimeout):
         self.ListenHost = ListenHost
         self.Port = Port
-        print(f"{ListenHost} : port={Port} and is type {type(ListenHost)}:{type(Port)}")
-        self.server = await serve(self.handleConnection, self.ListenHost, self.Port)
+        self.server = await serve(self.handleConnection, self.ListenHost, self.Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
         await self.server.serve_forever()
         
-        
+    def broadcast(self, type, data):
+        for sessID, player in list(self.players.items()):
+            player.send(type, data)
 
     async def stop(self):
         self.server.close()

@@ -13,7 +13,7 @@ import base64
 '''
 def WSonMove(handler, d, clientSocket):
     try:
-        if not clientSocket.is_authed or clientSocket.player is None:
+        if not clientSocket.is_authed:
             print(f"Move Packet from unauthenticated client, or player is null")
             return
         
@@ -24,14 +24,14 @@ def WSonMove(handler, d, clientSocket):
             print(f"Bad Movement Packet! (Missing x/y): {d}")
             return
         
-        clientSocket.player.x = x;
-        clientSocket.player.y = y;
+        clientSocket.x = x
+        clientSocket.y = y
 
         for sessID, otherPlayer in list(handler.csm.players.items()):
             if otherPlayer is clientSocket:
                 continue
             da = {
-                'session_id': clientSocket.player.session_id,
+                'session_id': clientSocket.session_id,
                 'x': x,
                 'y': y
             }
@@ -48,24 +48,31 @@ def WSonMove(handler, d, clientSocket):
 
 '''
     This function handles the type 'login' packet from the clients. They tell us their username, password and color. 
-    We associate this with their temporary client, and pass the data along to the dataserver to be authenticated.
+    We do a quick check to see if someone is already on the server as this player, and if so, don't bother, this method will
+    change in the future
+
+    p = {'username': 'Alex', 'password': '23423', 'color': '#e020ee'}
 
 '''
 def WSonLogin(handler, d, clientSocket):
-    print(f"Handling Login Packet {d}")
-    clientSocket.name = d["username"]
+    #print(f"Handling Login Packet {d}")
+    username = d.get("username")
+    password = d.get("password")
+    color = d.get("color")
 
-    for key, player in list(handler.csm.players.items()):
-        if player.name == clientSocket.name:
-            print(f"{clientSocket.name} tried to connect but they are already on the server!")
-            handler.csm.kickClient(player.name, code=1003, reason="Username already in use!")
+    #print(f"{clientSocket.session_id}  {username} {password} {color}")
+
+    for sessID, player in list(handler.csm.players.items()):
+        if username == player.username:
+            print(f"{username} tried to connect but they are already on the server!")
+            handler.csm.kick(clientSocket.session_id, code=1000, reason="Username already in use!")
             return
 
-
+    #attach the session id so we can associate it to this client when it comes back
     p = {
-        'username': d["username"],
-        'password': d["password"],
-        'color': d["color"],
+        'username': username,
+        'password': password,
+        'color': color,
         'session_id': clientSocket.session_id
     }
     handler.dsc.sendMsg("login", p)

@@ -1,26 +1,29 @@
 import { Entity } from "./Entity.js";
 
 export class OtherPlayer extends Entity{
-    constructor(x, y, session_id, username, color){
-        super();
-        this.x = x;
-        this.y = y;
+    static PLAYER_WIDTH = 40;
+    static PLAYER_HEIGHT = 40;
+    constructor(handler, x, y, session_id, username, color){
+        super(handler, x, y, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.session_id = session_id;
         this.username = username;
         this.color = color;
+        this.renderX = 0;
+        this.renderY = 0;
     }
-    tick(){
 
+    tick(){
+        this.renderX = this.x - this.handler.world.xOffset;
+        this.renderY = this.y - this.handler.world.yOffset;
     }
+
     render(ctx){
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, 40, 40);
+        ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
 
         ctx.fillStyle = "black";
         ctx.font = "bold 20px monospace";
-        ctx.fillText(this.username, this.x, this.y - 5);
-        
-
+        ctx.fillText(this.username, this.renderX, this.renderY - 5);
     }
 
 }

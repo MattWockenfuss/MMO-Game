@@ -1,5 +1,5 @@
 import json
-import base64
+
 '''
 This file lists all the functions that handle packets for the world server from the
 DATA SERVER
@@ -18,19 +18,42 @@ testpacket = {
                 'world-width': 3
             }
 }
-    
+#       We just received the world data from the data server, store in world, also parse and decode the data, 
+#       setting the width and height of the world as well,
+#       type = "world" data = {World-Name:"", Tile-Map:"", World-Entrance-Color:"", world-data:"", world-width:""}
+#       type = "tiles" data = {name:"", id:"", lore-blurb:"", is-Solid:"", map-color:"", Sprite:""}
 def WSonWorld(handler, d):
-    #print(f"world data: {d["world-data"]}")
-    handler.world.setWorldData(base64.b64decode(d["world-data"]), d["world-width"])
-    handler.world.printWorldData()
-    handler.world.setWorldString(d)
-    #print(handler.world.getWorldData())
+    # print(d)
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("world"))
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("tiles"))
+
+    # for tile in d.get("tiles"):
+    #     print(tile)
+
+
+    # worldName =           d.get("world").get("World-Name")
+    # tileMap =             d.get("world").get("Tile-Map")
+    # worldEntranceColor =  d.get("world").get("World-Entrance-Color")
+    # worldData =           d.get("world").get("world-data")
+    # worldWidth =          d.get("world").get("world-width")
+
+    handler.world.setWorldData(d)
 
 
 
 '''
     In WSonLogin, we accept the login packet from the dataserver, which tells us whether or not the user is authenticated in the Dataserver, and if so,
-    sends back their stored userdata
+    sends back their stored userdata. We then move the client to the players list because they are authed, and tell them and all the other players the event
+    that just occured.
+
+    Packet Looks Like:
+    
+        d = {'username': data["username"],'color': data["color"],'message': 'EXISTS','userdata': player,'session_id': data["session_id"]}
+    OR
+        d = {'username': data["username"],'message': 'NOT','session_id': data["session_id"]}}
+
 '''
 def WSonLogin(handler, d):
     
@@ -54,51 +77,48 @@ def WSonLogin(handler, d):
         handler.csm.clients.pop(session_id)
         handler.csm.players[session_id] = client
         client.is_authed = True
-        client.player = Player(200, 200, client.name, client.session_id, color) #hmm
-        client.data = userdata
 
-
-
-
-        client.send('world', handler.world.getWorldString())
-        #we also want to tell them about all the other players in the world, they need, players x, y, session_id, username, and color
-        #print(f"sending them the client data!")
-        #print(f"number of players: {len(handler.csm.players)}")
+        client.x = 200
+        client.y = 200
+        client.username = username
+        client.session_id = session_id
+        client.color = color
+        client.userdata = userdata
         
 
 
-        #alright, we also want to tell the client they are okay to be logged in
+        p = {
+            "world": handler.world.worldDict,
+            "tiles": handler.world.tilesDict
+        }
+        client.send('world', p)
+
         dataToSend = {"auth":"ok"}
-        client.send('loginVerify', dataToSend)   #this is working
+        client.send('loginVerify', dataToSend)
 
-        for session_id, player in handler.csm.players.items():
-            
-            #print(f"{client.session_id} =? {player.session_id}")
-            if session_id == client.session_id: #client is the one who just logged in, tell everyone else someone just logged in
-                continue
-            print(f"{player.data}")
-
-            # print(f"sending world data for {player.username}")
-            da = {
-                "username": player.player.username,
-                "x": player.player.x,
-                "y": player.player.y,
-                "session_id": player.player.session_id,
-                "color": player.player.color
-            }
-            client.send("onOtherPlayer", da)
-            #okay so we just told the client about this player, tell this player about the client
-            da = {
-                "username": client.player.username,
-                "x": client.player.x,
-                "y": client.player.y,
-                "session_id": client.player.session_id,
-                "color": client.player.color
-            }
-            player.send("login", da)
+        for sessID, player in handler.csm.players.items():
+            #here we are looping through all the clients, and if they didnt just log in, tell them
+            #someone just logged in, and tell the person who just logged in they exist
+            if sessID != session_id:
+                da = {
+                    "username": player.username,
+                    "x": player.x,
+                    "y": player.y,
+                    "session_id": player.session_id,
+                    "color": player.color
+                }
+                client.send("onOtherPlayer", da)
+                da = {
+                    "username": client.username,
+                    "x": client.x,
+                    "y": client.y,
+                    "session_id": client.session_id,
+                    "color": client.color
+                }
+                player.send("login", da)
 
     else:
-        print(f"{d["username"]} is NOT in the database!")
+        print(f"{username} is NOT in the database!")
         #then kick whoever tried to connect as me
         #alright, we also want to tell the client they are okay to be logged in
         dataToSend = {"auth":"fail"}

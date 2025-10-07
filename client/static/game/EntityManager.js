@@ -6,13 +6,13 @@ export class EntityManager{
         this.entities = [];
     }
     tick(){
-        for(let i = 0; i < this.entities.length; i++){
-            this.entities[i].tick();
+        for(const entity of this.entities){
+            entity.tick();
         }
     }
     render(ctx){
-        for(let i = 0; i < this.entities.length; i++){
-            this.entities[i].render(ctx);
+        for(const entity of this.entities){
+            entity.render(ctx);
         }
     }
 
@@ -21,6 +21,7 @@ export class EntityManager{
         console.log("Entity Added!");
     }
     removeEntity(index){
+        console.log(`Removing Entities[${index} which is ${typeof(this.entities[index])}]`);
         this.entities.splice(index, 1); //removes the indexth element O(n)
     }
     getEntity(index){
@@ -37,5 +38,9 @@ export class EntityManager{
             }
         }
         return null;
+    }
+    getPlayerIndexBySessionID(session_id){
+        const idx = this.entities.findIndex(e => e.session_id == session_id);
+        return idx;
     }
 }

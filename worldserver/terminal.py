@@ -24,9 +24,8 @@ class Terminal:
                 msg = None
 
             self.task = None
-            
-
-            #print(f"You typed: {msg}")
+            if msg is None or "":
+                return
 
             cmd, *args = msg.split()
 
@@ -56,19 +55,19 @@ class Terminal:
                     print(f"There are no players on the server!")
                 else:
                     print(f"logged in: {len(handler.csm.players)} players")
-                    for key, player in list(handler.csm.players.items()):
+                    for sessID, player in list(handler.csm.players.items()):
                         print(" " * 4, end="")
-                        print(f"{key} {player.name} ", end="")
-                        print(f"{player.data} ")
+                        print(f"{sessID} {player.username} ", end="")
+                        print(f"{player.userdata} ")
 
             if cmd == "sockets":
                 if len(handler.csm.clients.items()) == 0:
                     print(f"There are no clients on the server!")
                 else:
                     print(f"logged in: {len(handler.csm.clients)} clients")
-                    for key, client in list(handler.csm.clients.items()):
+                    for sessID, client in list(handler.csm.clients.items()):
                         print(" " * 4, end="")
-                        print(f"{key} {client} ")
+                        print(f"{sessID} {client} ")
 
             if cmd == "kick":
                 if len(args) == 0:
@@ -76,11 +75,9 @@ class Terminal:
                 else:
                     #okay so args[0] is our players name
                     for sessID, player in list(handler.csm.players.items()):
-                        #print("Hello")
-                        #print(f"Kicking {args[0]} =? {sessID} and {player.player.username}")
-                        if args[0] == player.player.username:
+                        if args[0] == player.username:
                             #kick them
-                            handler.csm.kickClient(player.player.username, code=1004, reason="Kicked by Console!")
+                            handler.csm.kick(sessID, code = 1000, reason = "Kicked by Console!")
 
 
             if cmd == "exit":

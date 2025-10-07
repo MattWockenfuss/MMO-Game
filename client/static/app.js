@@ -3,13 +3,29 @@ import gameloop from "./GameLoop.js";
 
 console.log("Loaded app.js")
 
+const colorInput = document.querySelector('.color');
+const colorValue = document.getElementById('cv');
+
+function updateColor() {
+    colorValue.textContent = colorInput.value;
+    colorValue.style.color = colorInput.value;
+}
+
+colorInput.addEventListener('input', updateColor);
+
+updateColor();
+
+
+
+
+
 const form = document.getElementById("loginForm");
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault();//prevents the sending the user to /submitLogin and sending it to backend
     //also the auto transfer to new page
     
-    const ipport = form.ipport.value;
+    const ipport = form.choices.value;
 
     const data = {
         "username": form.username.value,
@@ -31,14 +47,14 @@ form.addEventListener("submit", async (event) => {
     console.log(`REPLY:    ${JSON.stringify(reply)}`);
 
     const game = document.getElementById("game");
-    const loginForm = document.getElementById("login");
+    const loginPage = document.getElementById("loginPage");
 
     if (reply.data.auth === 'ok') {
         //then move to world server(hide login)
         //start game loop and read world
         console.log("Authentication Successful: Logging In!");
         game.hidden = false;
-        loginForm.hidden = true;
+        loginPage.hidden = true;
 
         //alright, now we need to start the game loop, passing through the
         //network handler

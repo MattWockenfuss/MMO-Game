@@ -7,18 +7,20 @@ export class PacketHandler{
             move:           (data) => this.onMove(data),
             login:          (data) => this.onLogin(data),
             world:          (data) => this.onWorld(data),
-            onOtherPlayer:  (data) => this.onOtherPlayer(data)
+            onOtherPlayer:  (data) => this.onOtherPlayer(data),
+            Disconnect:     (data) => this.onDisconnect(data)
         }
 
     }
     
     processInbound(){
         for(const packet of this.handler.net.inbound) {
+            console.log(packet.data);
             const handler = this.packetMap[packet.type];
             if(handler){
                 handler(packet.data);
             }else{
-                console.warn(`[PacketHandler] Unhandled Packet Type ${packet.type}`);
+                console.warn(`[PacketHandler] Unhandled Packet Type "${packet.type}"`);
             }
         }
         this.handler.net.inbound.length = 0;
@@ -27,7 +29,7 @@ export class PacketHandler{
 
     onLogin(data){
         //this packet is the login of other players
-        this.handler.EM.addEntity(new OtherPlayer(data.x, data.y, data.session_id, data.username, data.color));
+        this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
 
     onMove(data){
@@ -52,6 +54,10 @@ export class PacketHandler{
         console.log(data.session_id);
         console.log(data.color);
 
-        this.handler.EM.addEntity(new OtherPlayer(data.x, data.y, data.session_id, data.username, data.color));
+        this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
+    }
+    onDisconnect(data){
+        //{"type": "Disconnect", "data": {"session_id": "2vYQJ6OP", "code": 1000, "reason": "Kicked by Console!"}}
+        this.handler.EM.removeEntity(this.handler.EM.getPlayerIndexBySessionID(data.session_id));
     }
 }

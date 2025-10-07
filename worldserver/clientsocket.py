@@ -12,6 +12,7 @@ import json
 import asyncio
 import WSCPacketHandler as ph
 
+
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 
 class ClientSocket():
@@ -49,10 +50,26 @@ class ClientSocket():
             'data': data
         }
         self.outbound.put_nowait(json.dumps(p))
+
+
     async def handleSend(self):
-        while True:
-            msg = await self.outbound.get()
-            await self.ws.send(msg)
+        try:
+            while True:
+                msg = await self.outbound.get()
+                #print(f"Sending {msg}")
+                await self.ws.send(msg)
+        except ConnectionClosedOK:
+            print(f"[{self.session_id}]'s session was closed gracefully")
+            raise
+        except ConnectionClosedError:
+            print(f"[ERROR] Sending {self.session_id} a msg")
+            raise
+        except Exception as e:
+            print(f"[UNEXPECTED ERROR] Sending {self.session_id} a msg, {repr(e)}")
+            raise
+            
+
+
     async def handleReceive(self): 
         try:
             async for msg in self.ws:
@@ -62,17 +79,13 @@ class ClientSocket():
                 decoded = json.loads(msg)
                 #print(json.dumps(decoded, indent=4))  #json.dumps takes in a JSON object, so we have to load it first
                 if decoded.get("type") != "move":
-                    print(f"[{self.ip}:{self.port}] ID: {self.id} MSG: {msg}")
+                    print(f"[SESS-ID:{self.session_id}  {self.ip}:{self.port}] MSG: {msg}")
                 self.inbound.put_nowait(decoded)
-
-
-
-                #handle packet info
-                #move packet
-                #alex takes damage
-                #pranav kills a monster
-                #matt picks up an item
-
-                #add to the queue
-        except (ConnectionClosedOK, ConnectionClosedError) as e:
-            return
+        except ConnectionClosedOK:
+            raise
+        except ConnectionClosedError:
+            print(f"[ERROR] Receiving {self.session_id} a msg")
+            raise
+        except Exception as e:
+            print(f"[UNEXPECTED ERROR] Receiving {self.session_id} a msg, {repr(e)}")
+            raise

@@ -87,9 +87,9 @@ class WorldServer:
         
         '''
         results = await asyncio.gather(#if one of these stops, they all stop
-            self.tick(),       
-            self.dsc.start(self.cf.get("DataServer-IP"), self.cf.get("DataServer-Port")),  #sends/receives msgs from the dataserver, adds to inbound/outbound queues
-            self.csm.start(self.cf.get("listenAddress"), self.cf.get("myPort")),            #sends/receives msgs from the all clients, adds to inbound/outbound queues
+            self.tick(),
+            self.dsc.start(self.cf.get("DataServer-IP"), self.cf.get("DataServer-Port")),
+            self.csm.start(self.cf.get("listenAddress"), self.cf.get("myPort"), self.cf.get("pingInterval"), self.cf.get("pingTimeout")),
             return_exceptions=True
         )
 
