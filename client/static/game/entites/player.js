@@ -10,26 +10,50 @@ export class Player extends Entity{
         this.toggleG = false;
         this.username = myname;
         this.color = mycolor;
+        this.xMove = 0;
+        this.yMove = 0;
     }
 
     tick(){
+        
         var moved = false;
         if(this.handler.IM.down.has('KeyW')){
-            this.y -= this.speed;
+            this.yMove -= this.speed;
             moved = true;
         }
         if(this.handler.IM.down.has('KeyA')){
-            this.x -= this.speed;
+            this.xMove -= this.speed;
             moved = true;
         }
         if(this.handler.IM.down.has('KeyS')){
-            this.y += this.speed;
+            this.yMove += this.speed;
             moved = true;
         }
         if(this.handler.IM.down.has('KeyD')){
-            this.x += this.speed;
+            this.xMove += this.speed;
             moved = true;
         }
+
+        //alright, so we have these xMove and yMove variables that represent how much we want to move on that axis
+        //now what?
+        //normalize client movement?
+        //if i somehow hold A and D and W at the same time, xMove will cancel out, and yMove will be positive
+        
+        //if both are non zero, than normalize?
+        if(this.xMove != 0 && this.yMove != 0){
+            //then multiply both by cos(45) and keep the signs? 
+            //that should work perfectly fine
+            let cos45 = 0.7071067812;
+            this.xMove = this.xMove * cos45;
+            this.yMove = this.yMove * cos45;
+        }
+        
+        //okay so now speed is normalized right?
+        //now we want to do handling of collisions
+        //well
+        //this.x += this.xMove;
+        this.y += this.yMove;
+
         const p = {
             'x': this.x,
             'y': this.y  
@@ -59,6 +83,9 @@ export class Player extends Entity{
 
 
     render(ctx){
+        this.handleCollisions(ctx, this.xMove, this.yMove);
+        this.xMove = 0;
+        this.yMove = 0;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
 
@@ -68,5 +95,4 @@ export class Player extends Entity{
             ctx.fillText(this.username, this.renderX, this.renderY - 5);
         }
     }
-
 }
