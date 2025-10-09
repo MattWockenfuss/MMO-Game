@@ -117,4 +117,24 @@ export class World{
             console.log(builderString);
         }
     }
+    getTileAtAbsoluteCoords(x, y){
+        /*
+            This function takes in world coords x and y, maps those coordinates to
+            a world tile, and returns whether or not that tile is solid, or has collision.
+        */
+        let tileX = Math.trunc(x / Tile.tileWidth);
+        let tileY = Math.trunc(y / Tile.tileWidth);
+
+        return this.tileMap.get(this.worldData[(tileY * this.worldWidth) + tileX]);
+    }
+    getTileAtWorldCoords(x, y){
+        /*
+            This function returns the tile found at world coords (x,y), note that these can
+            only be integers where 0,0 is the top left of the world
+        */
+       return this.tileMap.get(this.worldData[y * this.worldWidth + x]);
+    }
+    getTileByID(id){
+        return this.tileMap.get(id);
+    }
 }

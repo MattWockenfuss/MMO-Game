@@ -2,7 +2,7 @@ import { Entity } from "./Entity.js";
 
 export class OtherPlayer extends Entity{
     static PLAYER_WIDTH = 40;
-    static PLAYER_HEIGHT = 40;
+    static PLAYER_HEIGHT = 96;
     constructor(handler, x, y, session_id, username, color){
         super(handler, x, y, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.session_id = session_id;

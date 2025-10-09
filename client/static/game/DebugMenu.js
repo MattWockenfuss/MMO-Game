@@ -126,6 +126,9 @@ export class DebugMenu {
             ctx.font = "16px monospace";
             ctx.fillStyle = "black";
 
+            // let isSolidT = this.handler.world.isTileSolid(mouseX, mouseY);
+            // ctx.fillText(`${isSolidT}`, mouseX, mouseY);
+
             ctx.fillText(`name: ${tile.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
             ctx.fillText(`(x,y): (${tileX},${tileY})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
             ctx.fillText(`ID: ${tile.ID}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
