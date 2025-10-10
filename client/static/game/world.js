@@ -39,8 +39,8 @@ export class World{
         const maxXOffset = this.worldPixelWidth - (this.CANVAS_WIDTH);
         const maxYOffset = this.worldPixelHeight - (this.CANVAS_HEIGHT);
         
-        this.xOffset = this.handler.player.x - (this.CANVAS_WIDTH / 2);
-        this.yOffset = this.handler.player.y - (this.CANVAS_HEIGHT / 2);
+        this.xOffset = Math.round(this.handler.player.x - (this.CANVAS_WIDTH / 2));
+        this.yOffset = Math.round(this.handler.player.y - (this.CANVAS_HEIGHT / 2));
 
         this.xOffset = Math.max(0, Math.min(this.xOffset, maxXOffset));
         this.yOffset = Math.max(0, Math.min(this.yOffset, maxYOffset));
