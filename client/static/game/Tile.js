@@ -1,6 +1,6 @@
 //alright so every tile is going to be instantiated from this tile class
 export class Tile {
-    static tileWidth = 48;  //all tiles have the same width
+    static tileWidth = 64;  //all tiles have the same width
     static tilePixelWidth = 16;  //like in the actual files
 
     constructor(handler, ID, name, isSolid, loreBlurb, animationSpeed = 60){
