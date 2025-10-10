@@ -2,7 +2,7 @@ import { Entity } from "./Entity.js";
 
 export class OtherPlayer extends Entity{
     static PLAYER_WIDTH = 40;
-    static PLAYER_HEIGHT = 96;
+    static PLAYER_HEIGHT = 40;
     constructor(handler, x, y, session_id, username, color){
         super(handler, x, y, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.session_id = session_id;
@@ -25,5 +25,31 @@ export class OtherPlayer extends Entity{
         ctx.font = "bold 20px monospace";
         ctx.fillText(this.username, this.renderX, this.renderY - 5);
     }
+
+    /*
+        Desert Tile 2 if not 3 variations
+        rivers
+
+        Tiles:
+            Sand Tile(3 variations)
+            lighter water
+        
+        Structures
+            Rivers with crops along the side
+            Oasis
+            Ruins of buildings
+            Mountain, dug into side
+            Quarry where you walk down to the bottom
+
+        Static Entities:
+            Cactus
+            Flowers
+            Crops by rivers
+
+
+
+
+    */
+
 
 }

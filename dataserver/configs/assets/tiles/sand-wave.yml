@@ -1,0 +1,6 @@
+name: "Sand Wave"
+id: 12
+lore-blurb: "The other direction"
+is-Solid: False
+map-color: "#bc8555"
+Sprite: "sand-wave.png"

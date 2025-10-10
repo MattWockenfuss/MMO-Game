@@ -1,0 +1,6 @@
+name: "Desert Stone Wall"
+id: 9
+lore-blurb: "Sharp Rocks!"
+is-Solid: True
+map-color: "#574244"
+Sprite: "desert-stone-wall.png"

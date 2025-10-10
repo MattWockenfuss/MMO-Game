@@ -1,0 +1,6 @@
+name: "Quarry Sand"
+id: 11
+lore-blurb: "Mixed with even more rocks"
+is-Solid: False
+map-color: "#c78328"
+Sprite: "sand-quarry.png"
