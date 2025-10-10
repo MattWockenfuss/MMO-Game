@@ -11,7 +11,11 @@ export class AssetManager{
             {name: 5, url: "./static/assets/void.png"},
             {name: 6, url: "./static/assets/darker-blue.png"},
             {name: 7, url: "./static/assets/wood-floor.png"},
-            {name: 8, url: "./static/assets/wood-wall.png"}
+            {name: 8, url: "./static/assets/wood-wall.png"},
+            {name: 9, url: "./static/assets/desert-stone-wall.png"},
+            {name: 10, url: "./static/assets/sand-noisy.png"},
+            {name: 11, url: "./static/assets/sand-quarry.png"},
+            {name: 12, url: "./static/assets/sand-wave.png"},
         ]
 
     }

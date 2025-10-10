@@ -51,6 +51,10 @@ class Terminal:
                     print(keys)
                     for value in handler.configs[keys]:
                         print(f"-{value}")
+            if cmd == "tiles":
+                #then print the tiles dictionary
+                for value in handler.configs["tiles"]:
+                    print(f"{value}")
 
             if cmd == "exit" or cmd == "shutdown":
                 print("Shutting Down Server!")
