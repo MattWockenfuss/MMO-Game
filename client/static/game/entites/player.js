@@ -3,7 +3,7 @@ import { OtherPlayer } from "./OtherPlayer.js";
 
 export class Player extends Entity{
     constructor(handler, myname, mycolor){
-        super(handler, 200, 200, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
+        super(handler, 100, 100, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.renderX = 0;
         this.renderY = 0;
         this.speed = 5;
@@ -52,7 +52,7 @@ export class Player extends Entity{
         //now we want to do handling of collisions
         //well
         //this.x += this.xMove;
-        this.y += this.yMove;
+        //this.y += this.yMove;
 
         const p = {
             'x': this.x,

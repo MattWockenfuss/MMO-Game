@@ -26,23 +26,19 @@ export class Entity {
     }
 
     handleCollisions(ctx, xMove, yMove){
-        let renderDebug = true;
-        /*
-            This function takes in xMove and yMove of the calling entity, combined with their hitbox and the world, it figures out
-            if they are allowed to move where they are, if so let them move, if not, snap to world. If the calling entity is an instance 
-            of the player, then we also want to send to the world server that we are moving.
+        let renderDebug = false;
+        let tw = Tile.tileWidth;
+        //This is substracted from our width and height when searching for rectangles so they we dont check below us
+        //when trying to move right, it was causing snapping glitches to tiles, set it to 0 and try it!
+        const EPS = 1e-6;
 
-            Every entity has an x, y, width, and height (square hitbox) and height.
+        /*
+            This function takes 
         */
-        
-        //alright whats the first thing we do with collision
-        //well we have to split up xMove and yMove into positive and negative
 
         if(xMove > 0){
-            let tw = Tile.tileWidth;
-            
             const top = this.y;
-            const bottom = this.y + this.height;
+            const bottom = this.y + this.height - EPS;
             const startX = this.x + this.width + xMove;
 
             let tx = Math.trunc(startX / tw);
@@ -75,12 +71,114 @@ export class Entity {
 
             this.x += earliestWall;
 
-
         }else if(xMove < 0){
-            //we are moving left, don't include width
-            this.x += xMove;
+            const top = this.y;
+            const bottom = this.y + this.height - EPS;
+            const startX = this.x + xMove;
+
+            let tx = Math.trunc(startX / tw);
+            let tyS = Math.trunc(top / tw);
+            let tyE = Math.trunc(bottom / tw);
+
+            let earliestWall = xMove;//this is negative
+
+            for(let ty = tyS; ty <= tyE; ty++){
+                console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
+                //get the tile at these coords
+                let t = this.handler.world.getTileAtWorldCoords(tx, ty);
+                if(!t) return;
+                
+                if(renderDebug){
+                    let renderX = tx * tw - this.handler.world.xOffset;
+                    let renderY = ty * tw - this.handler.world.yOffset;
+                    ctx.fillStyle = "red";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(renderX, renderY, tw, tw);
+                    ctx.fillStyle = 'Black';
+                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                }
+
+                if(t.isSolid){
+                    //(tx + 1) * tw = the tiles RIGHT edge
+                    let dx = ((tx + 1) * tw) - this.x;
+                    if(dx > earliestWall) earliestWall = dx;
+                }
+            }
+
+            this.x += earliestWall;
         }
 
+        if(yMove > 0){
+            //moving down
+            const left = this.x;
+            const right = this.x + this.width - EPS;
+            const startY = this.y + this.height + yMove;
+
+            let ty = Math.trunc(startY / tw);
+            let txS = Math.trunc(left / tw);
+            let txE = Math.trunc(right / tw);
+
+            let earliestWall = yMove;
+
+            for(let tx = txS; tx <= txE; tx++){
+                console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
+                //get the tile at these coords
+                let t = this.handler.world.getTileAtWorldCoords(tx, ty);
+                if(!t) return;
+                
+                if(renderDebug){
+                    let renderX = tx * tw - this.handler.world.xOffset;
+                    let renderY = ty * tw - this.handler.world.yOffset;
+                    ctx.fillStyle = "red";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(renderX, renderY, tw, tw);
+                    ctx.fillStyle = 'Black';
+                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                }
+
+                if(t.isSolid){
+                    let dy = (ty * tw) - (this.y + this.height);
+                    if(dy < earliestWall) earliestWall = dy;
+                }
+            }
+
+            this.y += earliestWall;
+        }else if(yMove < 0){
+            //moving up
+            const left = this.x;
+            const right = this.x + this.width - EPS;
+            const startY = this.y + yMove;
+
+            let ty = Math.trunc(startY / tw);
+            let txS = Math.trunc(left / tw);
+            let txE = Math.trunc(right / tw);
+
+            let earliestWall = yMove;
+
+            for(let tx = txS; tx <= txE; tx++){
+                console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
+                //get the tile at these coords
+                let t = this.handler.world.getTileAtWorldCoords(tx, ty);
+                if(!t) return;
+                
+                if(renderDebug){
+                    let renderX = tx * tw - this.handler.world.xOffset;
+                    let renderY = ty * tw - this.handler.world.yOffset;
+                    ctx.fillStyle = "red";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(renderX, renderY, tw, tw);
+                    ctx.fillStyle = 'Black';
+                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                }
+
+                if(t.isSolid){
+                    let dy = ((ty + 1) * tw) - this.y;
+                    if(dy > earliestWall) earliestWall = dy;
+                }
+            }
+
+            this.y += earliestWall;
+        }
 
 
     }
