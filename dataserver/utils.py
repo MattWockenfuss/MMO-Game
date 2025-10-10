@@ -5,8 +5,8 @@ def loadMapImage(item, database):
         #item is the dictionary for this world, this function reads the image file and loads data into world dict of their ids
         print(item)
         im = Image.open(f"configs/worlds/{item["Tile-Map"]}")
-        print(im.format, im.size, im.mode)
-        print(f"{im.width} x {im.height}")
+        #print(im.format, im.size, im.mode)
+        #print(f"{im.width} x {im.height}")
         im = im.convert("RGB")
 
         #alright so we know the width and height of the world, now lets load it in, and store it in a byte array
@@ -40,11 +40,11 @@ def loadMapImage(item, database):
 
         #alright so now out data is set
         #lets print it
-        for y in range(im.height):
-            for x in range(im.width):
-                idx = y * im.width + x
-                print(f"{world_data[idx]} ", end="")
-            print("")
+        # for y in range(im.height):
+        #     for x in range(im.width):
+        #         idx = y * im.width + x
+        #         print(f"{world_data[idx]} ", end="")
+        #     print("")
 
 
         #so we know the width and height of the server, how are we going to send the tile map
