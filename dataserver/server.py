@@ -3,6 +3,14 @@
 #https://pyyaml.org/wiki/PyYAMLDocumentation
 #https://websockets.readthedocs.io/en/stable/intro/tutorial1.html#download-the-starter-kit
 
+'''
+    What this class does, why, where does it fit
+
+
+
+'''
+
+
 import json
 import utils
 import asyncio

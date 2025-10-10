@@ -26,6 +26,7 @@ export class Entity {
     }
 
     handleCollisions(ctx, xMove, yMove){
+        let renderDebug = true;
         /*
             This function takes in xMove and yMove of the calling entity, combined with their hitbox and the world, it figures out
             if they are allowed to move where they are, if so let them move, if not, snap to world. If the calling entity is an instance 
@@ -39,90 +40,41 @@ export class Entity {
 
         if(xMove > 0){
             let tw = Tile.tileWidth;
-            let tileRectsArray = [];
             
-            //add the first and last points, because we must alway check at least the top and bottom no matter what
-            let sxP = this.x + this.width + xMove;
-            let syP = this.y;
+            const top = this.y;
+            const bottom = this.y + this.height;
+            const startX = this.x + this.width + xMove;
 
-            let exP = this.x + this.width + xMove;
-            let eyP = this.y + this.height;
+            let tx = Math.trunc(startX / tw);
+            let tyS = Math.trunc(top / tw);
+            let tyE = Math.trunc(bottom / tw);
 
-            //now check if the distance between them is less than tw, if it is just add the first one
-            let distance = this.height; //the distance between the top and bottom
-            let yIndex = 1;
-            let tx = Math.trunc(sxP / tw);
-            let ty = Math.trunc(syP / tw);
-            
-            let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-            tileRectsArray.push({
-                ID: t.ID,
-                x: tx,
-                y: ty
-            });
-
-            while(distance > tw){
-                //then we want to add another tile
-                let tx = Math.trunc(sxP / tw);
-                let ty = Math.trunc((syP + (yIndex * tw)) / tw);
-                let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-                tileRectsArray.push({
-                    ID: t.ID,
-                    x: tx,
-                    y: ty
-                });
-                distance -= tw;
-                yIndex++;
-            }
-            //now check if our height is already included
-            let found = false;
-            tx = Math.trunc(exP / tw);
-            ty = Math.trunc(eyP / tw);
-            
-            for(let t of tileRectsArray){
-                if(t.x == tx && t.y == ty) found = true;
-            }
-            if(!found){
-                let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-                tileRectsArray.push({
-                    ID: t.ID,
-                    x: tx, 
-                    y: ty
-                });
-            }
-
-            //alright so we have an array list of all of the tiles to check for collisiom
-            //its not super efficient but it is cleaner, revisit in a few weeks probs
-            //we can definitely come up with a better algorithm for generating the list of tiles
-            //right now we loop through the whole thing and add the last one if its not there
-            //probably fine for performance because in reality our entites won't be that big but still
-            
-            for(const tr of tileRectsArray){
-                let renderX = tr.x * tw - this.handler.world.xOffset;
-                let renderY = tr.y * tw - this.handler.world.yOffset;
-                ctx.fillStyle = "red";
-                ctx.lineWidth = 3;
-                ctx.strokeRect(renderX, renderY, tw, tw);
-                ctx.fillStyle = 'Black';
-                ctx.fillText(this.handler.world.tileMap.get(tr.ID).isSolid + "", renderX + 4, renderY + 10);
-            }
-
-            //now what? how do do actual collision? well loop through the tiles, and if they are solid, dont let us through
-            
             let earliestWall = xMove;
-            console.log(`Earliest Wall: ${earliestWall}`);
-            for(const tr of tileRectsArray){
-                if(this.handler.world.getTileByID(tr.ID).isSolid){
-                    //for every solid wall we are checking, if distance to wall is less than xMove
-                    //then set xMove equal to that distance
-                    //since we are moving right, distance = wall - player
-                    let dx = (tr.x * tw) - (this.x + this.width);
+
+            for(let ty = tyS; ty <= tyE; ty++){
+                console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
+                //get the tile at these coords
+                let t = this.handler.world.getTileAtWorldCoords(tx, ty);
+                if(!t) return;
+                
+                if(renderDebug){
+                    let renderX = tx * tw - this.handler.world.xOffset;
+                    let renderY = ty * tw - this.handler.world.yOffset;
+                    ctx.fillStyle = "red";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(renderX, renderY, tw, tw);
+                    ctx.fillStyle = 'Black';
+                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                }
+
+                if(t.isSolid){
+                    let dx = (tx * tw) - (this.x + this.width);
                     if(dx < earliestWall) earliestWall = dx;
                 }
             }
-            //so now earliestWall is now the closest solid object
-            console.log(`Earliest Wall AFTER: ${earliestWall}`);
+
             this.x += earliestWall;
+
 
         }else if(xMove < 0){
             //we are moving left, don't include width
