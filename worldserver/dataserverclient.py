@@ -32,7 +32,8 @@ class DataServerClient:
                         ph.WSonLogin(handler, d)
                     case default:
                         pass
-            except:
+            except Exception as e:
+                print(f"[ERROR] {e}")
                 print(f"[World Server Data Client => Error Processing incoming packets] \n packet = {data}")
 
 
