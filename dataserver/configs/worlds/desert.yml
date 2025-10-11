@@ -1,0 +1,46 @@
+World-Name: "The Desert"
+Tile-Map: "desert.png"
+
+World-Entrance-Color: "#33cc33"
+
+enemyHerds:
+  - name: slime-west
+    coords: [22, 15]
+    radius: 4
+    herdSize: [3, 8]
+    cooldown: [30, 60]
+    enemyType: slime   
+    Level: 10
+    Health: [3, 80]
+    Attack: [3, 7]
+    Attack-Speed: 0.5
+    Dodge-Chance: 0.05
+    Critical-Chance: 0
+    Movement-Speed: 1
+    Vision-Radius: 3
+    movement-type: static
+
+  - name: slime-east
+    coords: [40, 40]
+    radius: 4
+    herdSize: [3, 8]
+    cooldown: [30, 60]
+    enemyType: slime   
+    Level: 20
+    Health: [300, 600]
+    Attack: [5, 9]
+    Attack-Speed: 1
+    Dodge-Chance: 0.05
+    Critical-Chance: 0
+    Movement-Speed: 1
+    Vision-Radius: 3
+    movement-type: static
+
+
+
+
+
+
+
+
+

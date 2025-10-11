@@ -22,7 +22,8 @@ class ConfigManager():
                     "players": [],
                     "worlds": []
                 }
-        #print(f"Reading {path}")
+            print(self.database)
+        print(f"Reading {path}")
         names = os.listdir(path)
         for name in names:
             fullpath = os.path.join(path, name)

@@ -32,6 +32,13 @@ def WSonWorld(handler, d):
     # for tile in d.get("tiles"):
     #     print(tile)
 
+    for enemyHerd in d.get("world").get("enemyHerds"):
+        print(f"")
+        for keys, values in enemyHerd.items():
+            if not keys == "name": print(f"\t", end="")
+            print(f"{keys}: {values}")
+
+
 
     # worldName =           d.get("world").get("World-Name")
     # tileMap =             d.get("world").get("Tile-Map")
