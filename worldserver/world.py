@@ -45,6 +45,6 @@ class World:
 
         self.worldDict = world
         self.tilesDict = tiles
-        print(f"World Name: {self.worldDict.get("World-Name")}")
-        self.printWorldData()
+        #print(f"World Name: {self.worldDict.get("World-Name")}")
+        #self.printWorldData()
 

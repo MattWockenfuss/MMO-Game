@@ -45,7 +45,7 @@ class Terminal:
                 handler.dsc.sendMsg("world", {'World-Name':'Test World'})
 
             if cmd == "f":
-                handler.dsc.sendMsg("world", {'World-Name':'Caves'})
+                handler.dsc.sendMsg("world", {'World-Name':'The Desert'})
             
             
 

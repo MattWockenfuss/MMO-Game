@@ -51,6 +51,7 @@ class Terminal:
                     if arguments[0] == "database":
                         #then reload the database
                         handler.CM.readDirectory("configs")
+                        handler.configs = handler.CM.database
                     elif arguments[0] == "config":
                         #then reload the config file
                         handler.CR.readYML()

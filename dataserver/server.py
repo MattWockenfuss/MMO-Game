@@ -10,8 +10,6 @@
 
 '''
 
-
-import json
 import utils
 import asyncio
 
