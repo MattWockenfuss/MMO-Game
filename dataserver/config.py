@@ -1,5 +1,6 @@
 import yaml
 import os
+import utils
 
 class ConfigManager():
     def __init__(self):
@@ -59,6 +60,9 @@ class ConfigManager():
                 total += len(value)
 
             print(f"Loaded {total} YML Files!")
+            for item in self.database["worlds"]:
+                utils.loadMapImage(item, self.database)
+            print(f"Loaded Worlds!")
 
 
     def readYML(self, path):

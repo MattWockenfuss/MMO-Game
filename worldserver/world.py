@@ -37,12 +37,13 @@ class World:
         #these are both dictionaries
         world = d.get("world")
         tiles = d.get("tiles")
-
+        #print("okay got world and tiles")
         worldData = world.get("world-data")
+        #print(worldData)
         self.worldData = base64.b64decode(worldData)
         self.width = world.get("world-width")
         self.height = len(self.worldData) // self.width   # using // is integer division
-
+        #print("okay got worlddata and width and height")
         self.worldDict = world
         self.tilesDict = tiles
         #print(f"World Name: {self.worldDict.get("World-Name")}")

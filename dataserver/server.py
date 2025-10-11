@@ -56,10 +56,6 @@ class DataServer:
 
 
     async def start(self):
-        for item in self.CM.database["worlds"]:
-            utils.loadMapImage(item, self.CM.database)
-        
-        
         async with asyncio.TaskGroup() as tg:
             tg.create_task(self.tick())
             tg.create_task(self.wcm.start(self.CR.get("listenAddress"), self.CR.get("myPort"), self.handler))
