@@ -1,12 +1,16 @@
 '''
-Okay so the entity class is going to be used to represent every type of non player entity, this is not an abstract
-class, every monster is an instanceof this class. Although they have different hp, defence, damage, dodge chance, etc..
-every entity is of this class
+    Every entity in our game, both static, monsters and bosses, have a unique ID so the server can identify them, a
+    type, which details the kind of entity, could be 'SlimeBoss', 'blue-slime', 'skeleton', 'tree' or even 'crop'
+
+
+
 '''
 
+
 class Entity:
-    def __init__(self, id, x, y):
+    def __init__(self, id, type, x, y):
         self.id = id
+        self.type = type
         self.x = x
         self.y = y
 

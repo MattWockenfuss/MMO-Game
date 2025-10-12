@@ -3,6 +3,8 @@ Tile-Map: "desert.png"
 
 World-Entrance-Color: "#33cc33"
 
+
+#add a size variable to the enemies, make them really large, nice
 enemyHerds:
   - name: slime-west
     coords: [22, 15]
@@ -18,7 +20,7 @@ enemyHerds:
     Critical-Chance: 0
     Movement-Speed: 1
     Vision-Radius: 3
-    movement-type: static
+    Movement-Type: static
 
   - name: slime-east
     coords: [40, 40]
@@ -34,7 +36,7 @@ enemyHerds:
     Critical-Chance: 0
     Movement-Speed: 1
     Vision-Radius: 3
-    movement-type: static
+    Movement-Type: static
 
 
 

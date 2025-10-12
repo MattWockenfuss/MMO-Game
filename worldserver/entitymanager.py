@@ -37,4 +37,5 @@ class EntityManager:
         return True
 
     def tick(self, handler):
-        pass
+        for entity in self.items:
+            entity.tick()
