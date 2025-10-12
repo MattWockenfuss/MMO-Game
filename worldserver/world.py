@@ -1,4 +1,6 @@
 import base64
+import enemyherd
+
 '''
 every world is going to have a 2d array of tile ids to store world data?
 
@@ -9,12 +11,14 @@ class World:
         #read from the dataserver's world yml file, loaded in from JSON, can do .get("World-Name"), etc...
         self.worldDict = {}
         self.tilesDict = {}
+        self.enemyHerds = []
         self.worldData = bytes() #decoded into tile IDs
         self.width = 0
         self.height = 0
 
     def tick(self, handler):
-        pass
+        for enemyHerd in self.enemyHerds:
+            enemyHerd.tick(handler)
 
 
 
@@ -49,3 +53,14 @@ class World:
         #print(f"World Name: {self.worldDict.get("World-Name")}")
         #self.printWorldData()
 
+        #now load all of the enemy data
+        #how do we want to store this?
+        #well the world is going to have a list of entity herds, each entity herd has a variety of attributes
+        for enemyHerd in d.get("world").get("enemyHerds"):
+            herd = enemyherd.EnemyHerd(enemyHerd, self)
+
+
+        #once all of the herds are instantiated, they they should all add themselves to the list given their is no errors
+        #have them print their names
+        for h in self.enemyHerds:
+            h.printInfo()
