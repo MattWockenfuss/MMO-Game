@@ -21,8 +21,9 @@ export class Entity {
     render(ctx){}
     
     renderDebug(ctx){
-        ctx.fillStyle = "blue";
-        ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
+        ctx.fillStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.renderX - 1, this.renderY - 1, this.width + 1, this.height + 1);
     }
 
     handleCollisions(ctx, xMove, yMove){
