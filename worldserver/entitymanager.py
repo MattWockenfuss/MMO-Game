@@ -1,9 +1,15 @@
 import random, string
+from enemy import Enemy
 
 class EntityManager:
     def __init__(self):
-        self.items = []    #this is a list of the entity objects
-        self.indices = {}  #this is a dict linking their UUIDs with the indices in the items list
+        #items is the list of actual entity objects
+        #indices is a dictionary, linking uuids to the indices in the list
+
+        self.items = []  
+        self.indices = {}
+
+        self.handler = None
 
     def getNumberOfEntities(self):
         return len(self.entities)
@@ -12,6 +18,29 @@ class EntityManager:
         e.UUID = self.generateUUID()
         self.indices[e.UUID] = len(self.items)
         self.items.append(e)
+
+        #we also need to tell the clients about this entity? how?
+
+        if isinstance(e, Enemy):
+            p = {
+                "uuid": e.UUID,
+                "type": e.type,
+                "x": e.x,
+                "y": e.y,
+                "level": e.level,
+                "health": e.health,
+                "attack": e.attack,
+                "attackSpeed": e.attackSpeed,
+                "dodgeChance": e.dodgeChance,
+                "criticalChance": e.criticalChance,
+                "movementSpeed": e.movementSpeed,
+                "visionRadius": e.visionRadius,
+                "movementType": e.movementType
+            }
+        
+            self.handler.csm.broadcast("Enemy", p)
+
+
 
     def getByIndex(self, i):
         return self.items[i]

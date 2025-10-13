@@ -1,4 +1,5 @@
 import json
+from enemy import Enemy
 
 '''
 This file lists all the functions that handle packets for the world server from the
@@ -92,13 +93,40 @@ def WSonLogin(handler, d):
         client.color = color
         client.userdata = userdata
         
-
+        #lets also send them all of the entities currently in the world as well
+        #lets build an enemies dictionary to send to the player as well
+        #         
+        
+        enemies = {}
+        #loop through every enemy in the game and send it to the player
+        for entity in handler.em.items:
+            print(entity.UUID)
+            if isinstance(entity, Enemy):
+                #then this is an Enemy, build the appropriate packet
+                px = {
+                    "UUID": entity.UUID,
+                    "type": entity.type,
+                    "x": entity.x,
+                    "y": entity.y,
+                    "level": entity.level,
+                    "health": entity.health,
+                    "attack": entity.attack,
+                    "attackSpeed": entity.attackSpeed,
+                    "dodgeChance": entity.dodgeChance,
+                    "criticalChance": entity.criticalChance,
+                    "movementSpeed": entity.movementSpeed,
+                    "visionRadius": entity.visionRadius,
+                    "movementType": entity.movementType
+                }
+                enemies[entity.UUID] = px
 
         p = {
             "world": handler.world.worldDict,
-            "tiles": handler.world.tilesDict
+            "tiles": handler.world.tilesDict,
         }
         client.send('world', p)
+        client.send('Enemy', enemies)
+        print(f"ENEMIES: {enemies}")
 
         dataToSend = {"auth":"ok"}
         client.send('loginVerify', dataToSend)

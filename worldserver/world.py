@@ -1,5 +1,5 @@
 import base64
-import enemyherd
+from enemyherd import EnemyHerd
 
 '''
 every world is going to have a 2d array of tile ids to store world data?
@@ -57,7 +57,7 @@ class World:
         #how do we want to store this?
         #well the world is going to have a list of entity herds, each entity herd has a variety of attributes
         for enemyHerd in d.get("world").get("enemyHerds"):
-            herd = enemyherd.EnemyHerd(enemyHerd, self)
+            herd = EnemyHerd(enemyHerd, self)
 
 
         #once all of the herds are instantiated, they they should all add themselves to the list given their is no errors

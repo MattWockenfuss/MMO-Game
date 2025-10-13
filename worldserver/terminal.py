@@ -33,39 +33,24 @@ class Terminal:
             cmd, *args = msg.split()
 
             if cmd == "help":
-                print(f"test <args>")
-                print(f"\tTest command, prints out args")
-                print(f"reload <database / configs>")
-                print(f"\tReloads and Rereads Appropriate config files. Database contains the entities, tiles, worlds, etc..., while configs is the dataserver's config file")
-                print(f"tree")
-                print(f"\tPrints a tree of the current directory.")
-                print(f"configs")
-                print(f"\tPrints out the entire stored dictionary, skips world data")
+                print(f"desert")
+                print(f"\tSends a world request to the dataserver for desert!")
+                print(f"players")
+                print(f"\tlists all active players connected")
+                print(f"sockets")
+                print(f"\tlist all the connected sockets (unauthed players)")
+                print(f"kick <name>")
+                print(f"\tKicks the specified player by name")
+                print(f"kickall")
+                print(f"\tKicks all connected players")
                 print(f"clear ('cls')")
                 print(f"\tClears the screen")
 
 
-            if cmd == "a":
-                handler.dsc.sendMsg("test", "Hello Data Server!")
-
-            if cmd == "b":
-                handler.dsc.sendMsg("world",{'World-Name':'Big Forest'})
-            
-            if cmd == "c":
-                handler.dsc.sendMsg("enemy", {'Enemy':'Forest'})
-
-            if cmd == "d":
-                handler.dsc.sendMsg("world", {'Enemy':'Skeleton'})
-            
-            if cmd == "e":
-                handler.dsc.sendMsg("world", {'World-Name':'Test World'})
-
-            if cmd == "f":
+            if cmd == "desert":
                 handler.dsc.sendMsg("world", {'World-Name':'The Desert'})
             
             
-
-
             if cmd == "players":
                 if len(handler.csm.players.items()) == 0:
                     print(f"There are no players on the server!")
@@ -75,6 +60,25 @@ class Terminal:
                         print(" " * 4, end="")
                         print(f"{sessID} {player.username} ", end="")
                         print(f"{player.userdata} ")
+
+            if cmd == "entities":
+                if(len(handler.em.items) == 0):
+                    print(f"There are no entities on the server!?!?!?!")
+                else:
+                    for entity in handler.em.items:
+                        print(f"\t{entity.UUID} {entity.type} ({entity.x},{entity.y})")
+            
+            if cmd == "herds":
+                if len(args) == 0:
+                    for herd in handler.world.enemyHerds:
+                        print(f"{herd.name} ({herd.coords[0]},{herd.coords[1]}), Count: {herd.currentCount} Cooldown: {herd.cooldownTimer} in {herd.cooldown}")
+                else:
+                    for herd in handler.world.enemyHerds:
+                        if herd.name == args[0].lower():
+                            herd.printInfo()
+
+
+
 
             if cmd == "sockets":
                 if len(handler.csm.clients.items()) == 0:
@@ -93,9 +97,14 @@ class Terminal:
                     for sessID, player in list(handler.csm.players.items()):
                         if args[0] == player.username:
                             #kick them
+                            print(f"Kicked {player.username}")
                             handler.csm.kick(sessID, code = 1000, reason = "Kicked by Console!")
+                            
             
-
+            if cmd == "kickall":
+                #then we want to kickall players
+                for sessID, player in list(handler.csm.players.items()):
+                    handler.csm.kick(sessID, code = 1000, reason = "Kicked by Console!")
 
 
             if cmd == "cls" or cmd == "clear":

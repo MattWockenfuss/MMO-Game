@@ -49,28 +49,21 @@ class EnemyHerd:
         #alright so we are ticking the enemyHerd, we want to check if the herd has enough members, and if not, spawn on cooldown
         if self.cooldownTimer <= 0:
             self.cooldownTimer = self.getRandomAttribute(self.cooldown)
-            #print(f"Attempting to Spawn '{self.name}', Cooldown: {self.cooldown[0]} => {self.cooldown[1]}: {self.cooldownTimer}")
 
-            #okay so herdSize is either a number or a range,
-                
-            # if range and current is less than min, then pick a number between current and max, spawn that many
-            # if number, and current count is less than number, then pick a random number between current and number, spawn that many
-
-            # So we can refactor the function, 
-
-            spawnCount = self.getRandomAttribute(self.herdSize) - self.currentCount
-
-            #okay so spawncount is either equal to the number in the config, or a random number in between min and max, now subtract currentCount
-            #this way we shouldnt ever go over
-            #if we have 3 and the range is 5 to 10, our random number could be
-            #           5 - 3 = 2 spawnCounts so we will have 5
-            #           10 - 3 = 7 spawnCounts so we will have 10
+            spawnCount = 0
+            if isinstance(self.herdSize, list):
+                if self.currentCount < self.herdSize[0]:
+                    spawnCount = random.randint((self.herdSize[0] - self.currentCount), self.herdSize[1])
+                else:
+                    spawnCount = random.randint(0, self.herdSize[1] - self.currentCount)
+            else:
+                spawnCount = random.randint(self.currentCount, self.herdSize)
 
             print(f"Spawning {spawnCount} Entities!")
 
             for i in range(spawnCount):
-                x = random.randint(self.coords[0] - self.radius, self.coords[0] + self.radius)
-                y = random.randint(self.coords[1] - self.radius, self.coords[1] + self.radius)
+                x = random.randint((self.coords[0] - self.radius) * 64, (self.coords[0] + self.radius) * 64)
+                y = random.randint((self.coords[1] - self.radius) * 64, (self.coords[1] + self.radius) * 64)
                 
                 level = self.getRandomAttribute(self.Level)
                 health = self.getRandomAttribute(self.Health)
@@ -86,6 +79,7 @@ class EnemyHerd:
                     dodgeChance, criticalChance, movementSpeed, 
                     visionRadius, self.MovementType)
                 handler.em.addEntity(e)
+                self.currentCount += 1
 
 
 
@@ -93,20 +87,19 @@ class EnemyHerd:
 
     def printInfo(self):
         print(f"EnemyHerd {self.name}")
-        print(f"Coords {self.coords}")
-        print(f"Radius {self.radius}")
-        print(f"HerdSize {self.herdSize}")
-        print(f"Cooldown {self.cooldown}")
-        print(f"EnemyType {self.enemyType}")
-        print(f"Level {self.Level}")
-        print(f"Health {self.Health}")
-        print(f"Attack {self.Attack}")
-        print(f"AttackSpeed {self.AttackSpeed}")
-        print(f"DodgeChance {self.DodgeChance}")
-        print(f"CriticalChance {self.CriticalChance}")
-        print(f"MovementSpeed {self.MovementSpeed}")
-        print(f"VisionRadius {self.VisionRadius}")
-        print(f"MovementType {self.MovementType}")
+        print(f"\tCoords {self.coords}")
+        print(f"\tRadius {self.radius}")
+        print(f"\tHerdSize {self.herdSize}")
+        print(f"\tCooldown {self.cooldown}")
+        print(f"\tEnemyType {self.enemyType}")
+        print(f"\tLevel {self.Level}")
+        print(f"\tHealth {self.Health}")
+        print(f"\tAttack {self.Attack}")
+        print(f"\tAttackSpeed {self.AttackSpeed}")
+        print(f"\tDodgeChance {self.DodgeChance}")
+        print(f"\tCriticalChance {self.CriticalChance}")
+        print(f"\tMovementSpeed {self.MovementSpeed}")
+        print(f"\tVisionRadius {self.VisionRadius}")
+        print(f"\tMovementType {self.MovementType}")
 
-        self.cooldownTimer = random.randint(self.cooldown[0], self.cooldown[1])
-        print(f"Cooldown Timer: {self.cooldown[0]} => {self.cooldown[1]}: {self.cooldownTimer}")
+        print(f"Cooldown Timer: {self.cooldown}, current {self.cooldownTimer}")
