@@ -8,8 +8,8 @@
 
 
 class Entity:
-    def __init__(self, id, type, x, y):
-        self.id = id
+    def __init__(self, type, x, y):
+        self.UUID = None
         self.type = type
         self.x = x
         self.y = y

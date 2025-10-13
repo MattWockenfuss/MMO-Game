@@ -1,13 +1,13 @@
 import random
-import enemy
+from enemy import Enemy
 
 
 class EnemyHerd:
     def __init__(self, dictionary, world):
         print(f"Creating new Enemy Herd!")
         print(f"From {dictionary}")
-        for keys, values in dictionary.items():
-            print(f"{keys} -> {values}")
+        # for keys, values in dictionary.items():
+        #     print(f"{keys} -> {values}")
         
         self.name = dictionary.get("name")
         self.coords = dictionary.get("coords")
@@ -35,70 +35,58 @@ class EnemyHerd:
 
         world.enemyHerds.append(self)
 
-    def getRandomAttribute(attribute):
-
+    def getRandomAttribute(self, attribute):
+        #print(f"Testing Attribute for {attribute}")
         if isinstance(attribute, list):
+            #print(f"{attribute} is a list!")
             return random.randint(attribute[0], attribute[1])
         else:
+            #print(f"{attribute} is NOT a list!")
             return attribute
 
     def tick(self, handler):
-        #print("ticking!")
         self.cooldownTimer -= 1
         #alright so we are ticking the enemyHerd, we want to check if the herd has enough members, and if not, spawn on cooldown
         if self.cooldownTimer <= 0:
-            self.cooldownTimer = random.randint(self.cooldown[0], self.cooldown[1])
-            print(f"Attempting to Spawn '{self.name}', Cooldown: {self.cooldown[0]} => {self.cooldown[1]}: {self.cooldownTimer}")
+            self.cooldownTimer = self.getRandomAttribute(self.cooldown)
+            #print(f"Attempting to Spawn '{self.name}', Cooldown: {self.cooldown[0]} => {self.cooldown[1]}: {self.cooldownTimer}")
 
             #okay so herdSize is either a number or a range,
                 
-                # if range and current is less than min, then pick a number between current and max, spawn that many
+            # if range and current is less than min, then pick a number between current and max, spawn that many
+            # if number, and current count is less than number, then pick a random number between current and number, spawn that many
 
-            if isinstance(self.herdSize, list):
-                if self.currentCount < self.herdSize[0]:
-                    n = random.randint(self.currentCount, self.herdSize[1])
-                    x = random.randint(self.coords[0] - self.radius, self.coords[0] + self.radius)
-                    y = random.randint(self.coords[1] - self.radius, self.coords[1] + self.radius)
+            # So we can refactor the function, 
 
-                    
-                    level = self.getRandomAttribute(self.Level)
-                    health = self.getRandomAttribute(self.Health)
-                    attack = self.getRandomAttribute(self.Attack)
-                    attackSpeed = self.getRandomAttribute(self.AttackSpeed)
-                    dodgeChance = self.getRandomAttribute(self.DodgeChance)
-                    criticalChance = self.getRandomAttribute(self.CriticalChance)
-                    movementSpeed = self.getRandomAttribute(self.MovementSpeed)
-                    visionRadius = self.getRandomAttribute(self.VisionRadius)
+            spawnCount = self.getRandomAttribute(self.herdSize) - self.currentCount
 
-                    e = enemy.Enemy(id, self.enemyType, x, y, 
-                              level, health, attack, attackSpeed, 
-                              dodgeChance, criticalChance, movementSpeed, 
-                              visionRadius, self.MovementType)
-                    
-                    handler.em.addEntity(e)
-            else:
-                # if number, and current count is less than number, then pick a random number between current and Max, spawn that many
-                if self.currentCount < self.herdSize:
-                    n = random.randint(self.currentCount, self.herdSize)
-                    x = random.randint(self.coords[0] - self.radius, self.coords[0] + self.radius)
-                    y = random.randint(self.coords[1] - self.radius, self.coords[1] + self.radius)
+            #okay so spawncount is either equal to the number in the config, or a random number in between min and max, now subtract currentCount
+            #this way we shouldnt ever go over
+            #if we have 3 and the range is 5 to 10, our random number could be
+            #           5 - 3 = 2 spawnCounts so we will have 5
+            #           10 - 3 = 7 spawnCounts so we will have 10
 
-                    
-                    level = self.getRandomAttribute(self.Level)
-                    health = self.getRandomAttribute(self.Health)
-                    attack = self.getRandomAttribute(self.Attack)
-                    attackSpeed = self.getRandomAttribute(self.AttackSpeed)
-                    dodgeChance = self.getRandomAttribute(self.DodgeChance)
-                    criticalChance = self.getRandomAttribute(self.CriticalChance)
-                    movementSpeed = self.getRandomAttribute(self.MovementSpeed)
-                    visionRadius = self.getRandomAttribute(self.VisionRadius)
+            print(f"Spawning {spawnCount} Entities!")
 
-                    e = enemy.Enemy(id, self.enemyType, x, y, 
-                              level, health, attack, attackSpeed, 
-                              dodgeChance, criticalChance, movementSpeed, 
-                              visionRadius, self.MovementType)
-                    
-                    handler.em.addEntity(e)
+            for i in range(spawnCount):
+                x = random.randint(self.coords[0] - self.radius, self.coords[0] + self.radius)
+                y = random.randint(self.coords[1] - self.radius, self.coords[1] + self.radius)
+                
+                level = self.getRandomAttribute(self.Level)
+                health = self.getRandomAttribute(self.Health)
+                attack = self.getRandomAttribute(self.Attack)
+                attackSpeed = self.getRandomAttribute(self.AttackSpeed)
+                dodgeChance = self.getRandomAttribute(self.DodgeChance)
+                criticalChance = self.getRandomAttribute(self.CriticalChance)
+                movementSpeed = self.getRandomAttribute(self.MovementSpeed)
+                visionRadius = self.getRandomAttribute(self.VisionRadius)
+
+                e = Enemy(self.enemyType, x, y, 
+                    level, health, attack, attackSpeed, 
+                    dodgeChance, criticalChance, movementSpeed, 
+                    visionRadius, self.MovementType)
+                handler.em.addEntity(e)
+
 
 
 

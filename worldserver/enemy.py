@@ -1,4 +1,4 @@
-import entity as Entity
+from entity import Entity
 
 '''
     An Enemy is a child of the Entity object, every enemy has an x and y coordinate and an ID, but they also have a bunch of other attributes. They are used to represent
@@ -11,8 +11,10 @@ import entity as Entity
 
 
 class Enemy(Entity):
-    def __init__(self, id, type, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, movementType):
-        super(id, type, x, y)
+    def __init__(self, type, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, movementType):
+        super().__init__(type, x, y)
+
+        #print(f"Made it past the super() in Enemy.py!")
 
         self.level = level
         self.health = health
@@ -24,10 +26,11 @@ class Enemy(Entity):
         self.visionRadius = visionRadius
         self.movementType = movementType
 
-        print(f"NEW ENEMY {self.type}, ({self.x}, {self.y}), {self.level}, {self.health}")
+        print(f"NEW ENEMY Type: {self.type} at ({self.x}, {self.y}), Level:{self.level}, Health:{self.health}, Attack:{self.attack}")
 
 
 
 
     def tick(self):
-        print(f"{self.type}, ({self.x}, {self.y}), {self.level}, {self.health}")
+        #print(f"{self.type}, ({self.x}, {self.y}), {self.level}, {self.health}")
+        pass

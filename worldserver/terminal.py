@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 '''
     This is going to represent the piece of the code that is the input handler for our terminal, we will be able to parse commands
@@ -12,22 +13,37 @@ class Terminal:
 
     async def getTerminalInput(self):
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, input, "Please type a msg (or exit to quit)\n")
+        return await loop.run_in_executor(None, input, "'help' for commands, or 'exit' to quit\n")
 
     def tick(self, handler):
 
         if self.task and self.task.done():
+
+            msg = None
             try:
                 msg = self.task.result()
-            except:
-                print(f"Failed on Input at CMD Line")
-                msg = None
-
+            except Exception as e:
+                print(f"Failed on Input at CMD Line: {e}")
+            
             self.task = None
-            if msg is None or "":
-                return
+            if not msg: return
 
+            #   the * means take or expand the variable number of positional values
+            #   in this case, a list split on whitespace, the first is set to cmd, the rest are in arguments
             cmd, *args = msg.split()
+
+            if cmd == "help":
+                print(f"test <args>")
+                print(f"\tTest command, prints out args")
+                print(f"reload <database / configs>")
+                print(f"\tReloads and Rereads Appropriate config files. Database contains the entities, tiles, worlds, etc..., while configs is the dataserver's config file")
+                print(f"tree")
+                print(f"\tPrints a tree of the current directory.")
+                print(f"configs")
+                print(f"\tPrints out the entire stored dictionary, skips world data")
+                print(f"clear ('cls')")
+                print(f"\tClears the screen")
+
 
             if cmd == "a":
                 handler.dsc.sendMsg("test", "Hello Data Server!")
@@ -78,6 +94,15 @@ class Terminal:
                         if args[0] == player.username:
                             #kick them
                             handler.csm.kick(sessID, code = 1000, reason = "Kicked by Console!")
+            
+
+
+
+            if cmd == "cls" or cmd == "clear":
+                if os.name == "nt":
+                    os.system("cls")    #works on windows
+                else:
+                    os.system("clear")  #works on everything else
 
 
             if cmd == "exit":

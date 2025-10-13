@@ -1,17 +1,16 @@
+import random, string
+
 class EntityManager:
     def __init__(self):
         self.items = []    #this is a list of the entity objects
-        self.indices = {}  #this is a dict linking their IDs with the indices in the items list
+        self.indices = {}  #this is a dict linking their UUIDs with the indices in the items list
 
     def getNumberOfEntities(self):
         return len(self.entities)
 
     def addEntity(self, e):
-        #okay so this function is adding an entity, e to our Manager
-        #it is O(1)
-        if e.id in self.indices:
-            raise ValueError(f"Entity {e.id} already exists")
-        self.indices[e.id] = len(self.items)
+        e.UUID = self.generateUUID()
+        self.indices[e.UUID] = len(self.items)
         self.items.append(e)
 
     def getByIndex(self, i):
@@ -39,3 +38,9 @@ class EntityManager:
     def tick(self, handler):
         for entity in self.items:
             entity.tick()
+
+    def generateUUID(self):
+        characterPool = string.ascii_letters + string.digits
+        while True:
+            key = ''.join(random.choice(characterPool) for i in range(8))
+            if key not in self.indices: return key
