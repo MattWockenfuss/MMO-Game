@@ -20,7 +20,7 @@ enemyHerds:
     Critical-Chance: 0
     Movement-Speed: 1
     Vision-Radius: 3
-    Size: 1
+    Size: [1, 3]
     Movement-Type: static
 
   - name: slime-east

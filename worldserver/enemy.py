@@ -12,7 +12,7 @@ from entity import Entity
 
 
 class Enemy(Entity):
-    def __init__(self, type, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, movementType):
+    def __init__(self, type, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, size, movementType):
         super().__init__(type, x, y)
 
         #Everything about an Entity is defined here for simplicity, even if they dont use it, dont add to the object later.
@@ -27,6 +27,7 @@ class Enemy(Entity):
         self.criticalChance = criticalChance
         self.movementSpeed = movementSpeed
         self.visionRadius = visionRadius
+        self.size = size
         self.movementType = movementType
 
         print(f"NEW ENEMY Type: {self.type} at ({self.x}, {self.y}), Level:{self.level}, Health:{self.health}, Attack:{self.attack}")

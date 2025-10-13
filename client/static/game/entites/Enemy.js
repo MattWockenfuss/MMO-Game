@@ -17,6 +17,9 @@ export class Enemy extends Entity{
         this.criticalChance = enemyData.criticalChance;
         this.movementSpeed = enemyData.movementSpeed;
         this.visionRadius = enemyData.visionRadius;
+        this.size = enemyData.size;
+        this.width *= this.size;
+        this.height *= this.size;
         this.movementType = enemyData.movementType;
     }
 

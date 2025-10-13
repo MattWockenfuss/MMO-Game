@@ -26,9 +26,15 @@ export class DebugMenu {
         let CANVAS_WIDTH = 1500;  //probably should fix this, soon TM
         let CANVAS_HEIGHT = 640;
 
+        if(this.handler.world == null) return;
+        if(this.handler.world.xOffset == null) return;
+        if(this.handler.player == null) return;
+
+
+
         let mouseX = this.handler.world.xOffset + this.handler.IM.mouseX;
         let mouseY = this.handler.world.yOffset + this.handler.IM.mouseY;
-
+        
         ctx.fillStyle = "black";
         ctx.font = " 20px monospace";
         
@@ -44,21 +50,22 @@ export class DebugMenu {
 
         ctx.fillStyle = "black";
         ctx.fillText("Ticks: " + ticks, 8, 8 + (2 * gap));
-        
-        if(this.handler.player !== null && this.handler.player !== undefined){
-            ctx.fillText("x: " + (this.handler.player.x).toFixed(1), 8, 8 + (5 * gap));
-            ctx.fillText("y: " + (this.handler.player.y).toFixed(1), 8, 8 + (6 * gap));
-        }
-        if(this.handler.world !== null && this.handler.world !== undefined){
-            if(this.handler.world.xOffset !== null && this.handler.world.yOffset !== undefined){
-                ctx.fillText("xOffset: " + (this.handler.world.xOffset).toFixed(1), 8, 8 + (7 * gap));
-                ctx.fillText("yOffset: " + (this.handler.world.yOffset).toFixed(1), 8, 8 + (8 * gap));
-            }
-            let tileX = Math.trunc((this.handler.world.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
-            let tileY = Math.trunc((this.handler.world.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
 
-            ctx.fillText(`${tileX}, ${tileY}`, this.handler.IM.mouseX, this.handler.IM.mouseY);
-        }
+        ctx.fillText(`Player: (${(this.handler.player.x).toFixed(1)},${(this.handler.player.y).toFixed(1)})`,                   8, 8 + (5 * gap));
+        ctx.fillText(`Offset: (${(this.handler.world.xOffset).toFixed(1)},${(this.handler.world.yOffset).toFixed(1)})`,         8, 8 + (6 * gap));
+        ctx.fillText(`Mouse: (${(mouseX).toFixed(1)},${(mouseY).toFixed(1)})`,         8, 8 + (6 * gap));
+        
+        let tileX = Math.trunc((this.handler.world.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
+        let tileY = Math.trunc((this.handler.world.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
+
+
+        ctx.fillText(`Mouse (Tile): (${tileX},${tileY})`,                                                                      8, 8 + (7 * gap));
+        
+
+
+
+
+
 
         ctx.fillText("mouseX: " + (this.handler.IM.mouseX).toFixed(1), 8, 8 + (9 * gap));
         ctx.fillText("mouseY: " + (this.handler.IM.mouseY).toFixed(1), 8, 8 + (10 * gap));
@@ -99,7 +106,7 @@ export class DebugMenu {
                         }
                     }else if(entity instanceof Enemy){
                         let width = 300;
-                        let height = gap * 17 + 10;
+                        let height = gap * 18 + 10;
                         ctx.fillStyle = 'rgba(255, 255, 223, 0.55)';
                         ctx.fillRect(CANVAS_WIDTH - width, 0, width, height);
                         ctx.lineWidth = 2;
@@ -119,7 +126,8 @@ export class DebugMenu {
                         ctx.fillText(`critical: ${entity.criticalChance}`,                      CANVAS_WIDTH - width + 4, 18 + (gap * 13));
                         ctx.fillText(`movementSPD: ${entity.movementSpeed}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 14));
                         ctx.fillText(`VisionRadius: ${entity.visionRadius}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 15));
-                        ctx.fillText(`movementType: ${entity.movementType}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 16));
+                        ctx.fillText(`Size: ${entity.size}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 16));
+                        ctx.fillText(`movementType: ${entity.movementType}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 17));
                     }
                     return; //we return so we dont do the tile below this
                 }

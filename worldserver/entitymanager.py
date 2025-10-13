@@ -35,6 +35,7 @@ class EntityManager:
                 "criticalChance": e.criticalChance,
                 "movementSpeed": e.movementSpeed,
                 "visionRadius": e.visionRadius,
+                "size": e.size,
                 "movementType": e.movementType
             }
         

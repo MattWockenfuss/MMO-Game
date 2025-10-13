@@ -23,6 +23,7 @@ class EnemyHerd:
         self.CriticalChance = dictionary.get("Critical-Chance")
         self.MovementSpeed = dictionary.get("Movement-Speed")
         self.VisionRadius = dictionary.get("Vision-Radius")
+        self.Size = dictionary.get("Size")
         self.MovementType = dictionary.get("Movement-Type")
 
         self.cooldownTimer = 0
@@ -73,11 +74,12 @@ class EnemyHerd:
                 criticalChance = self.getRandomAttribute(self.CriticalChance)
                 movementSpeed = self.getRandomAttribute(self.MovementSpeed)
                 visionRadius = self.getRandomAttribute(self.VisionRadius)
+                size = self.getRandomAttribute(self.Size)
 
                 e = Enemy(self.enemyType, x, y, 
                     level, health, attack, attackSpeed, 
                     dodgeChance, criticalChance, movementSpeed, 
-                    visionRadius, self.MovementType)
+                    visionRadius, size, self.MovementType)
                 handler.em.addEntity(e)
                 self.currentCount += 1
 
@@ -100,6 +102,7 @@ class EnemyHerd:
         print(f"\tCriticalChance {self.CriticalChance}")
         print(f"\tMovementSpeed {self.MovementSpeed}")
         print(f"\tVisionRadius {self.VisionRadius}")
+        print(f"\Size {self.Size}")
         print(f"\tMovementType {self.MovementType}")
 
         print(f"Cooldown Timer: {self.cooldown}, current {self.cooldownTimer}")
