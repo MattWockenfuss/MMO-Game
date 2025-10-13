@@ -48,7 +48,7 @@ export class Entity {
             let earliestWall = xMove;
 
             for(let ty = tyS; ty <= tyE; ty++){
-                console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
+                //console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
@@ -83,7 +83,7 @@ export class Entity {
             let earliestWall = xMove;//this is negative
 
             for(let ty = tyS; ty <= tyE; ty++){
-                console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
+                //console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
@@ -121,7 +121,7 @@ export class Entity {
             let earliestWall = yMove;
 
             for(let tx = txS; tx <= txE; tx++){
-                console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
+                //console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
@@ -156,7 +156,7 @@ export class Entity {
             let earliestWall = yMove;
 
             for(let tx = txS; tx <= txE; tx++){
-                console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
+                //console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;

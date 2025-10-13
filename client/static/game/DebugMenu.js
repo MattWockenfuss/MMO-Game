@@ -8,6 +8,7 @@
 
 */
 
+import { Enemy } from "./entites/Enemy.js";
 import { OtherPlayer } from "./entites/OtherPlayer.js";
 import { Player } from "./entites/player.js";
 import { Tile } from "./Tile.js";
@@ -95,14 +96,26 @@ export class DebugMenu {
                     ctx.font = "16px monospace";
                     ctx.fillStyle = "black";
                     //alright now render entity properties
-                    ctx.fillText(`EntityType: ${entity.constructor.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
-                    ctx.fillText(`(x,y): (${entity.x},${entity.y})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
+                    ctx.fillText(`EntityType: ${entity.constructor.name}`,                  CANVAS_WIDTH - width + 4, 18 + (gap * 0));
+                    ctx.fillText(`(x,y): (${entity.x.toFixed(1)},${entity.y.toFixed(1)})`,  CANVAS_WIDTH - width + 4, 18 + (gap * 1));
                     if(entity instanceof OtherPlayer || entity instanceof Player){
-                        ctx.fillText(`Name: ${entity.username}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
-                        ctx.fillText(`Color: ${entity.color}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
+                        ctx.fillText(`Name: ${entity.username}`,                            CANVAS_WIDTH - width + 4, 18 + (gap * 2));
+                        ctx.fillText(`Color: ${entity.color}`,                              CANVAS_WIDTH - width + 4, 18 + (gap * 3));
                         if(entity instanceof OtherPlayer){
-                            ctx.fillText(`SessID: ${entity.session_id}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
+                            ctx.fillText(`SessID: ${entity.session_id}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 4));
                         }
+                    }else if(entity instanceof Enemy){
+                        this.UUID = enemyData.UUID;
+                        this.type = enemyData.type;
+                        this.level = enemyData.level;
+                        this.health = enemyData.health;
+                        this.attack = enemyData.attack;
+                        this.attackSpeed = enemyData.attackSpeed;
+                        this.dodgeChance = enemyData.dodgeChance;
+                        this.criticalChance = enemyData.criticalChance;
+                        this.movementSpeed = enemyData.movementSpeed;
+                        this.visionRadius = enemyData.visionRadius;
+                        this.movementType = enemyData.movementType;
                     }
                     return;
                 }

@@ -14,7 +14,7 @@ export default class NetworkHandler{
             console.log("Connected to World Server!");
         }
         this.ws.onmessage = (event) => {
-            console.log(event.data);
+            //console.log(event.data);
             try {
                 const packet = JSON.parse(event.data);
                 console.log(`${packet.type} : ${JSON.stringify(packet.data)}`);

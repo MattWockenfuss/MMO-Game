@@ -4,7 +4,7 @@ Tile-Map: "desert.png"
 World-Entrance-Color: "#33cc33"
 
 
-#add a size variable to the enemies, make them really large, nice
+
 enemyHerds:
   - name: slime-west
     coords: [22, 15]
