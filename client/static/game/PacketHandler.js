@@ -1,3 +1,4 @@
+import { Enemy } from "./entites/Enemy.js";
 import { OtherPlayer } from "./entites/OtherPlayer.js";
 
 export class PacketHandler{
@@ -8,7 +9,8 @@ export class PacketHandler{
             login:          (data) => this.onLogin(data),
             world:          (data) => this.onWorld(data),
             onOtherPlayer:  (data) => this.onOtherPlayer(data),
-            Disconnect:     (data) => this.onDisconnect(data)
+            Disconnect:     (data) => this.onDisconnect(data),
+            Enemy:          (data) => this.onEnemy(data)
         }
 
     }
@@ -45,7 +47,7 @@ export class PacketHandler{
 
     onWorld(data){
         this.handler.world.setWorldData(data);
-        this.handler.world.printWorldData();
+        //this.handler.world.printWorldData();
     }
     onOtherPlayer(data){
         console.log(data.username);
@@ -55,6 +57,12 @@ export class PacketHandler{
         console.log(data.color);
 
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
+    }
+    onEnemy(data){
+        console.log(data)
+        for(let uuid in data){
+            this.handler.EM.addEntity(new Enemy(this.handler, data[uuid]));
+        }
     }
     onDisconnect(data){
         //{"type": "Disconnect", "data": {"session_id": "2vYQJ6OP", "code": 1000, "reason": "Kicked by Console!"}}
