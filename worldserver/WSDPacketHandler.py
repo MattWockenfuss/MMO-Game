@@ -116,6 +116,7 @@ def WSonLogin(handler, d):
                     "criticalChance": entity.criticalChance,
                     "movementSpeed": entity.movementSpeed,
                     "visionRadius": entity.visionRadius,
+                    "size": entity.size,
                     "movementType": entity.movementType
                 }
                 enemies[entity.UUID] = px
