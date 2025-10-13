@@ -10,9 +10,9 @@ enemyHerds:
     coords: [22, 15]
     radius: 4
     herdSize: [3, 8]
-    cooldown: [30, 60]
+    cooldown: 3600
     enemyType: slime   
-    Level: 10
+    Level: [10, 16]
     Health: [3, 80]
     Attack: [3, 7]
     Attack-Speed: 0.5
@@ -26,7 +26,7 @@ enemyHerds:
     coords: [40, 40]
     radius: 4
     herdSize: [3, 8]
-    cooldown: [30, 60]
+    cooldown: [3600, 7200]
     enemyType: slime   
     Level: 20
     Health: [300, 600]

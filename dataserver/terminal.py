@@ -13,22 +13,25 @@ class Terminal:
 
     async def getTerminalInput(self):
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, input, "Please type 'help' for commands, or 'exit' to quit\n")
+        return await loop.run_in_executor(None, input, "'help' for commands, or 'exit' to quit\n")
 
     def tick(self, handler):
         if self.task and self.task.done():
-
+            
+            msg = None
             try:
                 msg = self.task.result()
-            except:
-                print(f"Failed on Input at CMD Line")
-                msg = None
-
+            except Exception as e:
+                print(f"Failed on Input at CMD Line: {e}")
+            
             self.task = None
+            if not msg: return
+
+            #   the * means take or expand the variable number of positional values
+            #   in this case, a list split on whitespace, the first is set to cmd, the rest are in arguments
+            cmd, *arguments = msg.split()   
             
-            cmd, *arguments = msg.split()   #the * means take or expand the variable number of positional values
-                                            #in this case, a list split on whitespace, the first is set to cmd, the rest are in arguments
-            
+
             if cmd == "help":
                 print(f"test <args>")
                 print(f"\tTest command, prints out args")
@@ -41,10 +44,12 @@ class Terminal:
                 print(f"clear ('cls')")
                 print(f"\tClears the screen")
             
+
+
+
             if cmd == "test":
                 for arg in arguments:
                     print(f"{arg}")
-
 
             if cmd == "reload":
                 if len(arguments) != 0:

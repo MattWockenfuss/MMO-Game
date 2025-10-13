@@ -62,5 +62,5 @@ class World:
 
         #once all of the herds are instantiated, they they should all add themselves to the list given their is no errors
         #have them print their names
-        for h in self.enemyHerds:
-            h.printInfo()
+        # for h in self.enemyHerds:
+        #     h.printInfo()
