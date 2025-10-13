@@ -45,7 +45,8 @@ class Handler:
 
 
 
-
+ticks = 0
+seconds = 0
 
 class WorldServer:
     def __init__(self):
@@ -55,11 +56,18 @@ class WorldServer:
         self.csm = ClientSocketManager()
         self.terminal = Terminal()
         self.handler = Handler(self.dsc, self.csm, self.world, self.em, self.terminal)
+
+        self.handler.em.handler = self.handler
         
 
     async def tick(self):
         while self.handler.running:
             await asyncio.sleep(1 / 60)
+            # ticks += 1
+            # if ticks >= 60:
+            #     ticks = 0
+            #     seconds += 1
+            #     print(f"Seconds: {seconds}")
             self.dsc.tick(self.handler)
             self.csm.tick(self.handler)
             self.world.tick(self.handler)

@@ -10,7 +10,7 @@ enemyHerds:
     coords: [22, 15]
     radius: 4
     herdSize: [3, 8]
-    cooldown: 3600
+    cooldown: 1000
     enemyType: slime   
     Level: [10, 16]
     Health: [3, 80]
@@ -20,13 +20,14 @@ enemyHerds:
     Critical-Chance: 0
     Movement-Speed: 1
     Vision-Radius: 3
+    Size: 1
     Movement-Type: static
 
   - name: slime-east
     coords: [40, 40]
     radius: 4
     herdSize: [3, 8]
-    cooldown: [3600, 7200]
+    cooldown: [2000, 3000]
     enemyType: slime   
     Level: 20
     Health: [300, 600]
@@ -36,6 +37,7 @@ enemyHerds:
     Critical-Chance: 0
     Movement-Speed: 1
     Vision-Radius: 3
+    Size: 1
     Movement-Type: static
 
 

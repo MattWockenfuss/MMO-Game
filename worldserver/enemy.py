@@ -10,12 +10,15 @@ from entity import Entity
 '''
 
 
+
 class Enemy(Entity):
     def __init__(self, type, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, movementType):
         super().__init__(type, x, y)
 
-        #print(f"Made it past the super() in Enemy.py!")
+        #Everything about an Entity is defined here for simplicity, even if they dont use it, dont add to the object later.
+        #the only exception here is the UUID, which is added for all entities by the entity manager
 
+        #self.UUID = ...
         self.level = level
         self.health = health
         self.attack = attack
