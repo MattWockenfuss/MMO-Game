@@ -34,16 +34,11 @@ class ConfigManager():
             else:
                 filename, extension = os.path.splitext(name)
                 match extension:
-                    case ".png":
-                        continue
                     case ".yml":
                         data = self.readYML(fullpath)
                         pieces = path.replace("\\", "/").split("/")
+                        print(pieces)
                         match pieces[1]:
-                            case "assets":
-                                self.database["tiles"].append(data)
-                            case "enemies":
-                                self.database["enemies"].append(data)
                             case "items":
                                 self.database["items"].append(data)
                             case "players":
@@ -51,7 +46,15 @@ class ConfigManager():
                             case "recipes":
                                 self.database["recipes"].append(data)
                             case "worlds":
-                                self.database["worlds"].append(data)
+                                #okay so whatever this is, its in world folder, check to see if its in tile folder
+                                if pieces[2] == "_tiles":
+                                    #then this is a tile
+                                    self.database["tiles"].append(data)
+                                else:
+                                    #then this isnt a tile, treat it as a world
+                                    data["folderName"] = pieces[2]
+                                    self.database["worlds"].append(data)
+
         if(atRoot):
             #alright when we are done, print out the number of files loaded!
             total = 0
@@ -60,8 +63,8 @@ class ConfigManager():
                 total += len(value)
 
             print(f"Loaded {total} YML Files!")
-            for item in self.database["worlds"]:
-                utils.loadMapImage(item, self.database)
+            for worldDict in self.database["worlds"]:
+                utils.loadMapImage(worldDict, self.database)
             print(f"Loaded Worlds!")
 
 
