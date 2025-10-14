@@ -1,10 +1,13 @@
 import base64
 from PIL import Image
 
-def loadMapImage(item, database): 
+def loadMapImage(worldDict, database): 
         #item is the dictionary for this world, this function reads the image file and loads data into world dict of their ids
-        print(item)
-        im = Image.open(f"configs/worlds/{item["Tile-Map"]}")
+        print(worldDict)
+        subfolder = worldDict.get("folderName")
+        tilemapName = worldDict.get("Tile-Map")
+
+        im = Image.open(f"configs/worlds/{subfolder}/{tilemapName}")
         #print(im.format, im.size, im.mode)
         #print(f"{im.width} x {im.height}")
         im = im.convert("RGB")
@@ -27,28 +30,10 @@ def loadMapImage(item, database):
 
         world_data = bytes(tiles)
         
-        item["world-data"] = base64.b64encode(world_data).decode("utf-8")   #add it to the database, probably change this later?
-        item["world-width"] = im.width
+        worldDict["world-data"] = base64.b64encode(world_data).decode("utf-8")   #add it to the database, probably change this later?
+        worldDict["world-width"] = im.width
         
 
-        # for worlds in database["worlds"]:
-        #     if worlds == item:
-        #         print(f"We are in the {worlds.get("World-Name")} World")
-        #         print(f"{worlds}")
-                
-
-
-        #alright so now out data is set
-        #lets print it
-        # for y in range(im.height):
-        #     for x in range(im.width):
-        #         idx = y * im.width + x
-        #         print(f"{world_data[idx]} ", end="")
-        #     print("")
-
-
-        #so we know the width and height of the server, how are we going to send the tile map
-        # i also need to figure out how to send images to clients
 
         
 

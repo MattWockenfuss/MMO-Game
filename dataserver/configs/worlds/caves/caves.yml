@@ -1,0 +1,58 @@
+World-Name: "Caves"
+Tile-Map: "caves.png"
+
+World-Entrance-Color: "#33cc33"
+
+
+
+enemyHerds:
+  - herdName: slime-2-west
+    coords: [22, 15]
+    radius: 4
+    herdSize: [3, 8]
+    cooldown: 1000
+    name: "Slime"
+    lore-blurb: "A Sticky Specimen"
+    Sprite: "slime.png"
+    enemyType: slime
+    #entity characteristics
+    Level: [10, 16]
+    Health: [3, 80]
+    Attack: [3, 7]
+    Attack-Speed: 0.5
+    Dodge-Chance: 0.05
+    Critical-Chance: 0
+    Movement-Speed: 1
+    Vision-Radius: 3
+    Size: [1, 3]
+    Movement-Type: static
+
+  - herdName: slime-3-east
+    coords: [25, 50]
+    radius: 3
+    herdSize: [1, 2]
+    cooldown: 100
+    name: "Boss Slime"
+    lore-blurb: "We Are Bosses"
+    Sprite: "slime.png"
+    enemyType: slime
+    #entity characteristics
+    Level: [100, 250]
+    Health: [4000, 8000]
+    Attack: [3, 7]
+    Attack-Speed: [1, 4]
+    Dodge-Chance: 0.01
+    Critical-Chance: 0.03
+    Movement-Speed: 1
+    Vision-Radius: 3
+    Size: [1, 6]
+    Movement-Type: static
+
+
+
+
+
+
+
+
+

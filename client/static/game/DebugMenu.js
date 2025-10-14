@@ -53,26 +53,15 @@ export class DebugMenu {
 
         ctx.fillText(`Player: (${(this.handler.player.x).toFixed(1)},${(this.handler.player.y).toFixed(1)})`,                   8, 8 + (5 * gap));
         ctx.fillText(`Offset: (${(this.handler.world.xOffset).toFixed(1)},${(this.handler.world.yOffset).toFixed(1)})`,         8, 8 + (6 * gap));
-        ctx.fillText(`Mouse: (${(mouseX).toFixed(1)},${(mouseY).toFixed(1)})`,         8, 8 + (6 * gap));
+        ctx.fillText(`Mouse: (${(this.handler.IM.mouseX).toFixed(1)},${(this.handler.IM.mouseY).toFixed(1)})`,                  8, 8 + (7 * gap));
+        ctx.fillText(`MseAdj: (${(mouseX).toFixed(1)},${(mouseY).toFixed(1)})`,                                                 8, 8 + (8 * gap));
         
         let tileX = Math.trunc((this.handler.world.xOffset + this.handler.IM.mouseX) / Tile.tileWidth);
         let tileY = Math.trunc((this.handler.world.yOffset + this.handler.IM.mouseY) / Tile.tileWidth);
 
 
-        ctx.fillText(`Mouse (Tile): (${tileX},${tileY})`,                                                                      8, 8 + (7 * gap));
+        ctx.fillText(`Mouse (Tile): (${tileX},${tileY})`,                                                                      8, 8 + (9 * gap));
         
-
-
-
-
-
-
-        ctx.fillText("mouseX: " + (this.handler.IM.mouseX).toFixed(1), 8, 8 + (9 * gap));
-        ctx.fillText("mouseY: " + (this.handler.IM.mouseY).toFixed(1), 8, 8 + (10 * gap));
-
-
-
-
 
 
 

@@ -1,6 +1,0 @@
-#other stuff to
-World-Name: "Big Forest"
-Tile-Map: "forest2.png"
-
-# On other tile maps, placing a pixel of this color will let you enter the forest
-World-Entrance-Color: "#33cc33"
