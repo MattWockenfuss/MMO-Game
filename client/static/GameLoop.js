@@ -67,39 +67,46 @@ class GameEngine{
     startGame(){
         this.canvas = document.getElementById("myCanvas");
         this.ctx = this.canvas.getContext("2d");
-        
+
         const centerCanvas = () => {
             const s = this.canvas.style;
-            s.position = "absolute";
+            s.position = "fixed";
             s.left = "50%";
-            s.right = "50%";
+            s.top = "50%";
             s.transform = "translate(-50%, -50%)";
         }
 
         const resizeFix = () => {
-            const cssW = 1500;
-            const cssH = 640;
-            const ratio = Math.max(1, window.devicePixelRatio || 1);
-
-            this.canvas.style.width = cssW + "px";
+            const cssW = Math.floor(window.innerWidth  * 1);
+            const cssH = Math.floor(window.innerHeight * 1);
+            this.canvas.style.width  = cssW + "px";
             this.canvas.style.height = cssH + "px";
 
-            this.canvas.width = Math.round(cssW * ratio);
-            this.canvas.height = Math.round(cssH * ratio);
+            const dPRRAW = window.devicePixelRatio || 1
+            const dPR = Math.max(1 , Math.round(dPRRAW));
+            
+            this.canvas.width = cssW * dPR;
+            this.canvas.height = cssH * dPR;
 
-            this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            this.ctx.setTransform(dPR, 0, 0, dPR, 0, 0);
             this.ctx.imageSmoothingEnabled = false;  //because we have pixel art
+            
 
+            //we have to tell the handler that we changed size
+            this.handler.updateSize(cssW, cssH);
+            console.log(`NEW DPR ${dPRRAW} adj:${dPR}`);
+            console.log(`cssW x cssH ${cssW} x ${cssH}`);
+            console.log(`canvasWidth x canvasHeight ${this.canvas.width} x ${this.canvas.height}`);
         };
 
         this.on(window, "resize", (e) => {
             centerCanvas();
             resizeFix();
         });
-        this.handler.IM.attachListeners(this.canvas, this.on);
 
         centerCanvas();
         resizeFix();
+        this.handler.IM.attachListeners(this.canvas, this.on);
 
         this.st = 0;
         this.timer3 = 0;

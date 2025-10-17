@@ -23,8 +23,9 @@ export class DebugMenu {
 
     }
     render(ctx, ticks){
-        let CANVAS_WIDTH = 1500;  //probably should fix this, soon TM
-        let CANVAS_HEIGHT = 640;
+        let CANVAS_WIDTH = this.handler.GAME_WIDTH;  //probably should fix this, soon TM
+        let CANVAS_HEIGHT = this.handler.GAME_HEIGHT;
+        //console.log(`${CANVAS_WIDTH} x ${CANVAS_HEIGHT}`);
 
         if(this.handler.world == null) return;
         if(this.handler.world.xOffset == null) return;

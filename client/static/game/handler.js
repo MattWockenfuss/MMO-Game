@@ -10,5 +10,11 @@ export class Handler {
         this.IM = inputManager;
         this.AM = assetManager;
         this.debug = debugMenu;
+        this.GAME_WIDTH = 1500;
+        this.GAME_HEIGHT = 640;
+    }
+    updateSize(width, height){
+        this.GAME_WIDTH = width;
+        this.GAME_HEIGHT = height;
     }
 }

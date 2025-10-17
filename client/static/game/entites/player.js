@@ -3,7 +3,7 @@ import { OtherPlayer } from "./OtherPlayer.js";
 
 export class Player extends Entity{
     constructor(handler, myname, mycolor){
-        super(handler, 100, 100, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
+        super(handler, 1000, 1000, OtherPlayer.PLAYER_WIDTH, OtherPlayer.PLAYER_HEIGHT);
         this.renderX = 0;
         this.renderY = 0;
         this.speed = 5;

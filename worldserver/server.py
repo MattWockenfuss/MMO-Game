@@ -5,6 +5,7 @@ from world import World
 from entitymanager import EntityManager
 from terminal import Terminal
 
+import time
 
 '''
 Websockets: 
@@ -45,8 +46,7 @@ class Handler:
 
 
 
-ticks = 0
-seconds = 0
+
 
 class WorldServer:
     def __init__(self):
@@ -61,23 +61,61 @@ class WorldServer:
         
 
     async def tick(self):
+        '''
+            This code runs the main server loop at a fixed 60 ticks per second, using the event loop's monotonic clock to keep precise timing and prevent drift. On each tick, 
+            it updates all subsystems (data server, client sockets, world, entities, and terminal) and measures how long the frame took using time.perf_counter(). Every five 
+            seconds, it prints performance stats (average, max, and min frame durations in milliseconds) so you can monitor server load and tick stability in real time.
+        '''
+        RATE = 60
+        DT = 1.0 / RATE
+
+        loop = asyncio.get_running_loop()
+        next_tick = loop.time()
+
+        frame_times = []
+        frames = 0
+        onStartup = loop.time()
+
+
         while self.handler.running:
-            await asyncio.sleep(1 / 60)
-            # ticks += 1
-            # if ticks >= 60:
-            #     ticks = 0
-            #     seconds += 1
-            #     print(f"Seconds: {seconds}")
+            await asyncio.sleep(max(0, next_tick - loop.time()))
+            frame_start = time.perf_counter()
+
             self.dsc.tick(self.handler)
             self.csm.tick(self.handler)
             self.world.tick(self.handler)
             self.em.tick(self.handler)
             self.terminal.tick(self.handler)
-        print("before")
+
+            frame_dur = (time.perf_counter() - frame_start) * 1000.0
+            frame_times.append(frame_dur)
+            frames += 1
+
+
+
+            if loop.time() - onStartup >= 5.0:
+                frames = 0
+                avg = sum(frame_times) / len(frame_times)
+                worst = max(frame_times)
+                lowest = min(frame_times)
+
+                print(f"[WS] {frames} frames avg={avg:.2f} ms max={worst:.2f} ms min={lowest:.2f} ms")
+
+                frame_times.clear()
+                frames = 0
+                onStartup = loop.time()
+
+
+
+            next_tick += DT
+            if loop.time() - next_tick > DT:
+                next_tick = loop.time() + DT
+            
+
+
+
         await self.dsc.stop(code=1000,reason="Shutdown!")
-        print("middle?")
         await self.csm.stop()
-        print("Done?")
 
 
 
