@@ -34,8 +34,8 @@ html, body {
 
 canvas {
     background-color: white;
-    width: 1500px;
-    height: 640px;
+    width: 90%;
+    height: 90%;
     border: solid 4px black;
 }
 

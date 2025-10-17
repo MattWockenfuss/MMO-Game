@@ -26,6 +26,10 @@ export class World{
         //we need to clamp the x and y offsets
         //so the x and y offsets are where we should start rendering the world so that our position is adjusted
         //we then clamp it so that when we get to the sides or corners, it doesnt let us see the background
+        
+        this.CANVAS_WIDTH = Math.floor(this.handler.GAME_WIDTH);
+        this.CANVAS_HEIGHT = Math.floor(this.handler.GAME_HEIGHT);
+
 
         if(this.worldData != null){
             //console.log("TILE MAP WIDTH: " + this.tileMap.size);
@@ -65,7 +69,6 @@ export class World{
                     
                     let renderX = (x * Tile.tileWidth) - this.xOffset;
                     let renderY = (row * Tile.tileWidth) - this.yOffset;
-
                     let id = this.worldData[(row * this.worldWidth) + x]
                     this.tileMap.get(id).render(ctx, renderX, renderY);
                 }
