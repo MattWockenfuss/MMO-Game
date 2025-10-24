@@ -16,19 +16,19 @@ export class Player extends Entity{
     tick(){
         
         var moved = false;
-        if(this.handler.IM.down.has('KeyW')){
+        if(this.handler.CM.controls.get('UP').down()){
             this.yMove -= this.speed;
             moved = true;
         }
-        if(this.handler.IM.down.has('KeyA')){
+        if(this.handler.CM.controls.get('LEFT').down()){
             this.xMove -= this.speed;
             moved = true;
         }
-        if(this.handler.IM.down.has('KeyS')){
+        if(this.handler.CM.controls.get('DOWN').down()){
             this.yMove += this.speed;
             moved = true;
         }
-        if(this.handler.IM.down.has('KeyD')){
+        if(this.handler.CM.controls.get('RIGHT').down()){
             this.xMove += this.speed;
             moved = true;
         }
