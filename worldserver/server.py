@@ -13,10 +13,6 @@ Websockets:
 Asyncio
     https://docs.python.org/3/contents.html
 
-✅ added terminal so nonblock
-✅ added queues to clientsockets
-✅ Move Terminal tick to main tick method
-
 
 Todo:
     switch data server to Object Oriented
@@ -47,8 +43,6 @@ class Handler:
 class Benchmark:
     def __init__(self):
         self.active = False
-        self.onInterval = None
-        self.onComplete = None
 
     def start(self, nowTime, intervalTime, totalTime): #The Asterisk means that after the asterisk, no longer excepts positional arguments
         self.active = True
@@ -136,21 +130,7 @@ class WorldServer:
             self.terminal.tick(self.handler)
 
             frame_dur = (time.perf_counter() - frame_start) * 1000.0
-            self.handler.benchmark.record(loop.time(), frame_dur)
-            
-
-
-            # if loop.time() - onStartup >= 5.0:
-            #     framesPerSecond = frames / 5.0
-            #     avg = sum(frame_times) / len(frame_times)
-            #     worst = max(frame_times)
-            #     lowest = min(frame_times)
-
-            #     print(f"[WS] TPS: {framesPerSecond} Avg: {avg:.2f} ms Max: {worst:.2f} ms Min: {lowest:.2f} ms")
-
-            #     frame_times.clear()
-            #     frames = 0
-            #     onStartup = loop.time()
+            self.benchmark.record(loop.time(), frame_dur)
 
 
 

@@ -17,6 +17,13 @@ class World:
         self.height = 0
 
     def tick(self, handler):
+        #getting called 60 Times per second!
+
+        # PRANAV IN HERE
+        self.checkWorldTrigger()
+
+
+
         for enemyHerd in self.enemyHerds:
             enemyHerd.tick(handler)
 
@@ -56,7 +63,7 @@ class World:
         #now load all of the enemy data
         #how do we want to store this?
         #well the world is going to have a list of entity herds, each entity herd has a variety of attributes
-        for enemyHerd in d.get("world").get("enemyHerds"):
+        for enemyHerd in d.get("world").get("EnemyHerds"):
             herd = EnemyHerd(enemyHerd, self)
 
 
@@ -64,3 +71,9 @@ class World:
         #have them print their names
         # for h in self.enemyHerds:
         #     h.printInfo()
+
+    def checkWorldTrigger(self):
+        #being called 60 times per second
+        #Not the most efficient way to do, probably event system instead, but hey
+        #checks if any player is in trigger
+        pass

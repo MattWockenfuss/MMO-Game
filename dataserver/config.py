@@ -8,17 +8,19 @@ class ConfigManager():
                             "tiles": [],
                             "recipes": [],
                             "enemies": [],
+                            "statics": [],
                             "items": [],
                             "players": [],
                             "worlds": []
                         }
-
+    #this is disgusting, fix later
     def readDirectory(self, path, atRoot = True):
         if atRoot:
             self.database = {
                     "tiles": [],
                     "recipes": [],
                     "enemies": [],
+                    "statics": [],
                     "items": [],
                     "players": [],
                     "worlds": []
@@ -26,6 +28,7 @@ class ConfigManager():
             print(self.database)
         print(f"Reading {path}")
         names = os.listdir(path)
+        #print(names)
         for name in names:
             fullpath = os.path.join(path, name)
             
@@ -35,9 +38,9 @@ class ConfigManager():
                 filename, extension = os.path.splitext(name)
                 match extension:
                     case ".yml":
-                        data = self.readYML(fullpath)
-                        pieces = path.replace("\\", "/").split("/")
-                        print(pieces)
+                        data = utils.readYML(fullpath)
+                        *pieces, file_name = fullpath.replace("\\", "/").split("/")
+                        print(f"{pieces} -> {file_name}")
                         match pieces[1]:
                             case "items":
                                 self.database["items"].append(data)
@@ -47,13 +50,19 @@ class ConfigManager():
                                 self.database["recipes"].append(data)
                             case "worlds":
                                 #okay so whatever this is, its in world folder, check to see if its in tile folder
+                                #we also only want to read the worldname.yml
                                 if pieces[2] == "_tiles":
                                     #then this is a tile
                                     self.database["tiles"].append(data)
+                                if pieces[2] == "_static_entities":
+                                    self.database["statics"].append(data)
                                 else:
-                                    #then this isnt a tile, treat it as a world
-                                    data["folderName"] = pieces[2]
-                                    self.database["worlds"].append(data)
+                                    if filename == pieces[2]:
+                                        data["folderName"] = pieces[2]
+                                        self.database["worlds"].append(data)
+                                    else:
+                                        pass
+                                        #print(f"SKIPPING {filename} in {path}")
 
         if(atRoot):
             #alright when we are done, print out the number of files loaded!
@@ -64,18 +73,16 @@ class ConfigManager():
 
             print(f"Loaded {total} YML Files!")
             for worldDict in self.database["worlds"]:
+                print()
+                print(f"-------- {worldDict.get("World-Name")} --------")
                 utils.loadMapImage(worldDict, self.database)
+                utils.loadEnemyHerds(worldDict, self.database)
+                utils.loadStaticEntities(worldDict, self.database)
+                utils.printWorldDictionary(worldDict)
             print(f"Loaded Worlds!")
 
 
-    def readYML(self, path):
-        #print("[READING YML]", path)
-        with open(path) as stream:
-            try:
-                data = yaml.safe_load(stream)
-                return data 
-            except yaml.YAMLError as exc:
-                print(exc)
+
     
 
     def printDirectories(self, path, indentLevel):

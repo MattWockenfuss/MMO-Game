@@ -24,14 +24,19 @@ testpacket = {
 #       type = "world" data = {World-Name:"", Tile-Map:"", World-Entrance-Color:"", world-data:"", world-width:""}
 #       type = "tiles" data = {name:"", id:"", lore-blurb:"", is-Solid:"", map-color:"", Sprite:""}
 def WSonWorld(handler, d):
-    # print(d)
-    # print("---------------------------------------------------------------------------------")
-    # print(d.get("world"))
-    # print("---------------------------------------------------------------------------------")
-    # print(d.get("tiles"))
+    #print(d)
+    print("---------------------------------------------------------------------------------")
+    print(d.get("world"))
+    print("---------------------------------------------------------------------------------")
+    print(d.get("tiles"))
+    print("---------------------------------------------------------------------------------")
+    print(d.get("statics"))
 
     # for tile in d.get("tiles"):
     #     print(tile)
+
+    for static in d.get("statics"):
+        print(static)
 
     # for enemyHerd in d.get("world").get("enemyHerds"):
     #     print(f"")

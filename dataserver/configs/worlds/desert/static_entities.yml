@@ -1,0 +1,17 @@
+#  remember we are going to have multiple servers of say desert, all of them must have same number of entities in same locations
+#  eventually your going to be able to chop down trees, or cut down cactuses, so they must be able to 'regrow' over time, this can change depending on the World
+#  
+#  so static entities also need to have a hitbox? how big?, how long, how much health? how many hits to cut down, right, maybe a health system
+#  okay so every static entity has an x, y and health at base
+#  crops are a child of so, they also have growth stages, and change images based on the growth stage, should this be moddable? nah, pain in the ass
+#  
+#  
+#  okay so we have predfined static entities that you can add to your World, similar to tiles, have a folder for them
+
+cactus:
+    - [100, 100]
+    - [200, 100]
+    - [300, 100]
+    - [400, 100]
+    - [500, 100]
+    - [600, 100]
