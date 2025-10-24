@@ -37,6 +37,12 @@ class Terminal:
                 print(f"\tSends a world request to the dataserver for desert!")
                 print(f"players")
                 print(f"\tlists all active players connected")
+                print(f"entities")
+                print(f"\tlists all entities")
+                print(f"herds")
+                print(f"\tlists all herds")
+                print(f"benchmark <interval> <total>")
+                print(f"\tRuns a TPS benchmark, printing at <interval> seconds for <total> seconds")
                 print(f"sockets")
                 print(f"\tlist all the connected sockets (unauthed players)")
                 print(f"kick <name>")
@@ -49,6 +55,18 @@ class Terminal:
 
             if cmd == "desert":
                 handler.dsc.sendMsg("world", {'World-Name':'The Desert'})
+
+            if cmd == "benchmark":
+                if len(args) < 2:
+                    print(f"Not Enough Arguments! Usage: 'benchmark <interval> <total>'")
+                if handler.benchmark.active:
+                    print(f"Benchmark Already active!")
+
+                interval = float(args[0])
+                total = float(args[1])
+
+                print(f"[BENCHMARK] Starting benchmarking at {interval} second intervals over {total} seconds")
+                handler.benchmark.start(asyncio.get_running_loop().time(), interval, total)
             
             
             if cmd == "players":
@@ -71,10 +89,10 @@ class Terminal:
             if cmd == "herds":
                 if len(args) == 0:
                     for herd in handler.world.enemyHerds:
-                        print(f"{herd.name} ({herd.coords[0]},{herd.coords[1]}), Count: {herd.currentCount} Cooldown: {herd.cooldownTimer} in {herd.cooldown}")
+                        print(f"{herd.herdName} ({herd.coords[0]},{herd.coords[1]}), Count: {herd.currentCount} Cooldown: {herd.cooldownTimer} in {herd.cooldown}")
                 else:
                     for herd in handler.world.enemyHerds:
-                        if herd.name == args[0].lower():
+                        if herd.herdName == args[0].lower():
                             herd.printInfo()
 
 

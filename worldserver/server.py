@@ -35,15 +35,64 @@ Todo:
 import asyncio
 
 class Handler:
-    def __init__(self, dsc, csm, world, em, terminal):
+    def __init__(self, dsc, csm, world, em, terminal, benchmark):
         self.running = True
         self.dsc = dsc
         self.csm = csm
         self.world = world
         self.em = em
         self.terminal = terminal
+        self.benchmark = benchmark
+
+class Benchmark:
+    def __init__(self):
+        self.active = False
+        self.onInterval = None
+        self.onComplete = None
+
+    def start(self, nowTime, intervalTime, totalTime): #The Asterisk means that after the asterisk, no longer excepts positional arguments
+        self.active = True
+
+        self.interval_frame_times = []
+        self.total_frame_times = []
+
+        self.intervalTime = intervalTime
+        self.totalTime = totalTime
+        self.nextEmit = nowTime + intervalTime
+        self.endTime = nowTime + totalTime
+        print(f"{nowTime} => {self.nextEmit} {self.endTime}")
 
 
+    def record(self, now, duration_ms: float):
+        if not self.active: return
+        self.interval_frame_times.append(duration_ms)
+        self.total_frame_times.append(duration_ms)
+
+        if now >= self.nextEmit:
+            #print(f"Recording!")
+            fps = len(self.interval_frame_times) / self.intervalTime
+            avg = sum(self.interval_frame_times) / len(self.interval_frame_times)
+            low = min(self.interval_frame_times)
+            high = max(self.interval_frame_times)
+
+            print(f"[BENCHMARK] TPS: {fps:.2f} Avg: {avg:.2f} ms Max: {high:.2f} ms Min: {low:.2f} ms")
+
+            self.interval_frame_times.clear()
+            self.nextEmit += self.intervalTime
+
+        if now >= self.endTime:
+            #then this is the last interval
+            fps = len(self.total_frame_times) / self.totalTime
+            avg = sum(self.total_frame_times) / len(self.total_frame_times)
+            low = min(self.total_frame_times)
+            high = max(self.total_frame_times)
+        
+            print(f"[BENCHMARK] FINAL TPS: {fps:.2f} Avg: {avg:.2f} ms Max: {high:.2f} ms Min: {low:.2f} ms")
+
+
+            self.active = False
+            self.interval_frame_times.clear()
+            self.total_frame_times.clear()
 
 
 
@@ -55,7 +104,8 @@ class WorldServer:
         self.dsc = DataServerClient()
         self.csm = ClientSocketManager()
         self.terminal = Terminal()
-        self.handler = Handler(self.dsc, self.csm, self.world, self.em, self.terminal)
+        self.benchmark = Benchmark()
+        self.handler = Handler(self.dsc, self.csm, self.world, self.em, self.terminal, self.benchmark)
 
         self.handler.em.handler = self.handler
         
@@ -72,9 +122,7 @@ class WorldServer:
         loop = asyncio.get_running_loop()
         next_tick = loop.time()
 
-        frame_times = []
-        frames = 0
-        onStartup = loop.time()
+
 
 
         while self.handler.running:
@@ -88,22 +136,21 @@ class WorldServer:
             self.terminal.tick(self.handler)
 
             frame_dur = (time.perf_counter() - frame_start) * 1000.0
-            frame_times.append(frame_dur)
-            frames += 1
+            self.handler.benchmark.record(loop.time(), frame_dur)
+            
 
 
+            # if loop.time() - onStartup >= 5.0:
+            #     framesPerSecond = frames / 5.0
+            #     avg = sum(frame_times) / len(frame_times)
+            #     worst = max(frame_times)
+            #     lowest = min(frame_times)
 
-            if loop.time() - onStartup >= 5.0:
-                frames = 0
-                avg = sum(frame_times) / len(frame_times)
-                worst = max(frame_times)
-                lowest = min(frame_times)
+            #     print(f"[WS] TPS: {framesPerSecond} Avg: {avg:.2f} ms Max: {worst:.2f} ms Min: {lowest:.2f} ms")
 
-                print(f"[WS] {frames} frames avg={avg:.2f} ms max={worst:.2f} ms min={lowest:.2f} ms")
-
-                frame_times.clear()
-                frames = 0
-                onStartup = loop.time()
+            #     frame_times.clear()
+            #     frames = 0
+            #     onStartup = loop.time()
 
 
 
@@ -114,7 +161,7 @@ class WorldServer:
 
 
 
-        await self.dsc.stop(code=1000,reason="Shutdown!")
+        await self.dsc.stop(code=1000, reason="Shutdown!")
         await self.csm.stop()
 
 

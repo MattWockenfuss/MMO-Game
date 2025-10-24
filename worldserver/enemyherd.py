@@ -9,7 +9,7 @@ class EnemyHerd:
         # for keys, values in dictionary.items():
         #     print(f"{keys} -> {values}")
         
-        self.name = dictionary.get("name")
+        self.herdName = dictionary.get("herdName")
         self.coords = dictionary.get("coords")
         self.radius = dictionary.get("radius")
         self.herdSize = dictionary.get("herdSize")
