@@ -10,8 +10,15 @@ export class InputManager {
     }
 
     attachListeners(canvas, on){
-        on(window, 'keydown', (e) => {this.down.add(e.code);});
-        on(window, 'keyup', (e) => {this.down.delete(e.code);});
+
+        on(window, 'keydown', (e) => {
+            this.down.add(e.code);
+        });
+
+        on(window, 'keyup', (e) => {
+            this.down.delete(e.code);
+        });
+
         on(canvas, 'mousedown',(e) => {
             if(e.button == 0) this.down.add("leftMouseBTN");
             if(e.button == 1) this.down.add("rightMouseBTN");

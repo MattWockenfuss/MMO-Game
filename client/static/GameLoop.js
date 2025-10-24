@@ -4,10 +4,11 @@ import { Handler } from "./game/handler.js";
 import { Player } from "./game/entites/player.js";
 import { World } from "./game/world.js";
 import { EntityManager } from "./game/EntityManager.js";
-import { InputManager } from "./game/InputManager.js";
+import { InputManager } from "./game/input/InputManager.js";
 import { AssetManager } from "./game/AssetManager.js";
 import { PacketHandler } from "./game/PacketHandler.js";
 import { DebugMenu } from "./game/DebugMenu.js";
+import { ControlManager } from "./game/input/ControlManager.js";
 
 class GameEngine{
     init(networkhandler, myname, mycolor){
@@ -23,10 +24,11 @@ class GameEngine{
         let world = new World(this.handler);
         let entityManager = new EntityManager(this.handler);
         let inputManager = new InputManager(this.handler);
+        let controlManager = new ControlManager(this.handler);
         let assetManager = new AssetManager(this.handler);
         let debugMenu = new DebugMenu(this.handler);
 
-        this.handler.init(networkhandler, player, world, entityManager, inputManager, assetManager, debugMenu);
+        this.handler.init(networkhandler, player, world, entityManager, inputManager, controlManager, assetManager, debugMenu);
         this.handler.EM.addEntity(player);    
 
     
@@ -131,9 +133,11 @@ class GameEngine{
 
     tick(){
         this.PH.processInbound();
-        
+        this.handler.CM.tick();
         this.handler.world.tick();
         this.handler.EM.tick();
+
+
     }
 
     render(){

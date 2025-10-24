@@ -7,7 +7,6 @@ export class Player extends Entity{
         this.renderX = 0;
         this.renderY = 0;
         this.speed = 5;
-        this.toggleG = false;
         this.username = myname;
         this.color = mycolor;
         this.xMove = 0;
@@ -62,18 +61,6 @@ export class Player extends Entity{
             this.handler.net.send("move", p);
         }
 
-
-        if(this.handler.IM.down.has('KeyG')){
-            this.toggleG = true;
-            //console.log("G down!")
-        }else if(this.toggleG){
-            //console.log("{\"World-Type\":\"Forest\"}")
-            // var name = prompt("Enter your name!");
-            // this.name = name;
-            // console.log(this.name)
-            // this.handler.net.send("login", {"username": name});
-            this.toggleG = false;
-        }
 
 
         //instead of rendering at direct center, render at our x my xOffset

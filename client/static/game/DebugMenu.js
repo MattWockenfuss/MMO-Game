@@ -23,6 +23,8 @@ export class DebugMenu {
 
     }
     render(ctx, ticks){
+        if(!this.handler.CM.controls.get('TOGGLEDEBUG').toggled()) return;
+
         let CANVAS_WIDTH = this.handler.GAME_WIDTH;  //probably should fix this, soon TM
         let CANVAS_HEIGHT = this.handler.GAME_HEIGHT;
         //console.log(`${CANVAS_WIDTH} x ${CANVAS_HEIGHT}`);

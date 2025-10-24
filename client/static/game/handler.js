@@ -2,12 +2,13 @@ export class Handler {
     constructor(){
 
     }
-    init(networkhandler, player, world, entityManager, inputManager, assetManager, debugMenu){
+    init(networkhandler, player, world, entityManager, inputManager, controlManager, assetManager, debugMenu){
         this.net = networkhandler;
         this.player = player;
         this.world = world;
         this.EM = entityManager;
         this.IM = inputManager;
+        this.CM = controlManager;
         this.AM = assetManager;
         this.debug = debugMenu;
         this.GAME_WIDTH = 1500;
