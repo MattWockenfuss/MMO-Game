@@ -2,7 +2,7 @@
   coords: [22, 15]
   radius: 4
   herdSize: [3, 8]
-  cooldown: 1000
+  cooldown: 3000
   name: "Slime"
   lore-blurb: "A Sticky Specimen"
   Sprite: "slime.png"
@@ -22,8 +22,8 @@
 - herdName: slime-3-east
   coords: [25, 50]
   radius: 13
-  herdSize: [1, 50]
-  cooldown: 300
+  herdSize: [1, 7]
+  cooldown: 3000
   name: "Boss Slime"
   lore-blurb: "We Are Bosses"
   Sprite: "slime.png"
@@ -43,8 +43,8 @@
 - herdName: slime-3-east
   coords: [50, 50]
   radius: 1
-  herdSize: [1, 50]
-  cooldown: 300
+  herdSize: [1, 2]
+  cooldown: 3000
   name: "Big Boss Slime"
   lore-blurb: "We Are Bosses"
   Sprite: "slime.png"

@@ -50,11 +50,11 @@ export class PacketHandler{
         //this.handler.world.printWorldData();
     }
     onOtherPlayer(data){
-        console.log(data.username);
-        console.log(data.x);
-        console.log(data.y);
-        console.log(data.session_id);
-        console.log(data.color);
+        // console.log(data.username);
+        // console.log(data.x);
+        // console.log(data.y);
+        // console.log(data.session_id);
+        // console.log(data.color);
 
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }

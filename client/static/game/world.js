@@ -33,7 +33,7 @@ export class World{
 
         if(this.worldData != null){
             //console.log("TILE MAP WIDTH: " + this.tileMap.size);
-            for(let i = 1; i < this.tileMap.size + 1; i++){
+            for(let i = 0; i < this.tileMap.size; i++){
                 //console.log(`${this.tileMap.get(i).ID}`);
                 this.tileMap.get(i).tick();
             }
@@ -81,19 +81,15 @@ export class World{
         //okay so we can set the world data in this function, everything about it
         let worlddata = data.world;
         let tilesdata = data.tiles;
+        let tileRegistry = data.tileMap
+        
 
-        for(const key of Object.keys(data)){
-            console.log(`${key} : ${data[key]}`)
-        }
-        
-        
 
         var decoded = atob(worlddata["world-data"]);
         var bytes = new Int8Array(decoded.length);
         for(let i = 0; i < decoded.length; i++){
             bytes[i] = decoded.charCodeAt(i);
         }
-
 
         this.worldName = worlddata["World-Name"]
         this.worldData = bytes;
@@ -105,7 +101,18 @@ export class World{
 
         console.log(tilesdata)
         for(let tile of tilesdata){
-            this.tileMap.set(tile.id, new Tile(this.handler, tile.id, tile.name, tile["is-Solid"], tile["lore-blurb"]))
+            //okay so we are creating our tilemap, and need to assign them the IDs given to us from the world server
+            //tileRegistry[]
+            let codename =  tile['code-name'];
+            let name =      tile['name'];
+            let loreblurb = tile['lore-blurb'];
+            let isSolid =   tile['is-Solid'];
+            let mapColor =  tile['map-color'];
+            let sprite =    tile['Sprite'];
+
+            let id = tileRegistry[codename];
+
+            this.tileMap.set(id, new Tile(this.handler, codename, name, isSolid, loreblurb, mapColor))
         }
         console.log(`Loaded World: ${this.worldName} ${this.worldWidth}x${this.worldHeight}`);
     }

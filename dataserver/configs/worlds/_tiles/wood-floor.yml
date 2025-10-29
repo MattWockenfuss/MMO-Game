@@ -1,5 +1,5 @@
+code-name: 'wood-floor'
 name: "Wood Floor"
-id: 7
 lore-blurb: "*thump* *thump* *thump*"
 is-Solid: False
 map-color: "#8f563b"

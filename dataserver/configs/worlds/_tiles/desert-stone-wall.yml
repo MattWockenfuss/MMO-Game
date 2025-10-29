@@ -1,5 +1,5 @@
+code-name: 'desert-stone-wall'
 name: "Desert Stone Wall"
-id: 9
 lore-blurb: "Sharp Rocks!"
 is-Solid: True
 map-color: "#574244"

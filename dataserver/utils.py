@@ -22,12 +22,21 @@ def loadMapImage(worldDict, database):
             point = (x, y)
             r, g, b = im.getpixel(point)
 
+            #so we are looping through our image, top to bottom, left to right
+            #every pixel has an associated R, G, and B, match them in our database
+
             for tile in database["tiles"]:
                 if f"#{r:02x}{g:02x}{b:02x}" == tile.get("map-color"):
-                    tiles[idx] = tile.get("id")
+                    codename = tile.get("code-name")
+                    tile_id = database["tileMap"].get(codename)
+
+                    if tile_id is None:
+                        tiles[idx] = database["tileMap"].get("void")
+
+                    tiles[idx] = tile_id
                     break
             else:
-                tiles[idx] = 5 #the void tile, ehh
+                tiles[idx] = database["tileMap"].get("void")
 
     world_data = bytes(tiles)
     
@@ -74,7 +83,25 @@ def loadStaticEntities(worldDict, database):
     except Exception as e:
         print(f"\t[ERROR] Error Loading {path}, {e}")
 
+def generateTileMappings(database):
+    #This function is called once all of the config files have been loaded, but before the worlds have been processed
+    #it generates a mapping of 'code-names' to IDs so that we can send world data to world server and player without having to have someone search the files
+    #for IDs
+
+    print(f"GENERATING TILE MAPPING")
     
+    tileMap = {}
+    id = 0
+
+    for tile in database["tiles"]:
+        print(f"{tile}")
+        tileMap[tile.get('code-name')] = id
+        id += 1
+
+    for key, value in tileMap.items():
+        print(f"{key} => {value}")
+    
+    return tileMap
 
 def printWorldDictionary(dict):
     #this function prints the world dictionary, essentially skipping the world data

@@ -49,16 +49,25 @@ async def DSonWorld(handler, data, ws):
     print(data)
     for world in handler.configs["worlds"]:
         if world.get("World-Name") == data["World-Name"]:
-            #print(f"STATIC {handler.configs["statics"]}")
             data = {
                 "type":"world",
                 "data": {
                     "world": world,
                     "tiles": handler.configs["tiles"],
+                    "tileMap": handler.configs["tileMap"],
                     "statics": handler.configs["statics"]
                 }
             }
-            print(f"SENDING PACKET TO WORLD SERVER")
+            
+            # for key, value in data.items():
+            #     if key == "data":
+            #         for key2, value2, in value.items():
+            #             print()
+            #             print(f"\t{key2}: {value2}")
+            #     else:
+            #         print(f"{key}: {value}")
+
+            # print(f"SENDING PACKET TO WORLD SERVER")
             await ws.send(json.dumps(data))
             break
     else:

@@ -12,8 +12,8 @@ from entity import Entity
 
 
 class Enemy(Entity):
-    def __init__(self, type, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, size, movementType):
-        super().__init__(type, x, y)
+    def __init__(self, etype, x, y, level, health, attack, attackSpeed, dodgeChance, criticalChance, movementSpeed, visionRadius, size, movementType):
+        super().__init__(etype, x, y)
 
         #Everything about an Entity is defined here for simplicity, even if they dont use it, dont add to the object later.
         #the only exception here is the UUID, which is added for all entities by the entity manager
@@ -36,5 +36,5 @@ class Enemy(Entity):
 
 
     def tick(self):
-        #print(f"{self.type}, ({self.x}, {self.y}), {self.level}, {self.health}")
+        #print(f"TICKING {self.type}, ({self.x}, {self.y}), {self.level}, {self.health}")
         pass

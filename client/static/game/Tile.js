@@ -3,40 +3,26 @@ export class Tile {
     static tileWidth = 64;  //all tiles have the same width
     static tilePixelWidth = 16;  //like in the actual files
 
-    constructor(handler, ID, name, isSolid, loreBlurb, animationSpeed = 60){
-        //what does every tile type have?
-        this.ID = ID; //how you access the sprite for this tile
+    constructor(handler, codename, name, isSolid, loreBlurb, mapColor, animationSpeed = 60){
+        this.codename = codename;
         this.handler = handler;
         this.name = name;  
         this.isSolid = isSolid;
-        this.loreBlurb = loreBlurb
-        //i need to be able to dynamically tell what kind of tile something is, like is it animated or not?
-        //maybe we create the tiles in the assets?
-        //if its animated, pass an object, detailing the animation speed in ticksPerFrame
-        //so like 60 would take 1 second per frame about
-        //see the thing is how do i know how many frames there are in the animation without the image? 
-        //I dont, and i dont have the image here I dont believe, well maybe i do, 
-        //this is called on receive of the world data
-        //so i could defintitely get the image width here
-        //should I? idk
+        this.loreBlurb = loreBlurb;
+        this.mapColor = mapColor;
 
-        this.frames = Math.trunc(handler.AM.get(this.ID).naturalWidth / Tile.tilePixelWidth);
+        this.frames = Math.trunc(handler.AM.get(this.codename).naturalWidth / Tile.tilePixelWidth);
         if(this.frames > 1){
-            console.log(`Created a new Animated Tile#${this.ID}, it has ${this.frames} frame(s)`);
+            console.log(`Created a new Animated Tile(${this.codename}), it has ${this.frames} frames`);
             this.animationSpeed = animationSpeed;
             this.animationIndex = 0;
             this.animationI = 0;
         }else{
-            console.log(`Created a new Tile#${this.ID}, isSolid: ${this.isSolid} lore:${this.loreBlurb}`);
+            console.log(`Created a new Tile (${this.codename}), isSolid: ${this.isSolid} lore:${this.loreBlurb}`);
         }
-        
-
-
-
     }
     tick(){
         this.animationI += 1;
-        //console.log(this.animationI);
         if(this.animationI >= this.animationSpeed){
             this.animationI = 0;
             this.animationIndex += 1;
@@ -69,9 +55,9 @@ export class Tile {
         
         
         if(this.frames > 1){
-            ctx.drawImage(this.handler.AM.get(this.ID), this.animationIndex * Tile.tilePixelWidth, 0, 16, 16, renderX, renderY, Tile.tileWidth, Tile.tileWidth);
+            ctx.drawImage(this.handler.AM.get(this.codename), this.animationIndex * Tile.tilePixelWidth, 0, 16, 16, renderX, renderY, Tile.tileWidth, Tile.tileWidth);
         }else{
-            ctx.drawImage(this.handler.AM.get(this.ID), renderX, renderY, Tile.tileWidth, Tile.tileWidth);
+            ctx.drawImage(this.handler.AM.get(this.codename), renderX, renderY, Tile.tileWidth, Tile.tileWidth);
         }
     }
     renderDebug(ctx, renderX, renderY){

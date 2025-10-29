@@ -1,5 +1,6 @@
 import json
 from enemy import Enemy
+from static_entity import StaticEntity
 
 '''
 This file lists all the functions that handle packets for the world server from the
@@ -25,18 +26,18 @@ testpacket = {
 #       type = "tiles" data = {name:"", id:"", lore-blurb:"", is-Solid:"", map-color:"", Sprite:""}
 def WSonWorld(handler, d):
     #print(d)
-    print("---------------------------------------------------------------------------------")
-    print(d.get("world"))
-    print("---------------------------------------------------------------------------------")
-    print(d.get("tiles"))
-    print("---------------------------------------------------------------------------------")
-    print(d.get("statics"))
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("world"))
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("tiles"))
+    # print("---------------------------------------------------------------------------------")
+    # print(d.get("statics"))
 
     # for tile in d.get("tiles"):
     #     print(tile)
 
-    for static in d.get("statics"):
-        print(static)
+    # for static in d.get("statics"):
+    #     print(static)
 
     # for enemyHerd in d.get("world").get("enemyHerds"):
     #     print(f"")
@@ -98,12 +99,30 @@ def WSonLogin(handler, d):
         client.color = color
         client.userdata = userdata
         
-        #lets also send them all of the entities currently in the world as well
-        #lets build an enemies dictionary to send to the player as well
-        #         
+        #okay so the client is allowed to login, what are we sending them?
+        #world data
+        #tile Map
+        #tile data
+        #static dict
+
+        #what else?
+        #they dont need to see enemyherds or staticHoles,
+        #they do need to see a list of the current entities on the server
+        #lets make a generic entity packet, sends the data of all entities in the game, and all the data about them.
+        #or we have tons of different packet types, but they are smaller?
+
+        p = {
+            "world": handler.world.worldDict,
+            "tiles": handler.world.tilesDict,
+            "tileMap": handler.world.tileMapDict
+        }
+        client.send('world', p)
+
         
         enemies = {}
-        #loop through every enemy in the game and send it to the player
+        statics = {}
+
+
         for entity in handler.em.items:
             print(entity.UUID)
             if isinstance(entity, Enemy):
@@ -125,13 +144,20 @@ def WSonLogin(handler, d):
                     "movementType": entity.movementType
                 }
                 enemies[entity.UUID] = px
+            if isinstance(entity, StaticEntity):
+                #then this is a static entity packet, build appropriately
+                px = {
+                    "UUID": entity.UUID,
+                    "type": entity.type,
+                    "x": entity.x,
+                    "y": entity.y,
+                    "level": entity.level,
+                    "health": entity.health
+                }
+                statics[entity.UUID] = px
 
-        p = {
-            "world": handler.world.worldDict,
-            "tiles": handler.world.tilesDict,
-        }
-        client.send('world', p)
         client.send('Enemy', enemies)
+        client.send('StaticEntity', statics)
         print(f"ENEMIES: {enemies}")
 
         dataToSend = {"auth":"ok"}
@@ -161,7 +187,6 @@ def WSonLogin(handler, d):
     else:
         print(f"{username} is NOT in the database!")
         #then kick whoever tried to connect as me
-        #alright, we also want to tell the client they are okay to be logged in
         dataToSend = {"auth":"fail"}
         client.send('loginVerify', dataToSend)   #this is working
         handler.csm.kickClient(client.id, code=4001, reason="Username not registered!")

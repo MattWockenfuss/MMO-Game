@@ -3,7 +3,7 @@ from enemy import Enemy
 
 
 class EnemyHerd:
-    def __init__(self, dictionary, world):
+    def __init__(self, dictionary):
         print(f"Creating new Enemy Herd!")
         print(f"From {dictionary}")
         # for keys, values in dictionary.items():
@@ -30,11 +30,6 @@ class EnemyHerd:
         self.currentCount = 0
 
 
-
-
-
-
-        world.enemyHerds.append(self)
 
     def getRandomAttribute(self, attribute):
         #print(f"Testing Attribute for {attribute}")
