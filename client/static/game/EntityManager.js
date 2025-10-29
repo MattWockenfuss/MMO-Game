@@ -1,4 +1,4 @@
-import { OtherPlayer } from "./entites/OtherPlayer.js";
+import { OtherPlayer } from "./entities/OtherPlayer.js";
 
 export class EntityManager{
     constructor(handler){

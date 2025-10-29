@@ -8,9 +8,9 @@
 
 */
 
-import { Enemy } from "./entites/Enemy.js";
-import { OtherPlayer } from "./entites/OtherPlayer.js";
-import { Player } from "./entites/player.js";
+import { Enemy } from "./entities/Enemy.js";
+import { OtherPlayer } from "./entities/OtherPlayer.js";
+import { Player } from "./entities/player.js";
 import { Tile } from "./Tile.js";
 
 

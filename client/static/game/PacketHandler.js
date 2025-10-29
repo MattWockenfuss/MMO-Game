@@ -1,5 +1,6 @@
-import { Enemy } from "./entites/Enemy.js";
-import { OtherPlayer } from "./entites/OtherPlayer.js";
+import { Enemy } from "./entities/Enemy.js";
+import { StaticEntity } from "./entities/StaticEntity.js";
+import { OtherPlayer } from "./entities/OtherPlayer.js";
 
 export class PacketHandler{
     constructor(handler){
@@ -10,7 +11,9 @@ export class PacketHandler{
             world:          (data) => this.onWorld(data),
             onOtherPlayer:  (data) => this.onOtherPlayer(data),
             Disconnect:     (data) => this.onDisconnect(data),
-            Enemy:          (data) => this.onEnemy(data)
+            Enemy:          (data) => this.onEnemy(data),
+            StaticEntity:   (data) => this.onStaticEntity(data),
+            loginVerify:    (data) => this.onLoginVerify(data)
         }
 
     }
@@ -32,6 +35,27 @@ export class PacketHandler{
     onLogin(data){
         //this packet is the login of other players
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
+    }
+    onLoginVerify(data){
+        console.log(`LOGINVERIFY: ${data}`);
+    }
+
+    onStaticEntity(data){
+        console.log(`STATIC ENTITY: ${data}`);
+        //This packet is used when first loading into the game to fill the world with static entities
+        
+        for (const [key, value] of Object.entries(data)){
+            //console.log(`${key}, ${value}`);
+            console.log(value.type);
+            console.log(value.UUID);
+            console.log(`(${value.x}, ${value.y})`);
+            console.log(value.level);
+            console.log(value.health);
+            this.handler.EM.addEntity(new StaticEntity(this.handler, value));
+        }
+
+
+
     }
 
     onMove(data){
