@@ -1,3 +1,16 @@
+"""
+worldserver/WSCPacketHandler.py
+
+Packet handler module for processing incoming client packets on the world server.
+
+Responsibilities:
+- Handle client packets related to player movement and login.
+- Update server-side client state based on received packets.
+- Broadcast relevant state changes (e.g., movement) to other connected clients.
+- Validate client authentication before processing sensitive packets.
+- Interact with the data server client (dsc) for login processing.
+"""
+
 import json
 import base64
 '''
@@ -12,6 +25,24 @@ import base64
     to the rest of the players connected to this world server.
 '''
 def WSonMove(handler, d, clientSocket):
+    """
+    Handle a player 'move' packet from a client.
+
+    Updates the player's x and y position coordinates according to the packet data,
+    and broadcasts this movement update to all other authenticated connected players.
+
+    Args:
+        handler (Handler): The main server handler containing subsystem references.
+        d (dict): The parsed packet data containing 'x' and 'y' fields.
+        clientSocket (ClientSocket): The client socket object representing the player connection.
+
+    Behavior:
+        - Verifies the client is authenticated.
+        - Validates presence of x and y coordinates in the packet.
+        - Updates the player's position on the server.
+        - Sends movement update packets to all other connected players.
+    """
+
     try:
         if not clientSocket.is_authed:
             print(f"Move Packet from unauthenticated client, or player is null")
@@ -44,17 +75,26 @@ def WSonMove(handler, d, clientSocket):
 
 
 
-
-
-'''
-    This function handles the type 'login' packet from the clients. They tell us their username, password and color. 
-    We do a quick check to see if someone is already on the server as this player, and if so, don't bother, this method will
-    change in the future
-
-    p = {'username': 'Alex', 'password': '23423', 'color': '#e020ee'}
-
-'''
 def WSonLogin(handler, d, clientSocket):
+    """
+    Handle a client 'login' packet.
+
+    Processes login requests containing username, password, and color.
+
+    Validates that no other player on the server has the same username.
+    If the username is already connected, kicks the new client connection.
+
+    Sends a login message to the data server client (dsc) for authentication/processing.
+
+    Args:
+        handler (Handler): The main server handler containing subsystem references.
+        d (dict): The parsed packet data containing 'username', 'password', and 'color'.
+        clientSocket (ClientSocket): The client socket object representing the player connection.
+
+    Packet example:
+    p = {'username': 'Alex', 'password': '23423', 'color': '#e020ee'}
+    """
+
     #print(f"Handling Login Packet {d}")
     username = d.get("username")
     password = d.get("password")

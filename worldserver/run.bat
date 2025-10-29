@@ -1,9 +1,15 @@
-:: alright this batch file, when run, will create a .venv if it doest exist,
-::use .venv
-::upgrade pip and packages
-::doesnt currently handle upgrading the packages or anything
+:: run.bat
 ::
-::Written by a probably dumb Matt Wockenfuss 9-21-2025
+:: This batch file automates the setup and running of the Python MMO server environment.
+:: When executed, it:
+:: - Checks if a virtual environment folder ".venv" exists.
+:: - If not present, it creates the virtual environment, activates it,
+::   upgrades pip, installs required Python packages, then runs server.py.
+:: - If the environment already exists, it activates it and runs server.py directly.
+:: - After running the server, it pauses so output can be reviewed.
+:: - Finally, it prompts to restart the script (though this is not handled automatically).
+::
+:: Written by Matt Wockenfuss on 9-21-2025.
 @echo off
 
 

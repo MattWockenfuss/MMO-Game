@@ -1,8 +1,35 @@
+"""
+worldserver/enemyherd.py
+
+EnemyHerd class represents a group of enemy entities (a herd) within the MMO game world.
+
+Responsibilities:
+- Initialize enemy herd attributes such as spawn location, size, enemy types, and behavior parameters from a configuration dictionary.
+- Manage spawning logic with cooldowns and counts to maintain herd population.
+- Randomize attributes that may be specified as ranges.
+- Periodically spawn enemy entities within a radius around the herd coordinates.
+- Provide diagnostic printing of herd attributes for debugging.
+"""
+
 import random
 from enemy import Enemy
 
 
 class EnemyHerd:
+    """
+    Represents a collection (herd) of enemy entities with shared properties.
+
+    Attributes:
+        herdName (str): Name identifier of the herd.
+        coords (list[int, int]): Central spawn coordinates (x, y) for the herd.
+        radius (int): Spawn radius around central coordinates (in tiles or units).
+        herdSize (int or list): Desired size range or fixed number of enemies in the herd.
+        cooldown (int or list): Time interval range or fixed cooldown between spawn cycles.
+        enemyType (str): Type of enemy to spawn.
+        Level, Health, Attack, AttackSpeed, DodgeChance, CriticalChance, MovementSpeed, VisionRadius, Size, MovementType: Enemy attributes, fixed or ranged.
+        cooldownTimer (int): Current cooldown timer until next spawn.
+        currentCount (int): Current number of entities in the herd.
+    """
     def __init__(self, dictionary, world):
         print(f"Creating new Enemy Herd!")
         print(f"From {dictionary}")
@@ -46,6 +73,19 @@ class EnemyHerd:
             return attribute
 
     def tick(self, handler):
+        """
+        Main logic executed at each server tick.
+
+        Decrements cooldown timer, and when zero or less,
+        attempts to spawn new enemies if the herd population is below herdSize.
+
+        Spawns enemies randomly within the radius around herd coordinates,
+        setting their attributes with potential random ranges.
+
+        Args:
+            handler (Handler): Server handler for adding new entities.
+        """
+
         self.cooldownTimer -= 1
         #alright so we are ticking the enemyHerd, we want to check if the herd has enough members, and if not, spawn on cooldown
         if self.cooldownTimer <= 0:
@@ -88,6 +128,12 @@ class EnemyHerd:
 
 
     def printInfo(self):
+        """
+        Print detailed info about this enemy herd for debugging.
+
+        Includes name, spawn coordinates, size, cooldown, enemy type,
+        and all attribute ranges or fixed values.
+        """
         print(f"EnemyHerd {self.name}")
         print(f"\tCoords {self.coords}")
         print(f"\tRadius {self.radius}")

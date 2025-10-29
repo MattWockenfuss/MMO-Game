@@ -1,3 +1,22 @@
+"""
+worldserver/world.py
+
+World class representing the MMO game world state.
+
+Responsibilities:
+- Stores world data as a 2D array of tile IDs decoded from base64 data.
+- Maintains metadata about the world dimensions.
+- Manages a list of enemy herds present in the world.
+- Provides periodic updates through the tick() method called every server tick.
+- Supports setting world data from a structured dictionary (e.g. loaded JSON/YAML from the data server).
+- Includes debug printing utilities to output world data and tile mappings.
+- Placeholder for trigger checking logic to detect player interactions with world events.
+
+Dependencies:
+- base64: To decode world data encoding.
+- enemyherd.EnemyHerd: Enemy herd entity class representing groups of enemies.
+"""
+
 import base64
 from enemyherd import EnemyHerd
 
@@ -8,6 +27,17 @@ every world is going to have a 2d array of tile ids to store world data?
 
 class World:
     def __init__(self):
+        """
+    Main game world representation.
+
+    Attributes:
+        worldDict (dict): Dictionary containing world metadata and config.
+        tilesDict (dict): Dictionary mapping tile IDs to tile properties.
+        enemyHerds (list): List of EnemyHerd instances in the world.
+        worldData (bytes): Raw decoded tile data defining the world layout.
+        width (int): Number of tiles horizontally.
+        height (int): Number of tiles vertically.
+    """
         #read from the dataserver's world yml file, loaded in from JSON, can do .get("World-Name"), etc...
         self.worldDict = {}
         self.tilesDict = {}
@@ -30,6 +60,14 @@ class World:
 
 
     def printWorldData(self):
+        """
+        Debug routine to print out world layout and tile mappings.
+
+        Prints:
+        - World dimensions.
+        - Tile ID values in a grid matching world layout.
+        - Descriptions of known tile IDs to names.
+        """
         print(f"{self.width} x {self.height} = {len(self.worldData)}")
 
         for y in range(self.height):
@@ -45,6 +83,18 @@ class World:
 
 
     def setWorldData(self, d):
+        """
+        Initialize world data from a nested dictionary structure.
+
+        Extracts:
+        - base64-encoded worldData which is decoded into raw tile IDs.
+        - World dimensions (width, height).
+        - Tile dictionary describing tiles by ID.
+        - Constructs EnemyHerd instances from enemy herd data within the world.
+
+        Args:
+            d (dict): Dictionary containing 'world' and 'tiles' data from the dataserver.
+        """
         #these are both dictionaries
         world = d.get("world")
         tiles = d.get("tiles")

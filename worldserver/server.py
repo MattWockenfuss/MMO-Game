@@ -1,3 +1,26 @@
+"""
+worldserver/server.py
+
+Main server module for the MMO World Server component.
+
+Responsibilities:
+- Initialize and manage core game world subsystems including world state, entity management,
+  client socket communication, data server communication, and terminal interface.
+- Implement the main async event loop running at 60 ticks per second to drive game logic updates.
+- Provide benchmarking functionality to monitor server tick performance in real-time.
+- Coordinate startup and graceful shutdown of subsystems.
+
+Dependencies:
+- config: Configuration reader for server settings.
+- dataserverclient: Manages communication with the data server.
+- clientsocketmanager: Manages client connections and messaging.
+- world: Represents the game world state and logic.
+- entitymanager: Manages game entities and their states.
+- terminal: Provides a terminal interface for server commands and debugging.
+- asyncio and time libraries for async event loop and performance timing.
+"""
+
+
 from config import ConfigReader
 from dataserverclient import DataServerClient
 from clientsocketmanager import ClientSocketManager
@@ -31,6 +54,12 @@ Todo:
 import asyncio
 
 class Handler:
+    """
+    Container for all main server subsystems and shared state.
+    Holds references to DataServerClient, ClientSocketManager,
+    World, EntityManager, Terminal, and Benchmark instances.
+    Controls the running state of the server loop.
+    """
     def __init__(self, dsc, csm, world, em, terminal, benchmark):
         self.running = True
         self.dsc = dsc
@@ -41,10 +70,22 @@ class Handler:
         self.benchmark = benchmark
 
 class Benchmark:
+    """
+    Measures and reports ticks per second (TPS) and frame durations
+    for performance monitoring during server runtime.
+    """
     def __init__(self):
         self.active = False
 
     def start(self, nowTime, intervalTime, totalTime): #The Asterisk means that after the asterisk, no longer excepts positional arguments
+        """
+        Start benchmarking session.
+
+        Args:
+            nowTime (float): Current time from event loop.
+            intervalTime (float): Interval between reporting performance stats.
+            totalTime (float): Total duration to run benchmarking.
+        """
         self.active = True
 
         self.interval_frame_times = []
@@ -58,6 +99,15 @@ class Benchmark:
 
 
     def record(self, now, duration_ms: float):
+        """
+        Record the duration of a single frame (tick) and print stats
+        at specified intervals and at the end of the benchmarking period.
+
+        Args:
+            now (float): Current time from event loop.
+            duration_ms (float): Duration of last frame in milliseconds.
+        """
+        
         if not self.active: return
         self.interval_frame_times.append(duration_ms)
         self.total_frame_times.append(duration_ms)
@@ -92,6 +142,10 @@ class Benchmark:
 
 
 class WorldServer:
+    """
+    Main world server class coordinating the MMO game server operation.
+    Initializes all subsystems and runs the async main loop to process ticks.
+    """
     def __init__(self):
         self.world = World()
         self.em = EntityManager()
@@ -105,11 +159,12 @@ class WorldServer:
         
 
     async def tick(self):
-        '''
-            This code runs the main server loop at a fixed 60 ticks per second, using the event loop's monotonic clock to keep precise timing and prevent drift. On each tick, 
-            it updates all subsystems (data server, client sockets, world, entities, and terminal) and measures how long the frame took using time.perf_counter(). Every five 
-            seconds, it prints performance stats (average, max, and min frame durations in milliseconds) so you can monitor server load and tick stability in real time.
-        '''
+        """
+        Main server loop running at 60 ticks per second.
+        Updates all subsystems and collects benchmarking info.
+        Uses asyncio event loop clock to maintain fixed tick rate
+        with drift correction.
+        """
         RATE = 60
         DT = 1.0 / RATE
 
@@ -147,6 +202,11 @@ class WorldServer:
 
 
     async def start(self):
+        """
+        Starts the world server by reading configuration,
+        then concurrently starting the main tick loop,
+        data server client, and client socket manager.
+        """
         self.cf = ConfigReader("world-server.yml")
         self.cf.readYML()
         self.cf.printConfigData()

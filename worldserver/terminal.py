@@ -1,22 +1,71 @@
+"""
+worldserver/terminal.py
+
+Terminal input handler for the MMO World Server.
+
+Responsibilities:
+- Provides an async interface to receive text commands from the server terminal.
+- Parses commands entered at the terminal and executes corresponding server actions.
+- Supports commands for server control, player management, benchmarking, querying game state, and terminal utility functions (e.g., clear screen).
+- Runs in a tick function that continuously checks for new input and processes it asynchronously.
+
+Dependencies:
+- asyncio: For asynchronous input reading and task scheduling.
+- os: To execute terminal commands like clearing the screen.
+"""
+
 import asyncio
 import os
 
 '''
-    This is going to represent the piece of the code that is the input handler for our terminal, we will be able to parse commands
-    and act accordingly depending on the command, maybe even add arguments, or an argument for that matter
+This module processes terminal commands asynchronously.
+Commands allow interaction with the worldserver subsystem to query state or control players.
 
+Example commands:
+- help: Prints a list of available commands and their usage.
+- desert: Requests world data for "The Desert" from the dataserver.
+- benchmark <interval> <total>: Runs a TPS benchmarking session over a specified duration.
+- players: Lists all currently connected players.
+- entities: Lists all entities present on the server.
+- herds: Lists enemy herds or details for a named herd.
+- sockets: Lists all connected client sockets.
+- kick <name>: Kicks a player by name.
+- kickall: Kicks all connected players.
+- clear or cls: Clears the terminal screen.
+- exit: Shuts down the server loop.
 '''
 
 class Terminal:
+    """
+    Terminal input handler class.
+
+    Manages asynchronous reading of server console input,
+    parsing commands and executing corresponding server-side actions.
+    """
     def __init__(self):
         self.task = None
 
     async def getTerminalInput(self):
+        """
+        Asynchronously reads a line of input from the terminal
+        in a non-blocking manner using an executor.
+
+        Returns:
+            str: The input string entered by the user.
+        """
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, input, "'help' for commands, or 'exit' to quit\n")
 
     def tick(self, handler):
+        """
+        Called periodically by the server main loop to process terminal input.
 
+        If an input task is completed, retrieve and parse the command,
+        then perform the requested action by interacting with the handler subsystems.
+
+        Args:
+            handler (Handler): The main server handler containing subsystem references.
+        """
         if self.task and self.task.done():
 
             msg = None
@@ -137,7 +186,7 @@ class Terminal:
                 print(f"Closing")
 
 
-
+        # Schedule new input task if none running
         if self.task is None:
             self.task = asyncio.create_task(self.getTerminalInput())
 

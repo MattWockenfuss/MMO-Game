@@ -1,3 +1,15 @@
+"""
+worldserver/WSDPacketHandler.py
+
+Packet handler module for processing incoming packets from the data server to the world server.
+
+Responsibilities:
+- Handle world data synchronization from the data server.
+- Process login authentication responses from the data server.
+- Update world state and notify clients accordingly.
+- Manage player authentication status and broadcast login events.
+"""
+
 import json
 from enemy import Enemy
 
@@ -24,6 +36,18 @@ testpacket = {
 #       type = "world" data = {World-Name:"", Tile-Map:"", World-Entrance-Color:"", world-data:"", world-width:""}
 #       type = "tiles" data = {name:"", id:"", lore-blurb:"", is-Solid:"", map-color:"", Sprite:""}
 def WSonWorld(handler, d):
+    """
+    Handle 'world' type packets from the data server.
+
+    Receives world metadata, tileset, static objects, and enemy herd information.
+
+    Updates the server's world state by setting world data and associated dictionaries.
+
+    Args:
+        handler (Handler): The main server handler containing subsystem references.
+        d (dict): Packet data containing keys like 'world', 'tiles', and 'statics'.
+    """
+
     #print(d)
     print("---------------------------------------------------------------------------------")
     print(d.get("world"))
@@ -56,19 +80,28 @@ def WSonWorld(handler, d):
 
 
 
-'''
-    In WSonLogin, we accept the login packet from the dataserver, which tells us whether or not the user is authenticated in the Dataserver, and if so,
-    sends back their stored userdata. We then move the client to the players list because they are authed, and tell them and all the other players the event
-    that just occured.
-
-    Packet Looks Like:
-    
-        d = {'username': data["username"],'color': data["color"],'message': 'EXISTS','userdata': player,'session_id': data["session_id"]}
-    OR
-        d = {'username': data["username"],'message': 'NOT','session_id': data["session_id"]}}
-
-'''
 def WSonLogin(handler, d):
+    """
+    Handle 'login' type packets from the data server which indicate the result of user authentication.
+
+    If the user exists and is authenticated:
+     - Move client from unauthenticated to authenticated players list.
+     - Update client information from data server userdata.
+     - Send current world entities and enemy data to the client.
+     - Notify all other players of the new player's login.
+
+    If authentication fails:
+     - Notify client of failure.
+     - Kick the client from the server.
+
+    Args:
+        handler (Handler): The main server handler containing subsystem references.
+        d (dict): Packet data containing login results and user information.
+
+    Packet examples:
+        Exists: {'username': ..., 'color': ..., 'message': 'EXISTS', 'userdata': ..., 'session_id': ...}
+        Not Exists: {'username': ..., 'message': 'NOT', 'session_id': ...}
+    """
     
     username = d.get("username")
     color = d.get("color")

@@ -1,14 +1,22 @@
+"""
+worldserver/enemy.py
+
+Enemy class represents all monster-type entities in the MMO game, inheriting from the base Entity class.
+
+Responsibilities:
+- Extend Entity by adding combat and gameplay related attributes such as level, health, attack stats, movement,
+  and detection abilities.
+- Represent all kinds of enemies including bosses and regular monsters.
+- Provide a framework for per-tick behavior updates via the tick() method (to be extended or overridden).
+"""
+
+'''
+An Enemy is a child of the Entity object. Every enemy has x and y coordinates and an ID,
+but they also have a variety of other attributes to define their combat and gameplay features.
+They represent all monster types the player can attack, including bosses and mobs.
+'''
+
 from entity import Entity
-
-'''
-    An Enemy is a child of the Entity object, every enemy has an x and y coordinate and an ID, but they also have a bunch of other attributes. They are used to represent
-    every type of monster in the game that the player is going to be able to attack. This could be bosses, or all of the different types of enemies.
-
-
-
-
-'''
-
 
 
 class Enemy(Entity):
@@ -36,5 +44,11 @@ class Enemy(Entity):
 
 
     def tick(self):
+        """
+        Per-tick update method for enemy behavior.
+
+        Intended to be extended or overridden to implement enemy actions per server tick.
+        Currently does nothing.
+        """
         #print(f"{self.type}, ({self.x}, {self.y}), {self.level}, {self.health}")
         pass

@@ -1,3 +1,18 @@
+"""
+A simple YAML configuration file reader.
+
+Responsibilities:
+- Load configuration data from a YAML file into a Python dictionary.
+- Provide an interface to access configuration values by keys.
+- Print loaded configuration data for debugging or verification.
+
+Usage:
+    cr = ConfigReader("config.yml")
+    cr.readYML()
+    cr.printConfigData()
+    value = cr.get("someKey")
+"""
+
 import yaml
 
 class ConfigReader:

@@ -1,11 +1,21 @@
+"""
+worldserver/clientsocket.py
+
+ClientSocket class represents an individual client WebSocket connection to the world server.
+
+Responsibilities:
+- Manage incoming and outgoing message queues asynchronously.
+- Deserialize incoming JSON packets and dispatch them to appropriate packet handlers.
+- Serialize outgoing messages and send them asynchronously via the websocket.
+- Track client session metadata such as IP, port, authentication status, and session ID.
+"""
+
 '''
-okay so we are going to create a client socket when a new client connects and it will handle incoming msgs
-it will add to the queue and send msgs to the client
-
-what are user IDs?
-whenever we create an account it will create one?
-
-
+When a new client connects, a ClientSocket instance is created to handle:
+- Receiving incoming messages asynchronously and queuing them for processing.
+- Sending queued outgoing messages asynchronously to the client.
+- Managing client identification by unique session_id.
+- Authentication status tracking.
 '''
 
 import json
@@ -16,6 +26,19 @@ import WSCPacketHandler as ph
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 
 class ClientSocket():
+    """
+    Represents a connected client WebSocket session.
+
+    Attributes:
+        session_id (str): Unique session identifier for this client's connection.
+        ws (WebSocketServerProtocol): Websocket connection instance.
+        ip (str): Client IP address.
+        port (int): Client port number.
+        inbound (asyncio.Queue): Queue holding received messages to be processed.
+        outbound (asyncio.Queue): Queue holding messages waiting to be sent.
+        is_authed (bool): Whether the client has successfully authenticated.
+    """
+
     def __init__(self, session_id, ws):
         self.session_id = session_id
         self.ws = ws
@@ -71,6 +94,14 @@ class ClientSocket():
 
 
     async def handleReceive(self): 
+        """
+        Coroutine handling asynchronous reception of incoming messages from the client websocket.
+
+        Decodes JSON messages and enqueues them for processing.
+
+        Logs received messages and handles connection closing or errors.
+        """
+
         try:
             async for msg in self.ws:
                 #this is called everytime the world server receives data from this client

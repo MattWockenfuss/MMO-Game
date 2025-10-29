@@ -1,3 +1,17 @@
+"""
+worldserver/clientsocketmanager.py
+
+ClientSocketManager class manages WebSocket client connections to the world server.
+
+Responsibilities:
+- Track all connected clients and authenticated players separately.
+- Handle new client connections, message sending, and receiving.
+- Facilitate kicking and forceful disconnection of clients or players.
+- Periodically tick clients and players for update processing.
+- Broadcast messages to all authenticated players.
+- Maintain unique session IDs for each client connection.
+"""
+
 import asyncio
 from websockets.asyncio.server import serve
 import websockets.exceptions as wsExceptions
@@ -6,6 +20,7 @@ import random, string
 from clientsocket import ClientSocket
 
 class ClientSocketManager:
+    #Manages all connected client sockets and authenticated players.
     def __init__(self):
         self.clients = {}
         self.players = {}  #clients whom have been authenticated, remember, ids or keys are unique across both lists
@@ -19,6 +34,15 @@ class ClientSocketManager:
 
     
     async def cleanup(self, client, code = 1000, reason = "Unknown"):
+        """
+        Cleanup client data structures when connection is closed or disconnected.
+
+        Args:
+            client (ClientSocket): Client to clean up.
+            code (int): WebSocket close code.
+            reason (str): Reason for disconnection.
+        """
+
         #first check if we alreadu cleaned this guy, if we did, return
         sessID = client.session_id
         async with self._clean_lock:
@@ -96,6 +120,8 @@ class ClientSocketManager:
             await self.cleanup(client)
 
     async def start(self, ListenHost, Port, pingInterval, pingTimeout):
+        #Start the WebSocket server to listen for incoming client connections.
+        
         self.ListenHost = ListenHost
         self.Port = Port
         self.server = await serve(self.handleConnection, self.ListenHost, self.Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
@@ -110,6 +136,14 @@ class ClientSocketManager:
         await self.server.wait_closed()
 
     def _generateNewSessionID(self):
+        """
+        Generate a unique 8-character alphanumeric session ID.
+
+        Ensures no collisions with existing clients or players.
+
+        Returns:
+            str: Unique session identifier.
+        """
         characterPool = string.ascii_letters + string.digits
         while True:
             key = ''.join(random.choice(characterPool) for i in range(8))

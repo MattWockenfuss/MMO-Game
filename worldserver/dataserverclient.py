@@ -1,3 +1,17 @@
+"""
+worldserver/dataserverclient.py
+
+DataServerClient class represents the client connection from the world server
+to the data server in the MMO architecture.
+
+Responsibilities:
+- Manage asynchronous websocket communication with the data server.
+- Maintain inbound and outbound message queues for reliable message handling.
+- Deserialize inbound packets and dispatch them to packet handlers.
+- Serialize and send outbound packets to the data server.
+- Handle lifecycle of the websocket connection using asyncio.
+"""
+
 #this object is represents the link between the data server and the world server
 #this is the client in the relationship, the data server is the server
 
@@ -17,6 +31,13 @@ class DataServerClient:
         self._shutdown_event = asyncio.Event()
     
     def tick(self, handler):
+        """
+        Process all inbound messages in the queue.
+
+        Decodes JSON packets, identifies the packet type, and dispatches
+        them to appropriate handlers in WSDPacketHandler module.
+        """
+        
         while not self.inbound.empty():
             data = self.inbound.get_nowait()
             #print(data)
@@ -53,6 +74,12 @@ class DataServerClient:
         self.outbound.put_nowait(json.dumps(packet))
 
     async def receiver(self):
+        """
+        Asynchronous websocket receiver listening for incoming messages from the data server.
+
+        Puts raw string messages into the inbound queue for processing in tick().
+        Limits large message printing in logs to 100 characters for readability.
+        """
         myrepr = reprlib.Repr()
         myrepr.maxstring = 100
 
@@ -63,6 +90,10 @@ class DataServerClient:
 
 
     async def sender(self):
+        """
+        Establish websocket connection to the data server and concurrently run sender and receiver tasks.
+        """
+
         while True:
             #print(f"im awaiting for something to be put in the queue")
             msg = await self.outbound.get()
@@ -80,6 +111,13 @@ class DataServerClient:
                 tg.create_task(self.sender())
 
     async def stop(self, code, reason):
+        """
+        Gracefully shutdown the websocket connection by setting the shutdown event and closing the websocket.
+
+        Args:
+            code (int): WebSocket close code.
+            reason (str): Close reason description.
+        """
         self._shutdown_event.set()
         await self.ws.close(code = code, reason = reason)
         
