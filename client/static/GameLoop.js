@@ -1,7 +1,7 @@
 console.log("Loading GameLoop.js!");
 
 import { Handler } from "./game/handler.js";
-import { Player } from "./game/entites/player.js";
+import { Player } from "./game/entities/player.js";
 import { World } from "./game/world.js";
 import { EntityManager } from "./game/EntityManager.js";
 import { InputManager } from "./game/input/InputManager.js";
