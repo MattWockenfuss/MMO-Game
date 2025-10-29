@@ -88,14 +88,17 @@ def WSonLogin(handler, d):
         print(f'{session_id} tried to login as {username}, They are in the Database!')
 
         #lets auth them right here, no method
+
+        new_sessID = handler.EM.generateUUID() #so players are not handled by the entityManager, but their UUIDs are mutually exclusive
+
         handler.csm.clients.pop(session_id)
-        handler.csm.players[session_id] = client
+        handler.csm.players[new_sessID] = client
         client.is_authed = True
 
         client.x = 200
         client.y = 200
         client.username = username
-        client.session_id = session_id
+        client.session_id = new_sessID
         client.color = color
         client.userdata = userdata
         

@@ -69,7 +69,6 @@ class ClientSocketManager:
     def tick(self, handler):
         for id, client in list(self.clients.items()): #chatGPT said run them in lists? so that they are 'snapshots' not the real thing
             client.tick(handler)
-            #print(f"ID: {id} {client.id}")
         for player in list(self.players.values()):
             player.tick(handler)
 
@@ -112,5 +111,5 @@ class ClientSocketManager:
     def _generateNewSessionID(self):
         characterPool = string.ascii_letters + string.digits
         while True:
-            key = ''.join(random.choice(characterPool) for i in range(8))
+            key = ''.join(random.choice(characterPool) for i in range(4))
             if key not in self.players.keys() and key not in self.clients.keys(): return key
