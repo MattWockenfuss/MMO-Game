@@ -1,5 +1,5 @@
+code-name: 'water'
 name: "Water"
-id: 6
 lore-blurb: "Very flowy"
 is-Solid: True
 map-color: "#5b6ee1"

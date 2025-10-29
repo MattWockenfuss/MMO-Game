@@ -1,5 +1,5 @@
+code-name: 'sand'
 name: "Sand Tile"
-id: 2
 lore-blurb: "sand castles"
 is-Solid: False
 map-color: "#d9a066"

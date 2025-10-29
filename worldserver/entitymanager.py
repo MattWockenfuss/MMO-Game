@@ -14,6 +14,7 @@ Responsibilities:
 
 import random, string
 from enemy import Enemy
+from static_entity import StaticEntity
 
 class EntityManager:
     """
@@ -70,9 +71,18 @@ class EntityManager:
                 "size": e.size,
                 "movementType": e.movementType
             }
-        
             self.handler.csm.broadcast("Enemy", p)
-
+        elif isinstance(e, StaticEntity):
+            p = {
+                "uuid": e.UUID,
+                "type": e.type,
+                "x": e.x,
+                "y": e.y,
+                "level": e.level,
+                "health": e.health
+            }
+            print(f"Telling all players of a new Static Entity -> {p}")
+            self.handler.csm.broadcast("StaticEntity", p)
 
 
     def getByIndex(self, i):

@@ -19,6 +19,8 @@ Dependencies:
 
 import base64
 from enemyherd import EnemyHerd
+from static_entity import StaticEntity
+from staticEntityHole import StaticEntityHole
 
 '''
 every world is going to have a 2d array of tile ids to store world data?
@@ -41,7 +43,12 @@ class World:
         #read from the dataserver's world yml file, loaded in from JSON, can do .get("World-Name"), etc...
         self.worldDict = {}
         self.tilesDict = {}
+        self.tileMapDict = {}
+        self.staticsDict = {}
+
         self.enemyHerds = []
+        self.staticHoles = []
+
         self.worldData = bytes() #decoded into tile IDs
         self.width = 0
         self.height = 0
@@ -56,6 +63,20 @@ class World:
 
         for enemyHerd in self.enemyHerds:
             enemyHerd.tick(handler)
+
+        for hole in self.staticHoles:
+            if not hole.filled:
+                #add an entity, set it to filled
+                for entry in self.staticsDict:
+                    if entry.get('code-name') == hole.type:
+                        print(entry)
+                        print(f"x {hole.x} y {hole.y}")
+
+                        etype = entry.get('code-name')
+                        health = entry.get('health')
+                        level = entry.get('Level')
+                        handler.em.addEntity(StaticEntity(etype, hole.x, hole.y, health, level))
+                        hole.filled = True
 
 
 
@@ -102,25 +123,32 @@ class World:
         worldData = world.get("world-data")
         #print(worldData)
         self.worldData = base64.b64decode(worldData)
-        self.width = world.get("world-width")
+        self.width = self.worldDict.get("world-width")
         self.height = len(self.worldData) // self.width   # using // is integer division
-        #print("okay got worlddata and width and height")
-        self.worldDict = world
-        self.tilesDict = tiles
-        #print(f"World Name: {self.worldDict.get("World-Name")}")
-        #self.printWorldData()
+        
+        #okay so we loaded world data, width and height, stored dictionaries to send to clients, now load enemy herds and entities
 
-        #now load all of the enemy data
-        #how do we want to store this?
-        #well the world is going to have a list of entity herds, each entity herd has a variety of attributes
-        for enemyHerd in d.get("world").get("EnemyHerds"):
-            herd = EnemyHerd(enemyHerd, self)
+        print("LOADING ENEMY HERDS")
+
+        print(self.worldDict.get("EnemyHerds"))
+        for enemyHerd in self.worldDict.get("EnemyHerds"):
+            herd = EnemyHerd(enemyHerd)
+            self.enemyHerds.append(herd)
+        
 
 
-        #once all of the herds are instantiated, they they should all add themselves to the list given their is no errors
-        #have them print their names
-        # for h in self.enemyHerds:
-        #     h.printInfo()
+
+        world_statics = self.worldDict.get("StaticEntities")
+
+        print(f"statics DB: {self.staticsDict}")
+        print(f"static_entities.yml: {world_statics}")
+        
+        for eTypes in world_statics:
+            print(f"\t{eTypes}")
+            for (x, y) in world_statics[eTypes]:
+                self.staticHoles.append(StaticEntityHole(eTypes, x, y))
+
+                
 
     def checkWorldTrigger(self):
         #being called 60 times per second

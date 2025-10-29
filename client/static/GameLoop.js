@@ -33,8 +33,10 @@ class GameEngine{
 
     
         //now lets try loading the images
-        const loadingAssets = assetManager.loadAll();
+        const loadingAssets = assetManager.loadAllFromServer();
         loadingAssets.then(() => {
+            console.log("Done Loading Assets!");
+            console.log(`HEIGHT OF RANDOM TILE IMAGE = ${assetManager.get('grass').height}`);
             this.startGame();
         });
 
@@ -55,7 +57,7 @@ class GameEngine{
         el.addEventListener(ev, cb, opts);
         this._listeners.push([el, ev, cb, opts]);
         //el = element, ev = event, cb = callback, and opts = options
-        console.log(`Now Tracking "${el}.${ev} and calling ${cb}"`);
+        //console.log(`Now Tracking "${el}.${ev} and calling ${cb}"`);
         return cb;
     }
     offAll(){

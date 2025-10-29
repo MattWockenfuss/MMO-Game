@@ -11,6 +11,7 @@ class ConfigManager():
                             "statics": [],
                             "items": [],
                             "players": [],
+                            "tileMap": {},
                             "worlds": []
                         }
     #this is disgusting, fix later
@@ -23,6 +24,7 @@ class ConfigManager():
                     "statics": [],
                     "items": [],
                     "players": [],
+                    "tileMap": {},
                     "worlds": []
                 }
             print(self.database)
@@ -72,9 +74,23 @@ class ConfigManager():
                 total += len(value)
 
             print(f"Loaded {total} YML Files!")
+
+            self.database["tileMap"] = utils.generateTileMappings(self.database)
+
             for worldDict in self.database["worlds"]:
                 print()
                 print(f"-------- {worldDict.get("World-Name")} --------")
+                #okay so we need a mapping of code names to IDs, global or world based?
+                #okay so every world can have a mappings file mapping color to code name to ID?
+                #or every tile has a set color, and the data server dynamically generates IDs on startup.
+                #then it sends these to all the worlds and eventually all the clients
+                #Problem?
+
+                #What if someone adds a tile, and refreshes the database while multiple worlds are online. 
+                #Well those worlds wont change, they will use the old tilesets
+                #so its confusing but not problem
+
+
                 utils.loadMapImage(worldDict, self.database)
                 utils.loadEnemyHerds(worldDict, self.database)
                 utils.loadStaticEntities(worldDict, self.database)

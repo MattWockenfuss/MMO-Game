@@ -58,11 +58,6 @@ class EnemyHerd:
 
 
 
-
-
-
-        world.enemyHerds.append(self)
-
     def getRandomAttribute(self, attribute):
         #print(f"Testing Attribute for {attribute}")
         if isinstance(attribute, list):
