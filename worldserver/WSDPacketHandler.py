@@ -122,7 +122,7 @@ def WSonLogin(handler, d):
 
         #lets auth them right here, no method
 
-        new_sessID = handler.EM.generateUUID() #so players are not handled by the entityManager, but their UUIDs are mutually exclusive
+        new_sessID = handler.em.generateUUID() #so players are not handled by the entityManager, but their UUIDs are mutually exclusive
 
         handler.csm.clients.pop(session_id)
         handler.csm.players[new_sessID] = client
@@ -150,7 +150,8 @@ def WSonLogin(handler, d):
         p = {
             "world": handler.world.worldDict,
             "tiles": handler.world.tilesDict,
-            "tileMap": handler.world.tileMapDict
+            "tileMap": handler.world.tileMapDict,
+            "statics": handler.world.staticsDict
         }
         client.send('world', p)
 
@@ -202,7 +203,7 @@ def WSonLogin(handler, d):
         for sessID, player in handler.csm.players.items():
             #here we are looping through all the clients, and if they didnt just log in, tell them
             #someone just logged in, and tell the person who just logged in they exist
-            if sessID != session_id:
+            if sessID != new_sessID:
                 da = {
                     "username": player.username,
                     "x": player.x,

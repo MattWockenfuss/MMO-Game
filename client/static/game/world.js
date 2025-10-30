@@ -81,9 +81,11 @@ export class World{
         //okay so we can set the world data in this function, everything about it
         let worlddata = data.world;
         let tilesdata = data.tiles;
-        let tileRegistry = data.tileMap
+        let tileRegistry = data.tileMap;
+        let staticsRegistry = data.statics;
         
-
+        console.log(staticsRegistry);
+        
 
         var decoded = atob(worlddata["world-data"]);
         var bytes = new Int8Array(decoded.length);

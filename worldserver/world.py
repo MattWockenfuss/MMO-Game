@@ -30,16 +30,16 @@ every world is going to have a 2d array of tile ids to store world data?
 class World:
     def __init__(self):
         """
-    Main game world representation.
+            Main game world representation.
 
-    Attributes:
-        worldDict (dict): Dictionary containing world metadata and config.
-        tilesDict (dict): Dictionary mapping tile IDs to tile properties.
-        enemyHerds (list): List of EnemyHerd instances in the world.
-        worldData (bytes): Raw decoded tile data defining the world layout.
-        width (int): Number of tiles horizontally.
-        height (int): Number of tiles vertically.
-    """
+            Attributes:
+                worldDict (dict): Dictionary containing world metadata and config.
+                tilesDict (dict): Dictionary mapping tile IDs to tile properties.
+                enemyHerds (list): List of EnemyHerd instances in the world.
+                worldData (bytes): Raw decoded tile data defining the world layout.
+                width (int): Number of tiles horizontally.
+                height (int): Number of tiles vertically.
+        """
         #read from the dataserver's world yml file, loaded in from JSON, can do .get("World-Name"), etc...
         self.worldDict = {}
         self.tilesDict = {}
@@ -79,16 +79,15 @@ class World:
                         hole.filled = True
 
 
-
-    def printWorldData(self):
-        """
+    """
         Debug routine to print out world layout and tile mappings.
 
         Prints:
         - World dimensions.
         - Tile ID values in a grid matching world layout.
         - Descriptions of known tile IDs to names.
-        """
+    """
+    def printWorldData(self):
         print(f"{self.width} x {self.height} = {len(self.worldData)}")
 
         for y in range(self.height):
@@ -102,41 +101,45 @@ class World:
         for tile in self.tilesDict:
             print(f'{tile.get("id")} >> "{tile.get("name")}"')
 
+    """
+    Initialize world data from a nested dictionary structure.
 
+    Extracts:
+    - base64-encoded worldData which is decoded into raw tile IDs.
+    - World dimensions (width, height).
+    - Tile dictionary describing tiles by ID.
+    - Constructs EnemyHerd instances from enemy herd data within the world.
+
+    Args:
+        d (dict): Dictionary containing 'world' and 'tiles' data from the dataserver.
+    """
     def setWorldData(self, d):
-        """
-        Initialize world data from a nested dictionary structure.
+        #Store all of the data from the data server in our dictionaries
+        self.worldDict = d.get("world")
+        self.tilesDict = d.get("tiles")
+        self.tileMapDict = d.get("tileMap")
+        self.staticsDict = d.get("statics")
 
-        Extracts:
-        - base64-encoded worldData which is decoded into raw tile IDs.
-        - World dimensions (width, height).
-        - Tile dictionary describing tiles by ID.
-        - Constructs EnemyHerd instances from enemy herd data within the world.
 
-        Args:
-            d (dict): Dictionary containing 'world' and 'tiles' data from the dataserver.
-        """
-        #these are both dictionaries
-        world = d.get("world")
-        tiles = d.get("tiles")
-        #print("okay got world and tiles")
-        worldData = world.get("world-data")
-        #print(worldData)
+
+        #Okay, so stored all of the dictionaries needed, set the world data, including width and height
+
+        worldData = self.worldDict.get("world-data")
+
         self.worldData = base64.b64decode(worldData)
         self.width = self.worldDict.get("world-width")
         self.height = len(self.worldData) // self.width   # using // is integer division
         
+
+
         #okay so we loaded world data, width and height, stored dictionaries to send to clients, now load enemy herds and entities
-
-        print("LOADING ENEMY HERDS")
-
-        print(self.worldDict.get("EnemyHerds"))
         for enemyHerd in self.worldDict.get("EnemyHerds"):
             herd = EnemyHerd(enemyHerd)
             self.enemyHerds.append(herd)
         
 
 
+        # Next up, statics
 
         world_statics = self.worldDict.get("StaticEntities")
 

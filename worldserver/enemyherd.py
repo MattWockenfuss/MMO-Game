@@ -30,7 +30,7 @@ class EnemyHerd:
         cooldownTimer (int): Current cooldown timer until next spawn.
         currentCount (int): Current number of entities in the herd.
     """
-    def __init__(self, dictionary, world):
+    def __init__(self, dictionary):
         print(f"Creating new Enemy Herd!")
         print(f"From {dictionary}")
         # for keys, values in dictionary.items():

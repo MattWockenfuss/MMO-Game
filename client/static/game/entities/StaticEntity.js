@@ -19,6 +19,7 @@ export class StaticEntity extends Entity{
     render(ctx){
         ctx.fillStyle = "blue";
         ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
+        ctx.drawImage(this.handler.AM.get(this.type), this.renderX, this.renderY);
 
         ctx.fillStyle = "black";
         ctx.font = "bold 20px monospace";

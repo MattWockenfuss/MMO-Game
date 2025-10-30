@@ -37,8 +37,7 @@ class EntityManager:
     def getNumberOfEntities(self):
         return len(self.entities)
 
-    def addEntity(self, e):
-        """
+    """
         Add a new entity to the manager.
 
         Assigns a generated unique UUID, updates indices mapping,
@@ -46,8 +45,8 @@ class EntityManager:
 
         Args:
             e (Entity): Entity instance to add.
-        """
-
+    """
+    def addEntity(self, e):
         e.UUID = self.generateUUID()
         self.indices[e.UUID] = len(self.items)
         self.items.append(e)

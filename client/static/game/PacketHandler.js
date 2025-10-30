@@ -41,16 +41,20 @@ export class PacketHandler{
     }
 
     onStaticEntity(data){
-        console.log(`STATIC ENTITY: ${data}`);
+        //console.log(`STATIC ENTITY: ${data}`);
         //This packet is used when first loading into the game to fill the world with static entities
         
+        for(let UUID in data){
+
+        }
+
         for (const [key, value] of Object.entries(data)){
             //console.log(`${key}, ${value}`);
-            console.log(value.type);
-            console.log(value.UUID);
-            console.log(`(${value.x}, ${value.y})`);
-            console.log(value.level);
-            console.log(value.health);
+            // console.log(value.type);
+            // console.log(value.UUID);
+            // console.log(`(${value.x}, ${value.y})`);
+            // console.log(value.level);
+            // console.log(value.health);
             this.handler.EM.addEntity(new StaticEntity(this.handler, value));
         }
 
@@ -79,11 +83,11 @@ export class PacketHandler{
         // console.log(data.y);
         // console.log(data.session_id);
         // console.log(data.color);
-
+        console.error(`NEW OTHER PLAYER`);
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
     onEnemy(data){
-        console.log(data)
+        //console.log(data)
         for(let uuid in data){
             this.handler.EM.addEntity(new Enemy(this.handler, data[uuid]));
         }
