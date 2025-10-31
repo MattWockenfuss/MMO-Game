@@ -1,0 +1,17 @@
+#the config for the comms server says what?
+#how many of each world type to load
+
+worldListenAddress: "0.0.0.0"
+worldListenPort: 8010
+
+playerListenAddress: "0.0.0.0"
+playerListenPort: 8011
+
+dataserverIP: "127.0.0.1"
+dataserverPORT: 8001
+
+worlds:
+  - beach: 2
+  - caves: 1
+  - crypts: 1
+  - desert: 1
