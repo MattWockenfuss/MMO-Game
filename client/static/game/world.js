@@ -18,6 +18,7 @@ export class World{
         this.yOffset = null;
 
         this.tileMap = new Map();
+        this.staticsRegistry = null;
     }
     tick(){
         //tile animations will go here?
@@ -82,9 +83,9 @@ export class World{
         let worlddata = data.world;
         let tilesdata = data.tiles;
         let tileRegistry = data.tileMap;
-        let staticsRegistry = data.statics;
+        this.staticsRegistry = data.statics;
         
-        console.log(staticsRegistry);
+        console.error(`STATICS LIST: ${JSON.stringify(this.staticsRegistry)}`);  //this is actually a list, convert to dictionary?
         
 
         var decoded = atob(worlddata["world-data"]);
@@ -101,10 +102,13 @@ export class World{
         this.worldPixelHeight = this.worldHeight * Tile.tileWidth;
 
 
-        console.log(tilesdata)
-        for(let tile of tilesdata){
-            //okay so we are creating our tilemap, and need to assign them the IDs given to us from the world server
-            //tileRegistry[]
+        console.log(tilesdata);
+        
+        for(const key in tilesdata){
+            const tile = tilesdata[key];
+            console.log(`Tile ${key} = ${tile.name}, loreblurb ${tile["lore-blurb"]}`);
+            
+            console.log(tile);
             let codename =  tile['code-name'];
             let name =      tile['name'];
             let loreblurb = tile['lore-blurb'];
@@ -112,10 +116,12 @@ export class World{
             let mapColor =  tile['map-color'];
             let sprite =    tile['Sprite'];
 
+
             let id = tileRegistry[codename];
 
-            this.tileMap.set(id, new Tile(this.handler, codename, name, isSolid, loreblurb, mapColor))
+            this.tileMap.set(id, new Tile(this.handler, codename, name, isSolid, loreblurb, mapColor));
         }
+
         console.log(`Loaded World: ${this.worldName} ${this.worldWidth}x${this.worldHeight}`);
     }
     printWorldData(){

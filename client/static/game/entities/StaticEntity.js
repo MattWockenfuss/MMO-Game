@@ -2,8 +2,8 @@ import { Entity } from "./Entity.js";
 
 export class StaticEntity extends Entity{
     constructor(handler, entityData){
-        super(handler, entityData.x, entityData.y, 10, 6);
-        
+        super(handler, entityData.x, entityData.y, 30, 30);
+        console.error(`ENTITY DATA: ${entityData}`);
         this.UUID = entityData.UUID;
         this.type = entityData.type;
         this.level = entityData.level;

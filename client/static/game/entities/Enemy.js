@@ -6,7 +6,7 @@ export class Enemy extends Entity{
         super(handler, enemyData.x, enemyData.y, 40, 40)
         
         
-        console.log(enemyData);
+        //console.log(enemyData);
         this.UUID = enemyData.UUID;
         this.type = enemyData.type;
         this.level = enemyData.level;

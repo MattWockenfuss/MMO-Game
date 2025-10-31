@@ -66,17 +66,17 @@ class World:
 
         for hole in self.staticHoles:
             if not hole.filled:
-                #add an entity, set it to filled
-                for entry in self.staticsDict:
-                    if entry.get('code-name') == hole.type:
-                        print(entry)
-                        print(f"x {hole.x} y {hole.y}")
+                entry = self.staticsDict.get(hole.type)
 
-                        etype = entry.get('code-name')
-                        health = entry.get('health')
-                        level = entry.get('Level')
-                        handler.em.addEntity(StaticEntity(etype, hole.x, hole.y, health, level))
-                        hole.filled = True
+                print(entry)
+                print(f"x {hole.x} y {hole.y}")
+
+                etype = entry.get('code-name')
+                health = entry.get('health')
+                level = entry.get('Level')
+                handler.em.addEntity(StaticEntity(etype, hole.x, hole.y, health, level))
+                hole.filled = True
+
 
 
     """
@@ -116,10 +116,17 @@ class World:
     def setWorldData(self, d):
         #Store all of the data from the data server in our dictionaries
         self.worldDict = d.get("world")
-        self.tilesDict = d.get("tiles")
+        self.tilesDict = {}
         self.tileMapDict = d.get("tileMap")
-        self.staticsDict = d.get("statics")
+        self.staticsDict = {}
 
+        for tile in d.get("tiles"):
+            codename = tile.get('code-name')
+            self.tilesDict[codename] = tile
+        
+        for static in d.get("statics"):
+            codename = static.get('code-name')
+            self.staticsDict[codename] = static
 
 
         #Okay, so stored all of the dictionaries needed, set the world data, including width and height

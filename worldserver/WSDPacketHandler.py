@@ -153,6 +153,9 @@ def WSonLogin(handler, d):
             "tileMap": handler.world.tileMapDict,
             "statics": handler.world.staticsDict
         }
+        print(f"Tiles DICT: {handler.world.tilesDict}")
+        print(f"TilesMap DICT: {handler.world.tileMapDict}")
+        print(f"STATICS DICT: {handler.world.staticsDict}")
         client.send('world', p)
 
         

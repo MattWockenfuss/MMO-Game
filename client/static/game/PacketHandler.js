@@ -45,21 +45,24 @@ export class PacketHandler{
         //This packet is used when first loading into the game to fill the world with static entities
         
         for(let UUID in data){
+            console.log(this.handler.world.staticsRegistry);
+            console.error(`${UUID} => ${JSON.stringify(data[UUID])}`);
+            //also attach the data from the statics dict
+            
 
+            //okay so we are trying to create a new entity, grab the static dict data
+            Object.entries(this.handler.world.staticsRegistry).forEach((key, value) => {
+                console.log("ENTRY");
+                console.log(`${key} : ${value}`);
+                Object.entries(value).forEach((key2, value2) => {
+                    console.log(`${key2} : ${value2}`);
+                });
+            });
+
+
+
+            this.handler.EM.addEntity(new StaticEntity(this.handler, data[UUID]));
         }
-
-        for (const [key, value] of Object.entries(data)){
-            //console.log(`${key}, ${value}`);
-            // console.log(value.type);
-            // console.log(value.UUID);
-            // console.log(`(${value.x}, ${value.y})`);
-            // console.log(value.level);
-            // console.log(value.health);
-            this.handler.EM.addEntity(new StaticEntity(this.handler, value));
-        }
-
-
-
     }
 
     onMove(data){
@@ -83,7 +86,6 @@ export class PacketHandler{
         // console.log(data.y);
         // console.log(data.session_id);
         // console.log(data.color);
-        console.error(`NEW OTHER PLAYER`);
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
     onEnemy(data){

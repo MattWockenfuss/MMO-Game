@@ -11,6 +11,7 @@
 import { Enemy } from "./entities/Enemy.js";
 import { OtherPlayer } from "./entities/OtherPlayer.js";
 import { Player } from "./entities/player.js";
+import { StaticEntity } from "./entities/StaticEntity.js";
 import { Tile } from "./Tile.js";
 
 
@@ -96,6 +97,7 @@ export class DebugMenu {
                         if(entity instanceof OtherPlayer){
                             ctx.fillText(`SessID: ${entity.session_id}`,                        CANVAS_WIDTH - width + 4, 18 + (gap * 5));
                         }
+
                     }else if(entity instanceof Enemy){
                         let width = 300;
                         let height = gap * 18 + 10;
@@ -118,13 +120,39 @@ export class DebugMenu {
                         ctx.fillText(`critical: ${entity.criticalChance}`,                      CANVAS_WIDTH - width + 4, 18 + (gap * 13));
                         ctx.fillText(`movementSPD: ${entity.movementSpeed}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 14));
                         ctx.fillText(`VisionRadius: ${entity.visionRadius}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 15));
-                        ctx.fillText(`Size: ${entity.size}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 16));
+                        ctx.fillText(`Size: ${entity.size}`,                                    CANVAS_WIDTH - width + 4, 18 + (gap * 16));
                         ctx.fillText(`movementType: ${entity.movementType}`,                    CANVAS_WIDTH - width + 4, 18 + (gap * 17));
+
+                    }else if(entity instanceof StaticEntity){
+                        let width = 300;
+                        let height = gap * 18 + 10;
+                        ctx.fillStyle = 'rgba(255, 255, 223, 0.55)';
+                        ctx.fillRect(CANVAS_WIDTH - width, 0, width, height);
+                        ctx.lineWidth = 2;
+                        ctx.fillStyle = "black";
+                        ctx.strokeRect(CANVAS_WIDTH - width + 1, 0 + 1, width - 2, height - 2);
+                        
+                        ctx.fillText(`EntityType: ${entity.constructor.name}`,                  CANVAS_WIDTH - width + 4, 18 + (gap * 0));
+                        ctx.fillText(`(x,y): (${entity.x.toFixed(1)},${entity.y.toFixed(1)})`,  CANVAS_WIDTH - width + 4, 18 + (gap * 1));
+                        ctx.fillText(`w x h: ${entity.width} x ${entity.height}`,               CANVAS_WIDTH - width + 4, 18 + (gap * 2));
+                        ctx.fillText(`UUID ${entity.UUID}`,                                     CANVAS_WIDTH - width + 4, 18 + (gap * 6));
+                        ctx.fillText(`Type: ${entity.type}`,                                    CANVAS_WIDTH - width + 4, 18 + (gap * 7));
+                        ctx.fillText(`Level: ${entity.level}`,                                  CANVAS_WIDTH - width + 4, 18 + (gap * 8));
+                        ctx.fillText(`Health: ${entity.health}`,                                CANVAS_WIDTH - width + 4, 18 + (gap * 9));
+
+                        let ex = this.handler.world.staticsRegistry[entity.type];
+
+                        ctx.fillText(`Name: ${ex.name}`,                                       CANVAS_WIDTH - width + 4, 18 + (gap * 10));
+                        ctx.fillText(`lore: ${ex["lore-blurb"]}`,                              CANVAS_WIDTH - width + 4, 18 + (gap * 11));
+                        ctx.fillText(`code-name: ${ex["code-name"]}`,                          CANVAS_WIDTH - width + 4, 18 + (gap * 13));
+
+
+
+
                     }
                     return; //we return so we dont do the tile below this
                 }
             }
-        
         }
 
         if(this.handler.world.worldData != null){
@@ -154,11 +182,12 @@ export class DebugMenu {
             // let isSolidT = this.handler.world.isTileSolid(mouseX, mouseY);
             // ctx.fillText(`${isSolidT}`, mouseX, mouseY);
 
-            ctx.fillText(`name: ${tile.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
+            ctx.fillText(`codename: ${tile.codename}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
             ctx.fillText(`(x,y): (${tileX},${tileY})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
-            ctx.fillText(`ID: ${tile.ID}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
-            ctx.fillText(`isSolid: ${tile.isSolid}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
-            ctx.fillText(`loreBlurb: ${tile.loreBlurb}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
+            ctx.fillText(`Name: ${tile.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
+            ctx.fillText(`loreBlurb: ${tile.loreBlurb}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
+            ctx.fillText(`isSolid: ${tile.isSolid}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
+            
         }
 
     }

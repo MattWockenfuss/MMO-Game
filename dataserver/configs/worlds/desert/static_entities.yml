@@ -3,10 +3,19 @@
 #  
 #  so static entities also need to have a hitbox? how big?, how long, how much health? how many hits to cut down, right, maybe a health system
 #  okay so every static entity has an x, y and health at base
-#  crops are a child of so, they also have growth stages, and change images based on the growth stage, should this be moddable? nah, pain in the ass
+#  crops are a child of so, they also have growth stages, and change images based on the growth stage, should this be moddable?
 #  
 #  
 #  okay so we have predfined static entities that you can add to your World, similar to tiles, have a folder for them
+
+#   okay so we are adding static entities to the world, they have collision, an image, and possibly an animation
+#   they can be chopped/mined/harvested for resources, they can have growth stages, and times between stages
+#   
+#
+#
+#
+
+
 
 cactus:
     - [100, 100]

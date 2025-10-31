@@ -5,6 +5,8 @@ lore-blurb: "Spiky Spiky"
 
 health: 200
 Level: 1
-Sprite: "cactus.png"
+
+
 #read as x, y, width and height, where x and y are the distances inside the sprite
+size: [64, 64]
 hitbox: [10, 10, 10, 10]

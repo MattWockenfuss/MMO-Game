@@ -1,0 +1,12 @@
+code-name: 'rock'
+
+name: "Desert Rock"
+lore-blurb: "Red Smushed Sand"
+
+health: 700
+Level: 1
+
+
+#read as x, y, width and height, where x and y are the distances inside the sprite
+size: [128, 128]
+hitbox: [10, 10, 30, 30]
