@@ -140,11 +140,11 @@ export class DebugMenu {
                         ctx.fillText(`Level: ${entity.level}`,                                  CANVAS_WIDTH - width + 4, 18 + (gap * 8));
                         ctx.fillText(`Health: ${entity.health}`,                                CANVAS_WIDTH - width + 4, 18 + (gap * 9));
 
-                        let ex = this.handler.world.staticsRegistry[entity.type];
+                        let ex = this.handler.world.staticsRegistry[entity.codename];
 
                         ctx.fillText(`Name: ${ex.name}`,                                       CANVAS_WIDTH - width + 4, 18 + (gap * 10));
                         ctx.fillText(`lore: ${ex["lore-blurb"]}`,                              CANVAS_WIDTH - width + 4, 18 + (gap * 11));
-                        ctx.fillText(`code-name: ${ex["code-name"]}`,                          CANVAS_WIDTH - width + 4, 18 + (gap * 13));
+                        ctx.fillText(`code-name: ${entity.codename}`,                          CANVAS_WIDTH - width + 4, 18 + (gap * 13));
 
 
 

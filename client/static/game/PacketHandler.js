@@ -48,20 +48,12 @@ export class PacketHandler{
             console.log(this.handler.world.staticsRegistry);
             console.error(`${UUID} => ${JSON.stringify(data[UUID])}`);
             //also attach the data from the statics dict
-            
+            let codename = data[UUID]['type'];
+            console.log(codename);
+            let entityDict = this.handler.world.staticsRegistry[codename];
+            console.log(`Size: ${entityDict.size[0]}, ${entityDict.size[1]}`);
 
-            //okay so we are trying to create a new entity, grab the static dict data
-            Object.entries(this.handler.world.staticsRegistry).forEach((key, value) => {
-                console.log("ENTRY");
-                console.log(`${key} : ${value}`);
-                Object.entries(value).forEach((key2, value2) => {
-                    console.log(`${key2} : ${value2}`);
-                });
-            });
-
-
-
-            this.handler.EM.addEntity(new StaticEntity(this.handler, data[UUID]));
+            this.handler.EM.addEntity(new StaticEntity(this.handler, data[UUID], entityDict));
         }
     }
 
