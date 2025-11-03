@@ -8,6 +8,17 @@ import websockets.exceptions as wsExceptions
 from worldclient import WorldClient
 import worldPH as ph
 
+# import logging
+
+# logging.basicConfig(
+#     format="%(asctime)s %(message)s",
+#     level=logging.DEBUG,
+# )
+
+# logger = logging.getLogger("websockets")
+# logger.setLevel(logging.DEBUG)
+# logger.addHandler(logging.StreamHandler())
+
 class WorldClientManager:
     def __init__(self):
         self.handler = None
@@ -15,10 +26,6 @@ class WorldClientManager:
         #   desiredWorlds key is world name, like beach and value would be 2 (we want to try and have 2 beach worlds)
         self.desiredWorlds = {}
 
-
-        #   active server key is beach-1, and the value would be its codename, IP, Port, and playerCount
-        #   {'beach-1': ['beach', '161.35.137.150', 8004, 4]}
-        self.activeServers = {}
 
 
         self.worldclients = {}
@@ -29,16 +36,20 @@ class WorldClientManager:
             c.tick(handler)
 
     async def handleConnection(self, ws):
+        print(f"Establishing New Connection!")
         key = self._generateNewSessionID()
+        print(f"Generated Key {key}")
         client = WorldClient(key, ws)
+        print(f"---New World Client Object!")
         self.worldclients[key] = client
+        print(f"Setting self.worldclients[{key} == new client!]")
 
         try:
             async with asyncio.TaskGroup() as tg:
                 tg.create_task(client.handleReceive())
                 tg.create_task(client.handleSend())
-        except (wsExceptions.ConnectionClosedOK, wsExceptions.ConnectionClosedError) as e:
-            print(f"Client {client.UUID} disconnected!: {e.code} {e.reason}")
+        # except (wsExceptions.ConnectionClosedOK, wsExceptions.ConnectionClosedError) as e:
+        #     print(f"Client {client.UUID} disconnected!: {e.code} {e.reason}")
         except Exception as e:
             print(f"[Error] Handling Receiving and Sending for {key} {e}")
         finally:
@@ -52,6 +63,9 @@ class WorldClientManager:
         self.server = await serve(self.handleConnection, self.ListenHost, self.Port)
         await self.server.serve_forever()
 
+    async def cleanup(self, client, code = 1000, reason = "Unknown"):
+        UUID = client.UUID
+        self.worldclients.pop(client.UUID, None)
 
     def _generateNewSessionID(self):
         characterPool = string.ascii_letters + string.digits

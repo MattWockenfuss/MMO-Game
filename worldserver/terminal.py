@@ -101,7 +101,7 @@ class Terminal:
                 print(f"clear ('cls')")
                 print(f"\tClears the screen")
 
-
+            
             if cmd == "desert":
                 handler.dsc.sendMsg("world", {'World-Name':'The Desert'})
 

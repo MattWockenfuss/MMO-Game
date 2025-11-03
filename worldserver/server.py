@@ -225,11 +225,12 @@ class WorldServer:
             entities update their actions
             add new data to outbound queues, entity positions, entity dealing damage, player moving, etc...
         '''
+        print(f"OPENING SOCKETS IN START METHOD!!!!")
         await asyncio.gather(#if one of these stops, they all stop
             self.tick(),
             self.dsc.start(self.cf.get("DataServer-IP"), self.cf.get("DataServer-Port")),
             self.csc.start(self.cf.get("CommsServer-IP"), self.cf.get("CommsServer-Port")),
-            self.csm.start(self.cf.get("listenAddress"), self.cf.get("myPort"), self.cf.get("pingInterval"), self.cf.get("pingTimeout"))
+            self.csm.start(self.cf.get("listenAddress"), 0, self.cf.get("pingInterval"), self.cf.get("pingTimeout"))
         )
 
 

@@ -3,7 +3,8 @@
 #used to set a specific listen address, 127.0.0.1 means only local machines can connect
 # 0.0.0.0 means anyone can connect and a specific address means that all traffic must flow through that address
 listenAddress: "0.0.0.0"
-myPort: 8002
+#portsRange currently ignored, the OS just picks a random port
+portRange: [8002, 8009]
 pingInterval: 20      #how often to send a ping
 pingTimeout: 20       #how lowang it waits for a response
 

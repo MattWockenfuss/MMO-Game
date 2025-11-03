@@ -124,6 +124,8 @@ class ClientSocketManager:
         self.ListenHost = ListenHost
         self.Port = Port
         self.server = await serve(self.handleConnection, self.ListenHost, self.Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
+        self.Port = self.server.sockets[0].getsockname()[1]
+        print(f"STARTED WORLD SERVER ON {self.ListenHost}:{self.Port}")
         await self.server.serve_forever()
         
     def broadcast(self, type, data):
@@ -134,15 +136,15 @@ class ClientSocketManager:
         self.server.close()
         await self.server.wait_closed()
 
+    """
+    Generate a unique 8-character alphanumeric session ID.
+
+    Ensures no collisions with existing clients or players.
+
+    Returns:
+        str: Unique session identifier.
+    """
     def _generateNewSessionID(self):
-        """
-        Generate a unique 8-character alphanumeric session ID.
-
-        Ensures no collisions with existing clients or players.
-
-        Returns:
-            str: Unique session identifier.
-        """
         characterPool = string.ascii_letters + string.digits
         while True:
             key = ''.join(random.choice(characterPool) for i in range(4))

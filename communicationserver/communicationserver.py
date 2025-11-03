@@ -67,7 +67,7 @@ class CommunicationServer:
         results = await asyncio.gather(#if one of these stops, they all stop
             self.tick(),
             self.wcm.start(self.worldListenAddress, self.worldListenPort, self.handler),
-            self.pcm.start(self.playerListenAddress, self.playerListenPort),
+            self.pcm.start(self.playerListenAddress, self.playerListenPort, self.handler),
             self.dsc.start(self.dataServerAddress, self.dataServerPort),
             return_exceptions=True
         )

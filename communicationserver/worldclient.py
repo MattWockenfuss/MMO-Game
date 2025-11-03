@@ -1,7 +1,7 @@
 import asyncio
 import json
 import websockets
-
+import traceback
 from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 
 import worldPH as ph
@@ -13,8 +13,13 @@ class WorldClient:
         self.ws = ws
         self.ip = ws.remote_address[0]
         self.port = ws.remote_address[1]
+        print(f"NEW WORLD CLIENT [{self.ip}:{self.port}]")
         self.inbound = asyncio.Queue()
         self.outbound = asyncio.Queue()
+        self.playerCount = 0
+        self.type = None
+        self.ID = None
+        self.nameID = self.updateName()
     
     def tick(self, handler):
         while not self.inbound.empty():
@@ -38,6 +43,7 @@ class WorldClient:
 
 
     async def handleSend(self):
+        print(f"Handling Send!")
         try:
             while True:
                 msg = await self.outbound.get()
@@ -54,7 +60,8 @@ class WorldClient:
             
 
 
-    async def handleReceive(self): 
+    async def handleReceive(self):
+        print(f"Handling Receive!")
         try:
             async for msg in self.ws:
                 decoded = json.loads(msg)
@@ -62,9 +69,17 @@ class WorldClient:
                 self.inbound.put_nowait(decoded)
         except ConnectionClosedOK:
             raise
-        except ConnectionClosedError:
-            print(f"[ERROR] Receiving {self.UUID} a msg")
+        except ConnectionClosedError as e:
+            print(f"[ERROR] Receiving {self.UUID} ConnectionClosedError {e} ")
+            traceback.print_exc()
             raise
         except Exception as e:
             print(f"[UNEXPECTED ERROR] Receiving {self.UUID} a msg, {e}")
             raise
+    
+    def updateName(self):
+        #print(f"REDOING NAME")
+        if self.type is None or self.ID is None:
+            self.nameID = None
+        else:
+            self.nameID = self.type + '-' + str(self.ID)

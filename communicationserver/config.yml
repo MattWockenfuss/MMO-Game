@@ -10,6 +10,11 @@ playerListenPort: 8011
 dataserverIP: "127.0.0.1"
 dataserverPORT: 8001
 
+
+#alright, so we are setting up our world, we want to be able to tell it how many servers of each type, so what?
+#okay say the type and number of servers to setup? handle load balancing by sending to the lowest amount of players, 
+#currently it cant start any servers
+
 worlds:
   - beach: 2
   - caves: 1
