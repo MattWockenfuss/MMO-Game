@@ -159,6 +159,8 @@ class WorldServer:
         self.benchmark = Benchmark()
         self.handler = Handler(self.dsc, self.csm, self.world, self.em, self.terminal, self.benchmark)
 
+
+
         self.handler.em.handler = self.handler
         
     """

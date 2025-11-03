@@ -11,6 +11,11 @@ class CommsServerClient:
         self.outbound = asyncio.Queue()
         self.inbound = asyncio.Queue()
         self._shutdown_event = asyncio.Event()
+
+        # ex... beach-1 or crypts-5
+        self.worldType = None
+        self.worldID = None
+        self.worldName = None
     
     def tick(self, handler):
         while not self.inbound.empty():

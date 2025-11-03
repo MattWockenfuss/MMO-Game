@@ -46,9 +46,18 @@ async def DSonLogin(handler, data, ws):
     await ws.send(json.dumps(p))
 
 async def DSonWorld(handler, data, ws):
-    print(data)
-    for world in handler.configs["worlds"]:
-        if world.get("World-Name") == data["World-Name"]:
+    print(f"RECEIVING {data} FROM WORLD SERVER")
+
+    for world in handler.configs["worlds"]:#this is a list of dictionaries
+        print(f"Getting {world.get('World-Name')}")
+        for key, value in world.items():
+            if key == "world-data":
+                print("world-data: ...")
+            else:
+                print(f"{key}: {value}")
+
+        print(f"is {world.get("folderName")} ==? {data["type"]}")
+        if world.get("folderName") == data["type"]:
             data = {
                 "type":"world",
                 "data": {

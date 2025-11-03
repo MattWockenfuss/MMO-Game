@@ -16,7 +16,7 @@ dataserverPORT: 8001
 #currently it cant start any servers
 
 worlds:
-  - beach: 2
+  - desert: 2
   - caves: 1
   - crypts: 1
-  - desert: 1
+  - beach: 1
