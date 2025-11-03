@@ -13,12 +13,12 @@ export class Tile {
 
         this.frames = Math.trunc(handler.AM.get(this.codename).naturalWidth / Tile.tilePixelWidth);
         if(this.frames > 1){
-            console.log(`Created a new Animated Tile(${this.codename}), it has ${this.frames} frames`);
+            //console.log(`Created a new Animated Tile(${this.codename}), it has ${this.frames} frames`);
             this.animationSpeed = animationSpeed;
             this.animationIndex = 0;
             this.animationI = 0;
         }else{
-            console.log(`Created a new Tile (${this.codename}), isSolid: ${this.isSolid} lore:${this.loreBlurb}`);
+            //console.log(`Created a new Tile (${this.codename}), isSolid: ${this.isSolid} lore:${this.loreBlurb}`);
         }
     }
     tick(){

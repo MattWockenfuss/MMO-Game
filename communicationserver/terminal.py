@@ -24,6 +24,12 @@ class Terminal:
 
             cmd, *args = msg.split()
             print(f"/{cmd} with args:[{args}]")
+
+            if cmd == 'desired':
+                print(handler.wcm.desiredWorlds)
+
+
+
         
         # Schedule new input task if none running
         if self.task is None:

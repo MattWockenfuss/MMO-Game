@@ -23,6 +23,7 @@ Dependencies:
 
 from config import ConfigReader
 from dataserverclient import DataServerClient
+from commsserverclient import CommsServerClient
 from clientsocketmanager import ClientSocketManager
 from world import World
 from entitymanager import EntityManager
@@ -77,15 +78,16 @@ class Benchmark:
     def __init__(self):
         self.active = False
 
-    def start(self, nowTime, intervalTime, totalTime): #The Asterisk means that after the asterisk, no longer excepts positional arguments
-        """
+    """
         Start benchmarking session.
 
         Args:
             nowTime (float): Current time from event loop.
             intervalTime (float): Interval between reporting performance stats.
             totalTime (float): Total duration to run benchmarking.
-        """
+    """
+    def start(self, nowTime, intervalTime, totalTime): #The Asterisk means that after the asterisk, no longer excepts positional arguments
+
         self.active = True
 
         self.interval_frame_times = []
@@ -98,15 +100,16 @@ class Benchmark:
         print(f"{nowTime} => {self.nextEmit} {self.endTime}")
 
 
-    def record(self, now, duration_ms: float):
-        """
+    """
         Record the duration of a single frame (tick) and print stats
         at specified intervals and at the end of the benchmarking period.
 
         Args:
             now (float): Current time from event loop.
             duration_ms (float): Duration of last frame in milliseconds.
-        """
+    """
+    def record(self, now, duration_ms: float):
+
         
         if not self.active: return
         self.interval_frame_times.append(duration_ms)
@@ -150,6 +153,7 @@ class WorldServer:
         self.world = World()
         self.em = EntityManager()
         self.dsc = DataServerClient()
+        self.csc = CommsServerClient()
         self.csm = ClientSocketManager()
         self.terminal = Terminal()
         self.benchmark = Benchmark()
@@ -157,21 +161,24 @@ class WorldServer:
 
         self.handler.em.handler = self.handler
         
-
-    async def tick(self):
-        """
+    """
         Main server loop running at 60 ticks per second.
         Updates all subsystems and collects benchmarking info.
         Uses asyncio event loop clock to maintain fixed tick rate
         with drift correction.
-        """
+    """
+    async def tick(self):
+
         RATE = 60
         DT = 1.0 / RATE
 
         loop = asyncio.get_running_loop()
         next_tick = loop.time()
 
-
+        d = {
+            'msg': 'this is my message'
+        }
+        self.csc.sendMsg('register', d)
 
 
         while self.handler.running:
@@ -179,6 +186,7 @@ class WorldServer:
             frame_start = time.perf_counter()
 
             self.dsc.tick(self.handler)
+            self.csc.tick(self.handler)
             self.csm.tick(self.handler)
             self.world.tick(self.handler)
             self.em.tick(self.handler)
@@ -200,7 +208,6 @@ class WorldServer:
         await self.csm.stop()
 
 
-
     async def start(self):
         """
         Starts the world server by reading configuration,
@@ -211,23 +218,19 @@ class WorldServer:
         self.cf.readYML()
         self.cf.printConfigData()
         '''
-                    self.tick()
-                process all of our inbound msgs,
-                msg could be move packet, could be disconnnect, could be kill, could be 
-                tick the world, tick the entities
-                 entities update their actions
-                 add new data to outbound queues, entity positions, entity dealing damage, player moving, etc...
-        
+            self.tick()
+            process all of our inbound msgs,
+            msg could be move packet, could be disconnnect, could be kill, could be 
+            tick the world, tick the entities
+            entities update their actions
+            add new data to outbound queues, entity positions, entity dealing damage, player moving, etc...
         '''
-        results = await asyncio.gather(#if one of these stops, they all stop
+        await asyncio.gather(#if one of these stops, they all stop
             self.tick(),
             self.dsc.start(self.cf.get("DataServer-IP"), self.cf.get("DataServer-Port")),
-            self.csm.start(self.cf.get("listenAddress"), self.cf.get("myPort"), self.cf.get("pingInterval"), self.cf.get("pingTimeout")),
-            return_exceptions=True
+            self.csc.start(self.cf.get("CommsServer-IP"), self.cf.get("CommsServer-Port")),
+            self.csm.start(self.cf.get("listenAddress"), self.cf.get("myPort"), self.cf.get("pingInterval"), self.cf.get("pingTimeout"))
         )
-
-        print(results)
-        print("Closing Server!")
 
 
     

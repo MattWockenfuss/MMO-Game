@@ -106,7 +106,7 @@ export class World{
         
         for(const key in tilesdata){
             const tile = tilesdata[key];
-            console.log(`Tile ${key} = ${tile.name}, loreblurb ${tile["lore-blurb"]}`);
+            //console.log(`Tile ${key} = ${tile.name}, loreblurb ${tile["lore-blurb"]}`);
             
             console.log(tile);
             let codename =  tile['code-name'];

@@ -1,29 +1,10 @@
-"""
-worldserver/dataserverclient.py
-
-DataServerClient class represents the client connection from the world server
-to the data server in the MMO architecture.
-
-Responsibilities:
-- Manage asynchronous websocket communication with the data server.
-- Maintain inbound and outbound message queues for reliable message handling.
-- Deserialize inbound packets and dispatch them to packet handlers.
-- Serialize and send outbound packets to the data server.
-- Handle lifecycle of the websocket connection using asyncio.
-"""
-
-#this object is represents the link between the data server and the world server
-#this is the client in the relationship, the data server is the server
-
 import websockets
 import asyncio
 import json
 
-import dataserverPH as ph
+import WSCOMMSPacketHandler as ph
 
-#import WSDPacketHandler as ph
-
-class DataServerClient:
+class CommsServerClient:
     def __init__(self):
         self.IP = None
         self.Port = None
@@ -40,23 +21,16 @@ class DataServerClient:
                 t = msg["type"]
                 d = msg["data"]
                 match t:
-                    case "authplayer":
-                        ph.authplayer(handler, d)
+                    case "registerRETURN":
+                        ph.registerRETURN(handler, d)
                     case _:
-                        print(f"[ERROR PACKET READ] {msg}")
+                        print(f"[ERROR] UNKNOWN PACKET TYPE")
             except Exception as e:
                 print(f"[ERROR] {e}")
-                print(f"[World Server Data Client => Error Processing incoming packets] \n packet = {data}")
-
-
-
-
-            
-
-
-
+                print(f"[World Server Comms Client => Error Processing incoming packets] \n packet = {data}")
 
     def sendMsg(self, type, data):
+        #okay so we want to send data to the data server
         packet = {
             "type": type,
             "data": data
@@ -65,18 +39,13 @@ class DataServerClient:
 
     async def receiver(self):
         async for msg in self.ws:
-            print(f"[FROM DS]: {msg}")
+            print(f"[FROM COMMS]: {msg}")
             await self.inbound.put(msg)
-            
-
-
     async def sender(self):
         while True:
-            #print(f"im awaiting for something to be put in the queue")
             msg = await self.outbound.get()
-            print(f"[TO DS] {msg}")
+            print(f"[TO COMMS] {msg}")
             await self.ws.send(msg)
-            #self.outbound_queue.task_done()
 
     async def start(self, IP, Port):
         self.IP = IP

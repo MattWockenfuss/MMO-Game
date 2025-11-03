@@ -17,7 +17,7 @@ export default class NetworkHandler{
             //console.log(event.data);
             try {
                 const packet = JSON.parse(event.data);
-                console.log(`${packet.type} : ${JSON.stringify(packet.data)}`);
+                //console.log(`${packet.type} : ${JSON.stringify(packet.data)}`);
                 //handlers[packet.type](packet.data);
                 //put on queue
                 this.inbound.push(packet);
@@ -80,8 +80,8 @@ export default class NetworkHandler{
     }
     waitForLoginVerify(predicate = () => true, timeout = 2000){
         /* 
-        Okay so we have established a connection to the server, wait for a reply of type loginVerify, if its not that, add to the inbound queue just incase
-        something weird happens
+            Okay so we have established a connection to the server, wait for a reply of type loginVerify, if its not that, add to the inbound queue just incase
+            something weird happens
         */
         
         return new Promise((resolve, reject) => {
@@ -98,11 +98,11 @@ export default class NetworkHandler{
             const onTimeout = () => cleanup(reject, new Error('WS wait timeout'));
 
             const cleanup = (fn, val) => {
-            this.ws.removeEventListener('message', onMessage);
-            this.ws.removeEventListener('error', onError);
-            this.ws.removeEventListener('close', onClose);
-            clearTimeout(t);
-            fn(val);
+                this.ws.removeEventListener('message', onMessage);
+                this.ws.removeEventListener('error', onError);
+                this.ws.removeEventListener('close', onClose);
+                clearTimeout(t);
+                fn(val);
             };
 
             this.ws.addEventListener('message', onMessage);

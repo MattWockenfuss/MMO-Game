@@ -19,12 +19,6 @@ class Handler:
         self.dsc = dsc
         self.terminal = terminal
 
-        #active server key is beach-1, and the value would be its codename, IP, Port, and playerCount
-        #                           {'beach-1': ['beach', '161.35.137.150', 8004, 4]}
-        self.activeServers = {}
-        #desiredWorlds key is world name, like beach and value would be 2 (we want to try and have 2 beach worlds)
-        self.desiredWorlds = {}
-
 
 class CommunicationServer:
     def __init__(self):
@@ -66,12 +60,13 @@ class CommunicationServer:
         self.dataServerAddress = yml.get("dataserverIP")
         self.dataServerPort = yml.get("dataserverPORT")
 
-
-        print(yml.get('worlds'))
+        for lines in yml.get('worlds'):
+            for key, value in lines.items():
+                self.wcm.desiredWorlds[key] = value
 
         results = await asyncio.gather(#if one of these stops, they all stop
             self.tick(),
-            self.wcm.start(self.worldListenAddress, self.worldListenPort),
+            self.wcm.start(self.worldListenAddress, self.worldListenPort, self.handler),
             self.pcm.start(self.playerListenAddress, self.playerListenPort),
             self.dsc.start(self.dataServerAddress, self.dataServerPort),
             return_exceptions=True

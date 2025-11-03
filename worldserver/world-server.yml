@@ -11,6 +11,10 @@ pingTimeout: 20       #how lowang it waits for a response
 DataServer-IP: "127.0.0.1"
 DataServer-Port: 8001
 
+#the IP and port of the Communications server
+CommsServer-IP: "127.0.0.1"
+CommsServer-Port: 8010
+
 #Server ID and World Type, world type details what I should be so the server can boot up
 #both of these are currently ignored
 Server-ID: 1
