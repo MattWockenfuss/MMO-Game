@@ -19,6 +19,22 @@ updateColor();
 
 
 
+
+const ipinput = document.querySelector('.ippicker');
+const ipbox = document.getElementById('customServer');
+
+
+function toggleCustom() {
+    const ipport = form.choices.value;
+    if (ipport === 'Custom') {
+        ipbox.style.display = 'inline-block';
+    } else {
+        ipbox.style.display = 'none';
+    }
+}
+ipinput.addEventListener('input', toggleCustom);
+
+
 const form = document.getElementById("loginForm");
 
 form.addEventListener("submit", async (event) => {
@@ -26,13 +42,17 @@ form.addEventListener("submit", async (event) => {
     //prevents the sending the user to /submitLogin and sending it to backend
     //also the auto transfer to new page
     
-    const ipport = form.choices.value;
+    let ipport = form.choices.value;
 
+    if (ipport === 'Custom') {
+        ipport = ipbox.value;
+    }
+    console.log(`IPPORT: ${ipport}`);
     const data = {
         "username": form.username.value,
         "password": form.password.value,
         "color": form.color.value
-        };
+    };
 
     //alright so we can accept user input, now what do we want to do
     //send it to the world server for now, or straight to the data server?, and transfer the user to the game if they get approved?
