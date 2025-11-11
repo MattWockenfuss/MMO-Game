@@ -3,4 +3,3 @@ name: "Stone Wall"
 lore-blurb: "stone wall"
 is-Solid: True
 map-color: "#616161"
-Sprite: "stone-wall.png"

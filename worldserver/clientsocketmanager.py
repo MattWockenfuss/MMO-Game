@@ -59,7 +59,7 @@ class ClientSocketManager:
                 "code": code,
                 "reason": reason
         }
-        self.broadcast("Disconnect", d)
+        self.broadcast("playerLOGOUT", d)
 
 
     def kick(self, session_id, code = 1008, reason = "You've been kicked!"):

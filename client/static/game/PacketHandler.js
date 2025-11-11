@@ -6,16 +6,15 @@ export class PacketHandler{
     constructor(handler){
         this.handler = handler;
         this.packetMap = {
-            move:           (data) => this.onMove(data),
-            login:          (data) => this.onLogin(data),
-            world:          (data) => this.onWorld(data),
-            onOtherPlayer:  (data) => this.onOtherPlayer(data),
-            Disconnect:     (data) => this.onDisconnect(data),
-            Enemy:          (data) => this.onEnemy(data),
-            StaticEntity:   (data) => this.onStaticEntity(data),
-            loginVerify:    (data) => this.onLoginVerify(data)
+            move:           (data) => this.move(data),
+            login:          (data) => this.login(data),
+            world:          (data) => this.world(data),
+            playerLOGIN:    (data) => this.playerLOGIN(data),
+            playerLOGOUT:   (data) => this.playerLOGOUT(data),
+            enemy:          (data) => this.enemy(data),
+            static:         (data) => this.static(data),
+            authenticate:   (data) => this.authenticate(data)
         }
-
     }
     
     processInbound(){
@@ -32,15 +31,15 @@ export class PacketHandler{
     }
 
 
-    onLogin(data){
+    login(data){
         //this packet is the login of other players
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
-    onLoginVerify(data){
+    authenticate(data){
         console.log(`LOGINVERIFY: ${data}`);
     }
 
-    onStaticEntity(data){
+    static(data){
         //console.log(`STATIC ENTITY: ${data}`);
         //This packet is used when first loading into the game to fill the world with static entities
         
@@ -57,7 +56,7 @@ export class PacketHandler{
         }
     }
 
-    onMove(data){
+    move(data){
         //this is the move of other players
         //console.log(data);
         //console.log(data.session_id);
@@ -68,11 +67,11 @@ export class PacketHandler{
         }
     }
 
-    onWorld(data){
+    world(data){
         this.handler.world.setWorldData(data);
         //this.handler.world.printWorldData();
     }
-    onOtherPlayer(data){
+    playerLOGIN(data){
         // console.log(data.username);
         // console.log(data.x);
         // console.log(data.y);
@@ -80,13 +79,13 @@ export class PacketHandler{
         // console.log(data.color);
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
     }
-    onEnemy(data){
+    enemy(data){
         //console.log(data)
         for(let uuid in data){
             this.handler.EM.addEntity(new Enemy(this.handler, data[uuid]));
         }
     }
-    onDisconnect(data){
+    playerLOGOUT(data){
         //{"type": "Disconnect", "data": {"session_id": "2vYQJ6OP", "code": 1000, "reason": "Kicked by Console!"}}
         this.handler.EM.removeEntity(this.handler.EM.getPlayerIndexBySessionID(data.session_id));
     }

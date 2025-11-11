@@ -3,4 +3,3 @@ name: "Water"
 lore-blurb: "Very flowy"
 is-Solid: True
 map-color: "#5b6ee1"
-Sprite: "darker-blue.png"

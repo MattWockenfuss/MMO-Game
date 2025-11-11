@@ -14,7 +14,7 @@
 '''
 
 
-def registerRETURN(handler, d):
+def registerACK(handler, d):
     nameID = d.get('nameID')
     worldType = d.get('type')
     worldID = d.get('ID')

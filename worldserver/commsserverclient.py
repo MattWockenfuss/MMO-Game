@@ -26,8 +26,8 @@ class CommsServerClient:
                 t = msg["type"]
                 d = msg["data"]
                 match t:
-                    case "registerRETURN":
-                        ph.registerRETURN(handler, d)
+                    case "registerACK":
+                        ph.registerACK(handler, d)
                     case _:
                         print(f"[ERROR] UNKNOWN PACKET TYPE")
             except Exception as e:

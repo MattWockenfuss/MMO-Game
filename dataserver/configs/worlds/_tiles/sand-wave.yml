@@ -3,4 +3,3 @@ name: "Sand Wave"
 lore-blurb: "The other direction"
 is-Solid: False
 map-color: "#bc8555"
-Sprite: "sand-wave.png"

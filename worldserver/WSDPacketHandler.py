@@ -196,12 +196,12 @@ def WSonLogin(handler, d):
                 }
                 statics[entity.UUID] = px
 
-        client.send('Enemy', enemies)
-        client.send('StaticEntity', statics)
+        client.send('enemy', enemies)
+        client.send('static', statics)
         print(f"ENEMIES: {enemies}")
 
         dataToSend = {"auth":"ok"}
-        client.send('loginVerify', dataToSend)
+        client.send('authenticate', dataToSend)
 
         for sessID, player in handler.csm.players.items():
             #here we are looping through all the clients, and if they didnt just log in, tell them
@@ -214,7 +214,7 @@ def WSonLogin(handler, d):
                     "session_id": player.session_id,
                     "color": player.color
                 }
-                client.send("onOtherPlayer", da)
+                client.send("playerLOGIN", da)
                 da = {
                     "username": client.username,
                     "x": client.x,
@@ -228,7 +228,7 @@ def WSonLogin(handler, d):
         print(f"{username} is NOT in the database!")
         #then kick whoever tried to connect as me
         dataToSend = {"auth":"fail"}
-        client.send('loginVerify', dataToSend)   #this is working
+        client.send('authenticate', dataToSend)   #this is working
         handler.csm.kickClient(client.id, code=4001, reason="Username not registered!")
 
 

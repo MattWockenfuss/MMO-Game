@@ -3,4 +3,3 @@ name: "Wood Floor"
 lore-blurb: "*thump* *thump* *thump*"
 is-Solid: False
 map-color: "#8f563b"
-Sprite: "wood-floor.png"

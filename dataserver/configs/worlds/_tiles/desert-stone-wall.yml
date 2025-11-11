@@ -3,4 +3,3 @@ name: "Desert Stone Wall"
 lore-blurb: "Sharp Rocks!"
 is-Solid: True
 map-color: "#574244"
-Sprite: "desert-stone-wall.png"

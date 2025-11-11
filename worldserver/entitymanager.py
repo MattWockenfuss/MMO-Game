@@ -70,7 +70,7 @@ class EntityManager:
                 "size": e.size,
                 "movementType": e.movementType
             }
-            self.handler.csm.broadcast("Enemy", p)
+            self.handler.csm.broadcast("enemy", p)
         elif isinstance(e, StaticEntity):
             p = {
                 "uuid": e.UUID,
@@ -81,7 +81,7 @@ class EntityManager:
                 "health": e.health
             }
             print(f"Telling all players of a new Static Entity -> {p}")
-            self.handler.csm.broadcast("StaticEntity", p)
+            self.handler.csm.broadcast("static", p)
 
 
     def getByIndex(self, i):

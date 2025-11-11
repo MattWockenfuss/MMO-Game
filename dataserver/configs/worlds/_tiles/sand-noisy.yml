@@ -3,4 +3,3 @@ name: "Noisy Sand"
 lore-blurb: "Dirty Sand, mixed with rocks, grinded down"
 is-Solid: False
 map-color: "#dfa264"
-Sprite: "sand-noisy.png"
