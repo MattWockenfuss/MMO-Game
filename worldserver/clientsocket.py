@@ -61,7 +61,7 @@ class ClientSocket():
         try:
             while True:
                 msg = await self.outbound.get()
-                #print(f"Sending {msg}")
+                print(f"SEND TO CLIENT [self.UUID] {msg}")
                 await self.ws.send(msg)
         except ConnectionClosedOK:
             print(f"[{self.UUID}]'s session was closed gracefully")

@@ -122,7 +122,8 @@ class Terminal:
                     print(f"logged in: {len(handler.csm.players)} player(s)")
                     for UUID, player in list(handler.csm.players.items()):
                         print(" " * 4, end="")
-                        print(f"{UUID} {player.username} ", end="")
+                        print(f"[{UUID}] {player.username} {player.x:.1f} {player.y:.1f}", end="")
+                        print()
                         #print(f"{player.userdata} ")
 
             if cmd == "entities":

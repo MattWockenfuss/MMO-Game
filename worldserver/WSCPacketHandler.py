@@ -26,7 +26,7 @@ from static_entity import StaticEntity
     This function handles the onMove packet from the player, updating their x and y positions in the server, and broadcasting
     to the rest of the players connected to this world server.
 '''
-def WSonMove(handler, d, clientSocket):
+def WSonMove(handler, d, player):
     """
     Handle a player 'move' packet from a client.
 
@@ -46,7 +46,7 @@ def WSonMove(handler, d, clientSocket):
     """
 
     try:
-        if not clientSocket:
+        if not player:
             print(f"Move Packet From broken client socket!")
             return
         
@@ -57,14 +57,14 @@ def WSonMove(handler, d, clientSocket):
             print(f"Bad Movement Packet! (Missing x/y): {d}")
             return
         
-        clientSocket.x = x
-        clientSocket.y = y
+        player.x = x
+        player.y = y
 
         for UUID, otherPlayer in list(handler.csm.players.items()):
-            if otherPlayer is clientSocket:
+            if otherPlayer is player:
                 continue
             da = {
-                'session_id': clientSocket.UUID,
+                'UUID': player.UUID,
                 'x': x,
                 'y': y
             }
@@ -157,25 +157,27 @@ def login(handler, d, player):
     player.send('static', statics)
     print(f"ENEMIES: {enemies}")
 
-    for UUID, player in handler.csm.players.items():
+    for UUID, otherplayer in handler.csm.players.items():
         #here we are looping through all the clients, and if they didnt just log in, tell them
         #someone just logged in, and tell the person who just logged in they exist
         if UUID != newUUID:
             #then this is another player on the server, tell them someone just logged in
             #and then tell the person who just logged in about this person
-            da = {
+            toPlayer = {
+                "username": otherplayer.username,
+                "x": otherplayer.x,
+                "y": otherplayer.y,
+                "UUID": otherplayer.UUID,
+                "color": otherplayer.color
+            }
+            
+            toOther = {
                 "username": player.username,
                 "x": player.x,
                 "y": player.y,
                 "session_id": player.UUID,
                 "color": player.color
             }
-            player.send("playerLOGIN", da)
-            da = {
-                "username": player.username,
-                "x": player.x,
-                "y": player.y,
-                "session_id": player.UUID,
-                "color": player.color
-            }
-            player.send("login", da)
+
+            otherplayer.send("login", toOther)
+            player.send("playerLOGIN", toPlayer)

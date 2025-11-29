@@ -58,9 +58,9 @@ export class PacketHandler{
 
     move(data){
         //this is the move of other players
-        //console.log(data);
+        console.log(data);
         //console.log(data.session_id);
-        const player = this.handler.EM.getPlayerBySessionID(data.session_id);
+        const player = this.handler.EM.getPlayerBySessionID(data.UUID);
         if(player != null){
             player.x = data.x;
             player.y = data.y;
