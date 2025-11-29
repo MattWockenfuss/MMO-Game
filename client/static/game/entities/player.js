@@ -53,10 +53,17 @@ export class Player extends Entity{
         //this.x += this.xMove;
         //this.y += this.yMove;
 
+
+
+        this.handleCollisions(null, this.xMove, this.yMove);
+        this.xMove = 0;
+        this.yMove = 0;
+
         const p = {
             'x': this.x,
             'y': this.y  
         }
+
         if(moved){
             this.handler.net.send("move", p);
         }
@@ -70,9 +77,6 @@ export class Player extends Entity{
 
 
     render(ctx){
-        this.handleCollisions(ctx, this.xMove, this.yMove);
-        this.xMove = 0;
-        this.yMove = 0;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.renderX, this.renderY, this.width, this.height);
 

@@ -54,15 +54,15 @@ export class Entity {
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
                 
-                if(renderDebug){
-                    let renderX = tx * tw - this.handler.world.xOffset;
-                    let renderY = ty * tw - this.handler.world.yOffset;
-                    ctx.fillStyle = "red";
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(renderX, renderY, tw, tw);
-                    ctx.fillStyle = 'Black';
-                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
-                }
+                // if(renderDebug){
+                //     let renderX = tx * tw - this.handler.world.xOffset;
+                //     let renderY = ty * tw - this.handler.world.yOffset;
+                //     ctx.fillStyle = "red";
+                //     ctx.lineWidth = 3;
+                //     ctx.strokeRect(renderX, renderY, tw, tw);
+                //     ctx.fillStyle = 'Black';
+                //     ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                // }
 
                 if(t.isSolid){
                     let dx = (tx * tw) - (this.x + this.width);
@@ -89,15 +89,15 @@ export class Entity {
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
                 
-                if(renderDebug){
-                    let renderX = tx * tw - this.handler.world.xOffset;
-                    let renderY = ty * tw - this.handler.world.yOffset;
-                    ctx.fillStyle = "red";
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(renderX, renderY, tw, tw);
-                    ctx.fillStyle = 'Black';
-                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
-                }
+                // if(renderDebug){
+                //     let renderX = tx * tw - this.handler.world.xOffset;
+                //     let renderY = ty * tw - this.handler.world.yOffset;
+                //     ctx.fillStyle = "red";
+                //     ctx.lineWidth = 3;
+                //     ctx.strokeRect(renderX, renderY, tw, tw);
+                //     ctx.fillStyle = 'Black';
+                //     ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                // }
 
                 if(t.isSolid){
                     //(tx + 1) * tw = the tiles RIGHT edge
@@ -127,15 +127,15 @@ export class Entity {
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
                 
-                if(renderDebug){
-                    let renderX = tx * tw - this.handler.world.xOffset;
-                    let renderY = ty * tw - this.handler.world.yOffset;
-                    ctx.fillStyle = "red";
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(renderX, renderY, tw, tw);
-                    ctx.fillStyle = 'Black';
-                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
-                }
+                // if(renderDebug){
+                //     let renderX = tx * tw - this.handler.world.xOffset;
+                //     let renderY = ty * tw - this.handler.world.yOffset;
+                //     ctx.fillStyle = "red";
+                //     ctx.lineWidth = 3;
+                //     ctx.strokeRect(renderX, renderY, tw, tw);
+                //     ctx.fillStyle = 'Black';
+                //     ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                // }
 
                 if(t.isSolid){
                     let dy = (ty * tw) - (this.y + this.height);
@@ -162,15 +162,15 @@ export class Entity {
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
                 if(!t) return;
                 
-                if(renderDebug){
-                    let renderX = tx * tw - this.handler.world.xOffset;
-                    let renderY = ty * tw - this.handler.world.yOffset;
-                    ctx.fillStyle = "red";
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(renderX, renderY, tw, tw);
-                    ctx.fillStyle = 'Black';
-                    ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
-                }
+                // if(renderDebug){
+                //     let renderX = tx * tw - this.handler.world.xOffset;
+                //     let renderY = ty * tw - this.handler.world.yOffset;
+                //     ctx.fillStyle = "red";
+                //     ctx.lineWidth = 3;
+                //     ctx.strokeRect(renderX, renderY, tw, tw);
+                //     ctx.fillStyle = 'Black';
+                //     ctx.fillText(t.isSolid + "", renderX + 4, renderY + 10);
+                // }
 
                 if(t.isSolid){
                     let dy = ((ty + 1) * tw) - this.y;
