@@ -104,6 +104,13 @@ def login(handler, d, player):
     player.color = color
     player.UUID = newUUID
 
+    #everytime a player logs in, send updates to the communications server and all of the connected clients
+    toComms = {}
+    for UUID, player in handler.csm.players.items():
+        toComms[UUID] = player.username
+
+    handler.csc.sendMsg('player_count_update', toComms)
+
     p = {
         "world": handler.world.worldDict,
         "tiles": handler.world.tilesDict,

@@ -17,6 +17,7 @@ class WorldClient:
         self.inbound = asyncio.Queue()
         self.outbound = asyncio.Queue()
         self.playerCount = 0
+        self.players = {}
         self.type = None
         self.ID = None
         self.nameID = self.updateName()
@@ -32,6 +33,8 @@ class WorldClient:
                     ph.register(handler, d, self)
                 case "switch":
                     ph.switch(handler, d, self)
+                case "player_count_update":
+                    ph.player_count_update(handler, d, self)
 
 
     def send(self, type, data):
@@ -43,7 +46,7 @@ class WorldClient:
 
 
     async def handleSend(self):
-        print(f"Handling Send!")
+        #print(f"Handling Send!")
         try:
             while True:
                 msg = await self.outbound.get()
@@ -61,7 +64,7 @@ class WorldClient:
 
 
     async def handleReceive(self):
-        print(f"Handling Receive!")
+        #print(f"Handling Receive!")
         try:
             async for msg in self.ws:
                 decoded = json.loads(msg)

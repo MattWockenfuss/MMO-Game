@@ -21,8 +21,8 @@ from clientsocket import ClientSocket
 
 class ClientSocketManager:
     #Manages all connected client sockets and authenticated players.
-    def __init__(self):
-
+    def __init__(self, handler):
+        self.handler = handler
         self.players = {}
         self.server = None
         self._cleaned = set()
@@ -35,17 +35,8 @@ class ClientSocketManager:
         self.Port = None #these are set to real values once the server starts
 
     
-    async def cleanup(self, player, code = 1000, reason = "Unknown"):
-        """
-        Cleanup client data structures when connection is closed or disconnected.
-
-        Args:
-            client (ClientSocket): Client to clean up.
-            code (int): WebSocket close code.
-            reason (str): Reason for disconnection.
-        """
-
-        #first check if we alreadu cleaned this guy, if we did, return
+    async def cleanup(self, player, code=1000, reason="Unknown"):
+        #first check if we already cleaned this guy, if we did, return
         sessID = player.UUID
         async with self._clean_lock:
             if sessID in self._cleaned:
@@ -53,29 +44,29 @@ class ClientSocketManager:
             self._cleaned.add(sessID)
 
 
-        self.clients.pop(sessID, None)
         self.players.pop(sessID, None)
         #broadcast to everyone that a client lost connnection, was disconnected, etc...
         d = {
-                "session_id": sessID,
-                "code": code,
-                "reason": reason
+            "session_id": sessID,
+            "code": code,
+            "reason": reason
         }
+
+        #everytime a player disconnects, send updates to the communications server and all of the connected clients
+        toComms = {}
+        for UUID, player in self.players.items():
+            toComms[UUID] = player.username
+
+        self.sendMsg('player_count_update', toComms)
         self.broadcast("playerLOGOUT", d)
 
 
     def kick(self, UUID, code = 1008, reason = "You've been kicked!"):
-        client = self.clients.get(UUID, None)
         player = self.players.get(UUID, None)
         
-        if client is None and player is None:
+        if player is None:
             print(f"[ERROR] Trying to Kick SESSID:{UUID}")
             return
-        
-        
-        if client is not None:
-            print(f"Kicking Client SESSID:{UUID}")
-            asyncio.create_task(self._forceDisconnect(client, code, reason))
 
         if player is not None:
             print(f"Kicking Player: {player.username}@{UUID}")
@@ -105,20 +96,20 @@ class ClientSocketManager:
         #so we no longer need to handle authentication via the world server!
         
         key = self._generateNewSessionID()
-        client = ClientSocket(key, ws)
-        self.players[key] = client
+        player = ClientSocket(key, ws)
+        self.players[key] = player
 
         try:
             async with asyncio.TaskGroup() as tg:
-                tg.create_task(client.handleReceive())
-                tg.create_task(client.handleSend())
+                tg.create_task(player.handleReceive())
+                tg.create_task(player.handleSend())
         except (wsExceptions.ConnectionClosedOK, wsExceptions.ConnectionClosedError) as e:
-            print(f"Client {client.id} disconnected!: {e.code} {e.reason}")
+            print(f"Client {player.UUID} disconnected!: {e.code} {e.reason}")
         except Exception as e:
             print(f"[Error] Handling Receiving and Sending for {key} {repr(e)}")
         finally:
-            await client.ws.wait_closed()
-            await self.cleanup(client)
+            await player.ws.wait_closed()
+            await self.cleanup(player)
 
     async def start(self, ListenHost, Port, pingInterval, pingTimeout):
         #Start the WebSocket server to listen for incoming client connections.

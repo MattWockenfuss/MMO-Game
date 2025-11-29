@@ -8,7 +8,7 @@ def register(handler, d, worldclient):
     #alright in this function, we need to figure out what kind of world it needs to be, and send it back
     #we need to set out port to the one provided
     worldclient.port = d.get('port')
-    print(f"REGISTERING WORLD SERVER AT {worldclient.ip}:{worldclient.port}")
+    #print(f"REGISTERING WORLD SERVER AT {worldclient.ip}:{worldclient.port}")
 
 
 
@@ -20,7 +20,7 @@ def register(handler, d, worldclient):
     '''
     currentCountDict = {}
     for key, value in handler.wcm.desiredWorlds.items():
-        print(f"{key}: {value}")
+        #print(f"{key}: {value}")
         #for every world type, loop through all the worlds and how many are of this type
         currentCountDict[key] = 0
         #print(currentCountDict)
@@ -30,8 +30,8 @@ def register(handler, d, worldclient):
                 if key == world.type:
                     currentCountDict[key] += 1
 
-    print(handler.wcm.desiredWorlds)
-    print(currentCountDict)
+    #print(handler.wcm.desiredWorlds)
+    #print(currentCountDict)
 
     #alright, so now loop through the current counts and find the lowest whos current is less than desired
 
@@ -42,18 +42,19 @@ def register(handler, d, worldclient):
 
         #first check if its less than max, to even consider
         if value < handler.wcm.desiredWorlds.get(key):
-            print(f"currentCount: {value} IS LESS THAN {handler.wcm.desiredWorlds.get(key)}")
+            #print(f"currentCount: {value} IS LESS THAN {handler.wcm.desiredWorlds.get(key)}")
             #then the current is less than desired
             #if its value is lower than currentcount@key then set new lowest type
-            print(f"CHECKING IS currentCount: {value} LESS THAN {currentCountDict[lowestType]}")
+            #print(f"CHECKING IS currentCount: {value} LESS THAN {currentCountDict[lowestType]}")
             if value < currentCountDict[lowestType]:
-                print(f"currentCount: {value} IS LESS THAN {currentCountDict[lowestType]}")
+                #print(f"currentCount: {value} IS LESS THAN {currentCountDict[lowestType]}")
                 lowestType = key
 
 
-    print(f"Type       Desired  Current")
+    #print(f"Type       Desired  Current")
     for key, value in handler.wcm.desiredWorlds.items():
-        print(f"{key}       {value} {currentCountDict[key]}")
+        #print(f"{key}       {value} {currentCountDict[key]}")
+        pass
     
 
     #alright now we know what type they should be
@@ -77,14 +78,15 @@ def register(handler, d, worldclient):
         i += 1
 
     found_id = i
-    print(f"Found the lowest available ID for type {lowestType}: {found_id}")
+    #print(f"Found the lowest available ID for type {lowestType}: {found_id}")
 
     #okay so this world can now update its stuff, its going to be lowestType-i
     worldclient.type = lowestType
     worldclient.ID = i
     worldclient.updateName()
 
-    print(f"Based on the above, the new world is {worldclient.nameID}")
+    print(f"[{worldclient.ip}:{worldclient.port}] REGISTERING NEW WORLD SERVER")
+    print(f"\tASSIGNED WORLD {worldclient.nameID}")
 
     
 
@@ -97,3 +99,15 @@ def register(handler, d, worldclient):
 
 def switch(handler, d , worldclient):
     print(f"SWITCH: {d}")
+
+
+def player_count_update(handler, d , worldclient):
+    #this function is sent by the world server everytime their player count changes to keep the comms server up to date
+    #we recieve a list of usernames of currently connected players? or just the num lets do list
+    #we recieve a list of usernames of currently connected players to that server
+    #print(f"player count update! {d}")
+
+    #we keep track of a dictionary of UUIDs and Usernames currently connected to this server, then we update the player count
+    worldclient.players = d
+    worldclient.playerCount = len(worldclient.players)
+    

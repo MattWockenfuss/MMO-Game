@@ -5,6 +5,7 @@
 
 
 def authenticateREP(handler, d):
+    print(d)
     UUID = d.get("UUID")
     userdata = d.get('userdata')
     username = d.get('username')
@@ -38,8 +39,13 @@ def authenticateREP(handler, d):
     #okay so the client has been moved to the other list
     #now lets send them the IP of the world server they can connect to
 
+    uuidOfServer = handler.wcm.getBestServer(handler.wcm.defaultServer)
+    server = handler.wcm.worldclients[uuidOfServer]
+
+    print(f"Sending '[{UUID}]:{client.username}' to '{server.nameID}, ({server.getIPString()})'!") 
+
     dx = {
-        "IP": handler.wcm.getBestServer(handler.wcm.defaultServer),
+        "IP": server.getIPString(),
         "AUTH": "AUTH_OK"
     }
     client.send('AUTH_REP', dx)

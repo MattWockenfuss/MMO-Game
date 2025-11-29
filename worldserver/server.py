@@ -61,15 +61,15 @@ class Handler:
     World, EntityManager, Terminal, and Benchmark instances.
     Controls the running state of the server loop.
     """
-    def __init__(self, dsc, csm, csc, world, em, terminal, benchmark):
+    def __init__(self):
         self.running = True
-        self.dsc = dsc
-        self.csm = csm
-        self.csc = csc
-        self.world = world
-        self.em = em
-        self.terminal = terminal
-        self.benchmark = benchmark
+        self.dsc = None
+        self.csm = None
+        self.csc = None
+        self.world = None
+        self.em = None
+        self.terminal = None
+        self.benchmark = None
 
 class Benchmark:
     """
@@ -151,25 +151,26 @@ class WorldServer:
     Initializes all subsystems and runs the async main loop to process ticks.
     """
     def __init__(self):
+        self.handler = Handler()
+
         self.world = World()
         self.em = EntityManager()
         self.dsc = DataServerClient()
         self.csc = CommsServerClient()
-        self.csm = ClientSocketManager()
+        self.csm = ClientSocketManager(self.handler)
         self.terminal = Terminal()
         self.benchmark = Benchmark()
-        self.handler = Handler(self.dsc, self.csm, self.csc, self.world, self.em, self.terminal, self.benchmark)
-
-
+        
+        self.handler.world = self.world
+        self.handler.em = self.em
+        self.handler.dsc = self.dsc
+        self.handler.csc = self.csc
+        self.handler.csm = self.csm
+        self.handler.terminal = self.terminal
+        self.handler.benchmark = self.benchmark
 
         self.handler.em.handler = self.handler
         
-    """
-        Main server loop running at 60 ticks per second.
-        Updates all subsystems and collects benchmarking info.
-        Uses asyncio event loop clock to maintain fixed tick rate
-        with drift correction.
-    """
     async def tick(self):
 
         RATE = 60

@@ -25,11 +25,36 @@ class Terminal:
             cmd, *args = msg.split()
             #print(f"/{cmd} with args:[{args}]")
 
+            if cmd == "help":
+                print(f"worlds")
+                print(f"\tPrints Out the current list of worlds!")
+                print(f"desired")
+                print(f"\tPrints out the servers set in the config that are desired and their counts")
+                print(f"clear ('cls')")
+                print(f"\tClears the screen")
+
+
             if cmd == 'desired':
                 print(handler.wcm.desiredWorlds)
 
-            if cmd == 'default':
-                print(handler.wcm.defaultServer)
+            if cmd == 'players':
+                for wUUID, worldserver in  handler.wcm.worldclients.items():
+                    print(f"[{wUUID}-{worldserver.getIPString()}] {worldserver.nameID} has {worldserver.playerCount} player(s)")
+                    for pUUID, playername in worldserver.players.items():
+                        print(f"  - [{pUUID}] {playername}")
+
+            if cmd == 'worlds':
+                #then we want to list all of the worlds, their IPs, their type and player count, 
+                for UUID, worldserver in handler.wcm.worldclients.items():
+                    print(f"[{UUID}-{worldserver.getIPString()}] Desired: {handler.wcm.desiredWorlds[worldserver.type]} {worldserver.playerCount} players, {worldserver.nameID}")
+                print(f"Players connect to a '{handler.wcm.defaultServer}' server on login!")
+
+            if cmd == "cls" or cmd == "clear":
+                if os.name == "nt":
+                    os.system("cls")    #works on windows
+                else:
+                    os.system("clear")  #works on everything else
+
 
             if cmd == 'pingDS':
                 dx = {
