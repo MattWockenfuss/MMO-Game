@@ -23,6 +23,8 @@ class WorldClientManager:
                     match t:
                         case "login":
                             await ph.DSonLogin(self.handler, d, websocket)
+                        case "AUTH_REQ":
+                            await ph.AUTH_REQ(self.handler, d, websocket)
                         case "world":
                             await ph.DSonWorld(self.handler, d, websocket)
                         case _:

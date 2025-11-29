@@ -6,7 +6,11 @@
 
 def register(handler, d, worldclient):
     #alright in this function, we need to figure out what kind of world it needs to be, and send it back
+    #we need to set out port to the one provided
+    worldclient.port = d.get('port')
     print(f"REGISTERING WORLD SERVER AT {worldclient.ip}:{worldclient.port}")
+
+
 
     '''
         Alright so whats the best way to assign world types, well we want it to be round robin, okay, and then a max? or what
@@ -89,7 +93,7 @@ def register(handler, d, worldclient):
         'type': worldclient.type,
         'ID': worldclient.ID,
     }
-    worldclient.send('registerRETURN', p)
+    worldclient.send('registerACK', p)
 
 def switch(handler, d , worldclient):
     print(f"SWITCH: {d}")

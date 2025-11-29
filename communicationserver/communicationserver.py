@@ -60,11 +60,16 @@ class CommunicationServer:
         self.dataServerAddress = yml.get("dataserverIP")
         self.dataServerPort = yml.get("dataserverPORT")
 
+        self.wcm.defaultServer = yml.get("defaultServer")
+
+        print(f"World  IP: {self.worldListenAddress}:{self.worldListenPort}")
+        print(f"Player IP: {self.playerListenAddress}:{self.playerListenPort}")
+
         for lines in yml.get('worlds'):
             for key, value in lines.items():
                 self.wcm.desiredWorlds[key] = value
 
-        results = await asyncio.gather(#if one of these stops, they all stop
+        results = await asyncio.gather(     #if one of these stops, they all stop
             self.tick(),
             self.wcm.start(self.worldListenAddress, self.worldListenPort, self.handler),
             self.pcm.start(self.playerListenAddress, self.playerListenPort, self.handler),

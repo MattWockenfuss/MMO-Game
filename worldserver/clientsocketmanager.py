@@ -22,8 +22,8 @@ from clientsocket import ClientSocket
 class ClientSocketManager:
     #Manages all connected client sockets and authenticated players.
     def __init__(self):
-        self.clients = {}
-        self.players = {}  #clients whom have been authenticated, remember, ids or keys are unique across both lists
+
+        self.players = {}
         self.server = None
         self._cleaned = set()
         self._clean_lock = asyncio.Lock()
@@ -31,9 +31,11 @@ class ClientSocketManager:
         #they need to be verified by username before they are let in
         #key is their userID and value is the ClientSocket object
 
+        self.IP = None
+        self.Port = None #these are set to real values once the server starts
 
     
-    async def cleanup(self, client, code = 1000, reason = "Unknown"):
+    async def cleanup(self, player, code = 1000, reason = "Unknown"):
         """
         Cleanup client data structures when connection is closed or disconnected.
 
@@ -44,55 +46,53 @@ class ClientSocketManager:
         """
 
         #first check if we alreadu cleaned this guy, if we did, return
-        sessID = client.session_id
+        sessID = player.UUID
         async with self._clean_lock:
             if sessID in self._cleaned:
                 return
             self._cleaned.add(sessID)
 
 
-        self.clients.pop(client.session_id, None)
-        self.players.pop(client.session_id, None)
+        self.clients.pop(sessID, None)
+        self.players.pop(sessID, None)
         #broadcast to everyone that a client lost connnection, was disconnected, etc...
         d = {
-                "session_id": client.session_id,
+                "session_id": sessID,
                 "code": code,
                 "reason": reason
         }
         self.broadcast("playerLOGOUT", d)
 
 
-    def kick(self, session_id, code = 1008, reason = "You've been kicked!"):
-        client = self.clients.get(session_id, None)
-        player = self.players.get(session_id, None)
+    def kick(self, UUID, code = 1008, reason = "You've been kicked!"):
+        client = self.clients.get(UUID, None)
+        player = self.players.get(UUID, None)
         
         if client is None and player is None:
-            print(f"[ERROR] Trying to Kick SESSID:{session_id}")
+            print(f"[ERROR] Trying to Kick SESSID:{UUID}")
             return
         
         
         if client is not None:
-            print(f"Kicking Client SESSID:{session_id}")
+            print(f"Kicking Client SESSID:{UUID}")
             asyncio.create_task(self._forceDisconnect(client, code, reason))
 
         if player is not None:
-            print(f"Kicking Player: {player.username}@{session_id}")
+            print(f"Kicking Player: {player.username}@{UUID}")
             asyncio.create_task(self._forceDisconnect(player, code, reason))
                     
 
-    async def _forceDisconnect(self, client, code = 1000, reason = "Forced Disconnect"):
+    async def _forceDisconnect(self, player, code = 1000, reason = "Forced Disconnect"):
         try:
-            await client.ws.close(code=code, reason=reason)
+            await player.ws.close(code=code, reason=reason)
         except Exception as e:
-            print(f"[ERROR] Trying to Disconnect {client.session_id}, {repr(e)}")
+            print(f"[ERROR] Trying to Disconnect {player.UUID}, {repr(e)}")
         finally:
-            await self.cleanup(client, code=code, reason=reason)
+            await self.cleanup(player, code=code, reason=reason)
 
 
 
     def tick(self, handler):
-        for id, client in list(self.clients.items()): #chatGPT said run them in lists? so that they are 'snapshots' not the real thing
-            client.tick(handler)
         for player in list(self.players.values()):
             player.tick(handler)
 
@@ -102,9 +102,11 @@ class ClientSocketManager:
         # all they have is an IP address and a port, lets create a client for them,
         # and functions to handle incoming and outgoing msgs
         
+        #so we no longer need to handle authentication via the world server!
+        
         key = self._generateNewSessionID()
         client = ClientSocket(key, ws)
-        self.clients[key] = client
+        self.players[key] = client
 
         try:
             async with asyncio.TaskGroup() as tg:
@@ -120,12 +122,10 @@ class ClientSocketManager:
 
     async def start(self, ListenHost, Port, pingInterval, pingTimeout):
         #Start the WebSocket server to listen for incoming client connections.
-        
-        self.ListenHost = ListenHost
-        self.Port = Port
-        self.server = await serve(self.handleConnection, self.ListenHost, self.Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
+        self.server = await serve(self.handleConnection, ListenHost, Port, ping_interval=pingInterval, ping_timeout=pingTimeout)
+        self.IP = ListenHost
         self.Port = self.server.sockets[0].getsockname()[1]
-        print(f"STARTED WORLD SERVER ON {self.ListenHost}:{self.Port}")
+        print(f"STARTED WORLD SERVER ON {self.IP}:{self.Port}")
         await self.server.serve_forever()
         
     def broadcast(self, type, data):
@@ -148,4 +148,4 @@ class ClientSocketManager:
         characterPool = string.ascii_letters + string.digits
         while True:
             key = ''.join(random.choice(characterPool) for i in range(4))
-            if key not in self.players.keys() and key not in self.clients.keys(): return key
+            if key not in self.players.keys(): return key

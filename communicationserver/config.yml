@@ -15,6 +15,8 @@ dataserverPORT: 8001
 #okay say the type and number of servers to setup? handle load balancing by sending to the lowest amount of players, 
 #currently it cant start any servers
 
+defaultServer: "desert"
+
 worlds:
   - desert: 2
   - caves: 1

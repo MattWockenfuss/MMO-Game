@@ -11,17 +11,39 @@ class PlayerClientManager:
     def __init__(self):
         self.handler = None
 
+        self.unauthedclients = {}
         self.playerclients = {}
 
 
     def tick(self, handler):
+        for c in self.unauthedclients.values():
+            c.tick(handler)
         for c in self.playerclients.values():
             c.tick(handler)
+
+    async def cleanup(self, player, code = 1000, reason = "Unknown"):
+        sessID = player.UUID
+
+        async with self._clean_lock:
+            if sessID in self._cleaned:
+                return
+            self._cleaned.add(sessID)
+
+        self.unauthedclients.pop(sessID, None)
+        self.playerclients.pop(sessID, None)
+    async def forceDisconnect(self, player, code=1000, reason="Forced Disconnect"):
+        try:
+            await player.ws.close(code=code, reason=reason)
+        except Exception as e:
+            print(f"[ERROR] Trying to Disconnect {player.UUID}, {repr(e)}")
+        finally:
+            await self.cleanup(player, code=code, reason=reason)
+
 
     async def handleConnection(self, ws):
         key = self._generateNewSessionID()
         client = PlayerClient(key, ws)
-        self.playerclients[key] = client
+        self.unauthedclients[key] = client
 
         try:
             async with asyncio.TaskGroup() as tg:

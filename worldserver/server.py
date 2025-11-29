@@ -61,10 +61,11 @@ class Handler:
     World, EntityManager, Terminal, and Benchmark instances.
     Controls the running state of the server loop.
     """
-    def __init__(self, dsc, csm, world, em, terminal, benchmark):
+    def __init__(self, dsc, csm, csc, world, em, terminal, benchmark):
         self.running = True
         self.dsc = dsc
         self.csm = csm
+        self.csc = csc
         self.world = world
         self.em = em
         self.terminal = terminal
@@ -157,7 +158,7 @@ class WorldServer:
         self.csm = ClientSocketManager()
         self.terminal = Terminal()
         self.benchmark = Benchmark()
-        self.handler = Handler(self.dsc, self.csm, self.world, self.em, self.terminal, self.benchmark)
+        self.handler = Handler(self.dsc, self.csm, self.csc, self.world, self.em, self.terminal, self.benchmark)
 
 
 
@@ -176,9 +177,15 @@ class WorldServer:
 
         loop = asyncio.get_running_loop()
         next_tick = loop.time()
+        
+        while self.csm.IP is None or self.csm.Port is None or getattr(self.csc, "ws", None) is None:
+            print(f"Waiting for {self.csm.IP} to not be None!")
+            await asyncio.sleep(0.01)
+
+
 
         d = {
-            'msg': 'this is my message'
+            'port': f'{self.csm.Port}'
         }
         self.csc.sendMsg('register', d)
 

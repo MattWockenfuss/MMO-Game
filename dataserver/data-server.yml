@@ -1,4 +1,4 @@
 #used to set a specific listen address, 127.0.0.1 means only local machines can connect
 # 0.0.0.0 means anyone can connect and a specific address means that all traffic must flow through that address
-listenAddress: "127.0.0.1"
+listenAddress: "0.0.0.0"
 myPort: 8001

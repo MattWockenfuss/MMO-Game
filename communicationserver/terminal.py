@@ -23,10 +23,21 @@ class Terminal:
             if not msg: return
 
             cmd, *args = msg.split()
-            print(f"/{cmd} with args:[{args}]")
+            #print(f"/{cmd} with args:[{args}]")
 
             if cmd == 'desired':
                 print(handler.wcm.desiredWorlds)
+
+            if cmd == 'default':
+                print(handler.wcm.defaultServer)
+
+            if cmd == 'pingDS':
+                dx = {
+                        "username": "Johnny", 
+                        "password": "12309841",
+                        "UUID": "KKKK"
+                    }
+                handler.dsc.sendMsg("AUTH_REQ", dx)
 
 
 

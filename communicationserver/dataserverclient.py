@@ -39,9 +39,10 @@ class DataServerClient:
                 msg = json.loads(data)
                 t = msg["type"]
                 d = msg["data"]
+                print(f"{t}    {d}")
                 match t:
-                    case "authplayer":
-                        ph.authplayer(handler, d)
+                    case "authenticateREP":
+                        ph.authenticateREP(handler, d)
                     case _:
                         print(f"[ERROR PACKET READ] {msg}")
             except Exception as e:
@@ -81,11 +82,20 @@ class DataServerClient:
     async def start(self, IP, Port):
         self.IP = IP
         self.Port = Port
-        async with websockets.connect(f"ws://{self.IP}:{self.Port}") as ws:
-            self.ws = ws
-            async with asyncio.TaskGroup() as tg:
-                tg.create_task(self.receiver())
-                tg.create_task(self.sender())
+        try:
+            print(f"[DSC] Attempting to connect to DataServer ws://{self.IP}:{self.Port}")
+            async with websockets.connect(f"ws://{self.IP}:{self.Port}") as ws:
+                self.ws = ws
+                print("[DSC] Connected to DataServer")
+
+                async with asyncio.TaskGroup() as tg:
+                    tg.create_task(self.receiver())
+                    tg.create_task(self.sender())
+
+                print("[DSC] DataServer connection closed normally")
+
+        except Exception as e:
+            print(f"[DSC] FAILED to connect to DataServer {self.IP}:{self.Port}: {repr(e)}")
 
     async def stop(self, code, reason):
         self._shutdown_event.set()

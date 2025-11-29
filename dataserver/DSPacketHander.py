@@ -45,6 +45,33 @@ async def DSonLogin(handler, data, ws):
     }
     await ws.send(json.dumps(p))
 
+
+async def AUTH_REQ(handler, d, ws):
+    username = d.get('username')
+    password = d.get('password')
+    UUID = d.get('UUID')
+    print(f"Attempting to authenticate {username}")
+    for player in handler.configs["players"]:
+        if player.get("name") == username:
+            d = {
+                'UUID': UUID,
+                'userdata': player,
+                'message': 'AUTH_OK'
+            }
+            break
+    else:
+        d = {
+            'UUID': UUID,
+            'username': username,
+            'message': 'NOT AUTH'
+        }
+
+    p = {
+        'type': "authenticateREP",
+        'data': d
+    }
+    await ws.send(json.dumps(p))
+
 async def DSonWorld(handler, data, ws):
     print(f"RECEIVING {data} FROM WORLD SERVER")
 

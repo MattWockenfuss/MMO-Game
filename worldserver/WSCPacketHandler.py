@@ -13,6 +13,8 @@ Responsibilities:
 
 import json
 import base64
+from enemy import Enemy
+from static_entity import StaticEntity
 '''
     This file handles all packets For the world server FROM THE
     CLIENTS
@@ -44,8 +46,8 @@ def WSonMove(handler, d, clientSocket):
     """
 
     try:
-        if not clientSocket.is_authed:
-            print(f"Move Packet from unauthenticated client, or player is null")
+        if not clientSocket:
+            print(f"Move Packet From broken client socket!")
             return
         
         x = d.get("x")
@@ -58,11 +60,11 @@ def WSonMove(handler, d, clientSocket):
         clientSocket.x = x
         clientSocket.y = y
 
-        for sessID, otherPlayer in list(handler.csm.players.items()):
+        for UUID, otherPlayer in list(handler.csm.players.items()):
             if otherPlayer is clientSocket:
                 continue
             da = {
-                'session_id': clientSocket.session_id,
+                'session_id': clientSocket.UUID,
                 'x': x,
                 'y': y
             }
@@ -75,45 +77,105 @@ def WSonMove(handler, d, clientSocket):
 
 
 
-def WSonLogin(handler, d, clientSocket):
-    """
-    Handle a client 'login' packet.
+def login(handler, d, player):
+    '''
+        This function handles user logging in, they have already been authenticated and sent to us
+    
+    '''
+    
+    #what do we want to do?
+    #give them world data, other player data, entity data, tile data?
+    #add them to our list
 
-    Processes login requests containing username, password, and color.
+    newUUID = handler.em.generateUUID()
+    username = d.get('username')
+    color = d.get('color')
+    handler.csm.players.pop(player.UUID, None)
 
-    Validates that no other player on the server has the same username.
-    If the username is already connected, kicks the new client connection.
 
-    Sends a login message to the data server client (dsc) for authentication/processing.
 
-    Args:
-        handler (Handler): The main server handler containing subsystem references.
-        d (dict): The parsed packet data containing 'username', 'password', and 'color'.
-        clientSocket (ClientSocket): The client socket object representing the player connection.
+    handler.csm.players[newUUID] = player
 
-    Packet example:
-    p = {'username': 'Alex', 'password': '23423', 'color': '#e020ee'}
-    """
+    print(f"Player Connecting! [{username}, {color}]")
+    #now we need to add the player to our list and send them the data and stuff!
+    player.x = 200
+    player.y = 200
+    player.username = username
+    player.color = color
+    player.UUID = newUUID
 
-    #print(f"Handling Login Packet {d}")
-    username = d.get("username")
-    password = d.get("password")
-    color = d.get("color")
-
-    #print(f"{clientSocket.session_id}  {username} {password} {color}")
-
-    for sessID, player in list(handler.csm.players.items()):
-        if username == player.username:
-            print(f"{username} tried to connect but they are already on the server!")
-            handler.csm.kick(clientSocket.session_id, code=1000, reason="Username already in use!")
-            return
-
-    #attach the session id so we can associate it to this client when it comes back
     p = {
-        'username': username,
-        'password': password,
-        'color': color,
-        'session_id': clientSocket.session_id
+        "world": handler.world.worldDict,
+        "tiles": handler.world.tilesDict,
+        "tileMap": handler.world.tileMapDict,
+        "statics": handler.world.staticsDict
     }
-    handler.dsc.sendMsg("login", p)
+    print(f"Tiles DICT: {handler.world.tilesDict}")
+    print(f"TilesMap DICT: {handler.world.tileMapDict}")
+    print(f"STATICS DICT: {handler.world.staticsDict}")
+    player.send('world', p)
 
+
+    enemies = {}
+    statics = {}
+
+
+    for entity in handler.em.items:
+        print(entity.UUID)
+        if isinstance(entity, Enemy):
+            #then this is an Enemy, build the appropriate packet
+            px = {
+                "UUID": entity.UUID,
+                "type": entity.type,
+                "x": entity.x,
+                "y": entity.y,
+                "level": entity.level,
+                "health": entity.health,
+                "attack": entity.attack,
+                "attackSpeed": entity.attackSpeed,
+                "dodgeChance": entity.dodgeChance,
+                "criticalChance": entity.criticalChance,
+                "movementSpeed": entity.movementSpeed,
+                "visionRadius": entity.visionRadius,
+                "size": entity.size,
+                "movementType": entity.movementType
+            }
+            enemies[entity.UUID] = px
+        if isinstance(entity, StaticEntity):
+            #then this is a static entity packet, build appropriately
+            px = {
+                "UUID": entity.UUID,
+                "type": entity.type,
+                "x": entity.x,
+                "y": entity.y,
+                "level": entity.level,
+                "health": entity.health
+            }
+            statics[entity.UUID] = px
+
+    player.send('enemy', enemies)
+    player.send('static', statics)
+    print(f"ENEMIES: {enemies}")
+
+    for UUID, player in handler.csm.players.items():
+        #here we are looping through all the clients, and if they didnt just log in, tell them
+        #someone just logged in, and tell the person who just logged in they exist
+        if UUID != newUUID:
+            #then this is another player on the server, tell them someone just logged in
+            #and then tell the person who just logged in about this person
+            da = {
+                "username": player.username,
+                "x": player.x,
+                "y": player.y,
+                "session_id": player.UUID,
+                "color": player.color
+            }
+            player.send("playerLOGIN", da)
+            da = {
+                "username": player.username,
+                "x": player.x,
+                "y": player.y,
+                "session_id": player.UUID,
+                "color": player.color
+            }
+            player.send("login", da)

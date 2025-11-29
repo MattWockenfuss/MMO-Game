@@ -119,11 +119,11 @@ class Terminal:
                 if len(handler.csm.players.items()) == 0:
                     print(f"There are no players on the server!")
                 else:
-                    print(f"logged in: {len(handler.csm.players)} players")
-                    for sessID, player in list(handler.csm.players.items()):
+                    print(f"logged in: {len(handler.csm.players)} player(s)")
+                    for UUID, player in list(handler.csm.players.items()):
                         print(" " * 4, end="")
-                        print(f"{sessID} {player.username} ", end="")
-                        print(f"{player.userdata} ")
+                        print(f"{UUID} {player.username} ", end="")
+                        #print(f"{player.userdata} ")
 
             if cmd == "entities":
                 if(len(handler.em.items) == 0):

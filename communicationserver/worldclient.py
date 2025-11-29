@@ -77,6 +77,9 @@ class WorldClient:
             print(f"[UNEXPECTED ERROR] Receiving {self.UUID} a msg, {e}")
             raise
     
+    def getIPString(self):
+        return f"{self.ip}:{self.port}"
+
     def updateName(self):
         #print(f"REDOING NAME")
         if self.type is None or self.ID is None:

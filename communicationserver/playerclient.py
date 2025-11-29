@@ -23,8 +23,8 @@ class PlayerClient:
             d = msg["data"]
             print(f"[{self.UUID}] PLAYER CLIENT TICK {t} : {d}")
             match t:
-                case "authenticate":
-                    ph.authenticate(handler, d, self)
+                case "AUTH_REQ":
+                    ph.AUTH_REQ(handler, d, self)
 
 
     def send(self, type, data):
