@@ -1,12 +1,7 @@
 World-Name: "The Desert"
 Tile-Map: "desert.png"
 
-World-Entrance-Color: "#33cc33"
-
-
-
-
-
-
-
-
+TileTrigger: 
+  - toWorld: "caves"
+    toCoords: [200, 200]
+    fromCoords: [0, 0]    #these are specific coords

@@ -34,6 +34,9 @@ class ClientSocket():
         self.inbound = asyncio.Queue()
         self.outbound = asyncio.Queue()
 
+        self.x = None
+        self.y = None
+
         print(f"NEW CLIENT: [{self.ip}:{self.port}] UUID: {self.UUID}")
 
     def tick(self, handler):
@@ -91,8 +94,8 @@ class ClientSocket():
                 #okay so we just received a packet?
                 decoded = json.loads(msg)
                 #print(json.dumps(decoded, indent=4))  #json.dumps takes in a JSON object, so we have to load it first
-                #if decoded.get("type") != "move":
-                print(f"[UUID:{self.UUID}  {self.ip}:{self.port}] MSG: {msg}")
+                if decoded.get("type") != "move":
+                    print(f"[UUID:{self.UUID}  {self.ip}:{self.port}] MSG: {msg}")
                 self.inbound.put_nowait(decoded)
         except ConnectionClosedOK:
             raise

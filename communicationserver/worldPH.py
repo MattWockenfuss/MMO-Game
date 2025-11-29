@@ -99,6 +99,34 @@ def register(handler, d, worldclient):
 
 def switch(handler, d , worldclient):
     print(f"SWITCH: {d}")
+    
+    UUID = d.get("UUID")
+    worldTo = d.get("worldTo")
+
+    #alright so a player is trying to switch, we have their UUID and the worldTo, lets send back the optimal server, or an error if no server
+    #No Server of type
+    uuidOfLowest = handler.wcm.getBestServer(worldTo)
+
+    if uuidOfLowest.startswith("No Server of type"):
+        #then there is no server of type, tell world server to drop it
+        p = {
+            "MESSAGE": "There is no server of type!",
+            "UUID": UUID
+        }
+        worldclient.send('switch_REP', p)
+        return
+
+    #alright so there is a world of type, send them to it
+    print(f"User [{UUID}] from '{worldclient.nameID}' is switching worlds, sending them to '{handler.wcm.worldclients.get(uuidOfLowest)}'!")
+    p = {
+        "MESSAGE": "Server Found!",
+        "IP": handler.wcm.worldclients.get(uuidOfLowest).getIPString(),
+        "UUID": UUID
+
+    }
+    worldclient.send('switch_REP', p)
+
+
 
 
 def player_count_update(handler, d , worldclient):

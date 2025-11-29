@@ -16,7 +16,7 @@ Dependencies:
 - base64: To decode world data encoding.
 - enemyherd.EnemyHerd: Enemy herd entity class representing groups of enemies.
 """
-
+import math
 import base64
 from enemyherd import EnemyHerd
 from static_entity import StaticEntity
@@ -45,6 +45,7 @@ class World:
         self.tilesDict = {}
         self.tileMapDict = {}
         self.staticsDict = {}
+        self.tileTriggers = {}
 
         self.enemyHerds = []
         self.staticHoles = []
@@ -54,11 +55,30 @@ class World:
         self.height = 0
 
     def tick(self, handler):
-        #getting called 60 Times per second!
 
-        # PRANAV IN HERE
-        self.checkWorldTrigger()
+        #here we want to check if any of the players are at the world trigger points, set in the data server dictionary
+        #if they are inside of the tile, then they will be transported
+        for trigger in self.tileTriggers:
+            #  trigger["toWorld"]  is the world type
+            #  trigger["toCoords"] are the coords we want them to have in the new world
+            #  trigger["fromCoords"]  the coords we want to check
+            cX, cY = trigger.get("fromCoords")
+            #we want to loop through all of the players on the server, check if they are touching this tile, if so
+            for UUID, player in handler.csm.players.items():
+                distanceFrom = math.sqrt(math.pow(player.x - cX, 2) + math.pow(player.y - cY, 2))
+                if distanceFrom <= 16:
+                    print(f"{distanceFrom} {player.username} ({player.x:.1f}, {player.y:.1f}) is triggering switch to {trigger.get("toWorld")}")
+                    #okay so we want to initiate a user to switch worlds? what do we do?
+                    # we tell the comms server, the comms server returns the IP for them,
+                    # we tell them the IP, they leave and join another server.
+                    p = {
+                        "UUID": player.UUID,
+                        "worldTo": trigger.get("toWorld")
+                    }
+                    handler.csc.sendMsg('switch', p)
+                    
 
+            pass
 
 
         for enemyHerd in self.enemyHerds:
@@ -158,10 +178,7 @@ class World:
             for (x, y) in world_statics[eTypes]:
                 self.staticHoles.append(StaticEntityHole(eTypes, x, y))
 
-                
 
-    def checkWorldTrigger(self):
-        #being called 60 times per second
-        #Not the most efficient way to do, probably event system instead, but hey
-        #checks if any player is in trigger
-        pass
+        #finally lets load the tile triggers,
+        self.tileTriggers = self.worldDict.get("TileTrigger")
+        print(f"TILE TRIGGERS {self.tileTriggers}")

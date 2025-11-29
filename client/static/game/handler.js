@@ -1,8 +1,11 @@
+import { GAMESTATE } from "../GameLoop.js";
+
 export class Handler {
     constructor(){
 
     }
     init(networkhandler, player, world, entityManager, inputManager, controlManager, assetManager, debugMenu){
+        this.state = GAMESTATE.LOADING
         this.net = networkhandler;
         this.player = player;
         this.world = world;

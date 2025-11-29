@@ -75,7 +75,7 @@ async def AUTH_REQ(handler, d, ws):
 async def DSonWorld(handler, data, ws):
     print(f"RECEIVING {data} FROM WORLD SERVER")
 
-    for world in handler.configs["worlds"]:#this is a list of dictionaries
+    for world in handler.configs["worlds"]: #this is a list of dictionaries
         print(f"Getting {world.get('World-Name')}")
         for key, value in world.items():
             if key == "world-data":

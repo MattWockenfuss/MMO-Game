@@ -10,6 +10,12 @@ import { PacketHandler } from "./game/PacketHandler.js";
 import { DebugMenu } from "./game/DebugMenu.js";
 import { ControlManager } from "./game/input/ControlManager.js";
 
+export const GAMESTATE = {
+    PLAYING: "Playing",
+    LOADING: "Loading"
+}
+
+
 class GameEngine{
     init(networkhandler, myname, mycolor){
         this._rafID = 0;

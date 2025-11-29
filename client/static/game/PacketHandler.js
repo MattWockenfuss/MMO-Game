@@ -13,7 +13,8 @@ export class PacketHandler{
             playerLOGIN:    (data) => this.playerLOGIN(data),
             playerLOGOUT:   (data) => this.playerLOGOUT(data),
             enemy:          (data) => this.enemy(data),
-            static:         (data) => this.static(data)
+            static:         (data) => this.static(data),
+            switch_execute: (data) => this.switch_execute(data)
         }
     }
     
@@ -28,6 +29,10 @@ export class PacketHandler{
             }
         }
         this.handler.net.inbound.length = 0;
+    }
+
+    switch_execute(data){
+        console.log(`We are going to switch worlds!   ${data}`);
     }
 
     login_res(data){
