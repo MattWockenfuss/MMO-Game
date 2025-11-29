@@ -104,6 +104,13 @@ def login(handler, d, player):
     player.color = color
     player.UUID = newUUID
 
+    #we want to tell them what kind of server we are
+    p = {
+        "nameID": handler.csc.worldName
+    }
+    player.send('login_res', p)
+
+
     #everytime a player logs in, send updates to the communications server and all of the connected clients
     toComms = {}
     for UUID, player in handler.csm.players.items():

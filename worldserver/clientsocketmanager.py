@@ -57,7 +57,7 @@ class ClientSocketManager:
         for UUID, player in self.players.items():
             toComms[UUID] = player.username
 
-        self.sendMsg('player_count_update', toComms)
+        self.handler.csc.sendMsg('player_count_update', toComms)
         self.broadcast("playerLOGOUT", d)
 
 

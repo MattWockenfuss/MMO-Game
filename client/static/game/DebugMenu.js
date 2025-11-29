@@ -24,17 +24,47 @@ export class DebugMenu {
 
     }
     render(ctx, ticks){
-        if(!this.handler.CM.controls.get('TOGGLEDEBUG').toggled()) return;
-
         let CANVAS_WIDTH = this.handler.GAME_WIDTH;  //probably should fix this, soon TM
         let CANVAS_HEIGHT = this.handler.GAME_HEIGHT;
-        //console.log(`${CANVAS_WIDTH} x ${CANVAS_HEIGHT}`);
 
         if(this.handler.world == null) return;
         if(this.handler.world.xOffset == null) return;
         if(this.handler.player == null) return;
 
+        //render the world we are connected to at the bottom right
 
+        let playerCount = this.handler.EM.getPlayerCount();
+        let nameID = this.handler.world.nameID;
+
+        let playerString = "player"
+        if(playerCount > 1) playerString = "players"
+
+        
+        let text = `${playerCount} ${playerString} in ${nameID}`;
+        ctx.font = "32px monospace";
+
+
+        const metrics = ctx.measureText(text);
+        const textWidth = metrics.width;
+        const textHeight = 32;
+
+        const padX = 12;
+        const padY = 6;
+        const boxWidth = textWidth + padX * 2;
+        const boxHeight = textHeight + padY * 2;
+        const x = CANVAS_WIDTH - boxWidth;
+        const y = CANVAS_HEIGHT - boxHeight;
+
+        ctx.fillStyle = "rgba(81,81,71,0.68)";
+        ctx.fillRect(x, y, boxWidth, boxHeight);
+        ctx.fillStyle = "yellow";
+        ctx.fillText(text, x + padX, y + textHeight + padY - 4);
+
+
+
+
+
+        if(!this.handler.CM.controls.get('TOGGLEDEBUG').toggled()) return;
 
         let mouseX = this.handler.world.xOffset + this.handler.IM.mouseX;
         let mouseY = this.handler.world.yOffset + this.handler.IM.mouseY;

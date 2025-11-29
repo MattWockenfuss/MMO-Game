@@ -10,6 +10,8 @@ export class World{
         this.worldPixelWidth = null;
         this.worldPixelHeight = null;
 
+        this.nameID = "";
+
         this.CANVAS_WIDTH = 1500;
         this.CANVAS_HEIGHT = 640;
 

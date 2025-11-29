@@ -72,6 +72,7 @@ form.addEventListener("submit", async (event) => {
     if (AUTH_REP.data.AUTH === 'AUTH_OK'){
         //then we were authenticated!, lets connect to the world server!
         let worldserverIP = AUTH_REP.data.IP;
+
         const worldServerWS = new NetworkHandler(worldserverIP);
         await worldServerWS.waitForOpen();
         

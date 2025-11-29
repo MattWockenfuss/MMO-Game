@@ -1,4 +1,5 @@
 import { OtherPlayer } from "./entities/OtherPlayer.js";
+import { Player } from "./entities/player.js";
 
 export class EntityManager{
     constructor(handler){
@@ -42,5 +43,14 @@ export class EntityManager{
     getPlayerIndexBySessionID(session_id){
         const idx = this.entities.findIndex(e => e.session_id == session_id);
         return idx;
+    }
+    getPlayerCount(){
+        let playerCount = 0;
+        for(let i = 0; i < this.entities.length; i++){
+            if(this.entities[i] instanceof OtherPlayer || this.entities[i] instanceof Player){
+                playerCount++;
+            }
+        }
+        return playerCount; // we have to add one to account for the current client
     }
 }

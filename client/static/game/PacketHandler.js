@@ -8,12 +8,12 @@ export class PacketHandler{
         this.packetMap = {
             move:           (data) => this.move(data),
             login:          (data) => this.login(data),
+            login_res:      (data) => this.login_res(data),
             world:          (data) => this.world(data),
             playerLOGIN:    (data) => this.playerLOGIN(data),
             playerLOGOUT:   (data) => this.playerLOGOUT(data),
             enemy:          (data) => this.enemy(data),
-            static:         (data) => this.static(data),
-            authenticate:   (data) => this.authenticate(data)
+            static:         (data) => this.static(data)
         }
     }
     
@@ -30,6 +30,13 @@ export class PacketHandler{
         this.handler.net.inbound.length = 0;
     }
 
+    login_res(data){
+        //console.log(data);
+
+        //so we have logged into the server, they sent back what kind of server we are connected to!
+        console.log(data.nameID);
+        this.handler.world.nameID = data.nameID;
+    }
 
     login(data){
         //this packet is the login of other players
