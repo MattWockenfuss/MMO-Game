@@ -1,6 +1,9 @@
 import { Enemy } from "./entities/Enemy.js";
 import { StaticEntity } from "./entities/StaticEntity.js";
 import { OtherPlayer } from "./entities/OtherPlayer.js";
+import { GAMESTATE } from "../GameLoop.js";
+import NetworkHandler from "./NetworkHandler.js";
+
 
 export class PacketHandler{
     constructor(handler){
@@ -31,8 +34,44 @@ export class PacketHandler{
         this.handler.net.inbound.length = 0;
     }
 
-    switch_execute(data){
-        console.log(`We are going to switch worlds!   ${data}`);
+    async switch_execute(data){
+        let worldserverIP = data.IP;
+        let coords = data.CoordsTo;
+        console.log(`We are going to switch worlds to ${worldserverIP} at ${coords[0]}, ${coords[1]}`);
+
+        this.handler.state = GAMESTATE.LOADING;
+        this.handler.net.switchclose();
+        //alright now for the fun stuff, we want to create a new network handler, open a connection with the new server, 
+        //wait for connection, upon login, 
+
+        //then we were authenticated!, lets connect to the world server!
+        
+
+        let newServer = new NetworkHandler(this.handler, worldserverIP);
+        await newServer.waitForOpen();
+        this.handler.net = newServer;
+
+        this.handler.player.x = coords[0];
+        this.handler.player.y = coords[1];
+        
+
+        var p = {
+            "username": this.handler.player.username,
+            "color": this.handler.player.color,
+            "x": coords[0],
+            "y": coords[1]
+        }
+
+
+        //we also need to clear all of the entities except for us.
+        this.handler.EM.clearAllExceptPlayer();
+
+        console.log(p)
+        this.handler.net.send("login", p);
+        this.handler.state = GAMESTATE.PLAYING;
+
+
+
     }
 
     login_res(data){
@@ -46,6 +85,7 @@ export class PacketHandler{
     login(data){
         //this packet is the login of other players
         this.handler.EM.addEntity(new OtherPlayer(this.handler, data.x, data.y, data.session_id, data.username, data.color));
+        this.handler.state = GAMESTATE.PLAYING;
     }
     authenticate(data){
         console.log(`LOGINVERIFY: ${data}`);

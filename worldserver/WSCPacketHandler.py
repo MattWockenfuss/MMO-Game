@@ -98,8 +98,9 @@ def login(handler, d, player):
 
     print(f"Player Connecting! [{username}, {color}]")
     #now we need to add the player to our list and send them the data and stuff!
-    player.x = 200
-    player.y = 200
+
+    player.x = d.get('x', 200)  #attempt to set it to the passed in data, if not, 200
+    player.y = d.get('y', 200)
     player.username = username
     player.color = color
     player.UUID = newUUID

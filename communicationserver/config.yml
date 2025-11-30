@@ -19,6 +19,6 @@ defaultServer: "desert"
 
 worlds:
   - desert: 2
-  - caves: 1
-  - crypts: 1
-  - beach: 1
+  - beach: 2
+  - crypts: 3
+  - forest: 1

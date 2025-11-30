@@ -199,24 +199,27 @@ export class DebugMenu {
             let tileY = Math.trunc(mouseY / Tile.tileWidth);
             //console.log(`Checking ${tileX}, ${tileY}`);
 
-            let id = this.handler.world.worldData[tileY * this.handler.world.worldWidth + tileX];
-            let tile = this.handler.world.tileMap.get(id);
+            let t = this.handler.world.getTileAtWorldCoords(tileX, tileY);
+            if(t){
+                let renderX = (tileX * Tile.tileWidth) - this.handler.world.xOffset;
+                let renderY = (tileY * Tile.tileWidth) - this.handler.world.yOffset;
+                t.renderDebug(ctx, renderX, renderY);
 
-            let renderX = (tileX * Tile.tileWidth) - this.handler.world.xOffset;
-            let renderY = (tileY * Tile.tileWidth) - this.handler.world.yOffset;
-            tile.renderDebug(ctx, renderX, renderY);
+                ctx.fillStyle = "black";
+                ctx.font = " 20px monospace";
 
-            ctx.fillStyle = "black";
-            ctx.font = " 20px monospace";
+                // let isSolidT = this.handler.world.isTileSolid(mouseX, mouseY);
+                // ctx.fillText(`${isSolidT}`, mouseX, mouseY);
 
-            // let isSolidT = this.handler.world.isTileSolid(mouseX, mouseY);
-            // ctx.fillText(`${isSolidT}`, mouseX, mouseY);
+                ctx.fillText(`codename: ${t.codename}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
+                ctx.fillText(`(x,y): (${tileX},${tileY})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
+                ctx.fillText(`Name: ${t.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
+                ctx.fillText(`loreBlurb: ${t.loreBlurb}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
+                ctx.fillText(`isSolid: ${t.isSolid}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
+            }
 
-            ctx.fillText(`codename: ${tile.codename}`, CANVAS_WIDTH - width + 4, 18 + (gap * 0));
-            ctx.fillText(`(x,y): (${tileX},${tileY})`, CANVAS_WIDTH - width + 4, 18 + (gap * 1));
-            ctx.fillText(`Name: ${tile.name}`, CANVAS_WIDTH - width + 4, 18 + (gap * 2));
-            ctx.fillText(`loreBlurb: ${tile.loreBlurb}`, CANVAS_WIDTH - width + 4, 18 + (gap * 3));
-            ctx.fillText(`isSolid: ${tile.isSolid}`, CANVAS_WIDTH - width + 4, 18 + (gap * 4));
+
+
             
         }
 

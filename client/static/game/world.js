@@ -152,6 +152,8 @@ export class World{
             This function returns the tile found at world coords (x,y), note that these can
             only be integers where 0,0 is the top left of the world
         */
+       if(x < 0 || x >= this.worldWidth) return null;
+       if(y < 0 || y >= this.worldHeight) return null;
        return this.tileMap.get(this.worldData[y * this.worldWidth + x]);
     }
     getTileByID(id){

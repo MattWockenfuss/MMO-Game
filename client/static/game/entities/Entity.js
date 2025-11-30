@@ -52,7 +52,7 @@ export class Entity {
                 //console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-                if(!t) return;
+                if(!t) continue;
                 
                 // if(renderDebug){
                 //     let renderX = tx * tw - this.handler.world.xOffset;
@@ -87,7 +87,7 @@ export class Entity {
                 //console.log(`Collision Cycle: ${tyS}->${ty}->${tyE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-                if(!t) return;
+                if(!t) continue;
                 
                 // if(renderDebug){
                 //     let renderX = tx * tw - this.handler.world.xOffset;
@@ -125,7 +125,7 @@ export class Entity {
                 //console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-                if(!t) return;
+                if(!t) continue;
                 
                 // if(renderDebug){
                 //     let renderX = tx * tw - this.handler.world.xOffset;
@@ -160,8 +160,7 @@ export class Entity {
                 //console.log(`Collision Cycle: ${txS}->${tx}->${txE}`);
                 //get the tile at these coords
                 let t = this.handler.world.getTileAtWorldCoords(tx, ty);
-                if(!t) return;
-                
+                if(!t) continue;
                 // if(renderDebug){
                 //     let renderX = tx * tw - this.handler.world.xOffset;
                 //     let renderY = ty * tw - this.handler.world.yOffset;
@@ -184,26 +183,26 @@ export class Entity {
 
     }
 
-    #rectsCollide(r1, r2){
-        /*
-            Given 2 rectangles with properties x, y, width and height,
-            this function returns whether or not they overlap.
+    // #rectsCollide(r1, r2){
+    //     /*
+    //         Given 2 rectangles with properties x, y, width and height,
+    //         this function returns whether or not they overlap.
 
-            Split into 4 statements they check
-                is r1's leftside left of r2's right
-                is r1's rightside right of r2's left
-                is r1's top above r2's bottom
-                is r1's bottom below r2's top
+    //         Split into 4 statements they check
+    //             is r1's leftside left of r2's right
+    //             is r1's rightside right of r2's left
+    //             is r1's top above r2's bottom
+    //             is r1's bottom below r2's top
 
-            essentially, if 2 rects are overlapping (colliding) than all 4 of these must be true
-        */
-        return (
-            r1.x <= r2.x + r2.width &&
-            r1.x + r1.width >= r2.x &&
-            r1.y <= r2.y + r2.height &&
-            r1.y + r1.height >= r2.y
-        );
-    }
+    //         essentially, if 2 rects are overlapping (colliding) than all 4 of these must be true
+    //     */
+    //     return (
+    //         r1.x <= r2.x + r2.width &&
+    //         r1.x + r1.width >= r2.x &&
+    //         r1.y <= r2.y + r2.height &&
+    //         r1.y + r1.height >= r2.y
+    //     );
+    // }
 
 
 }

@@ -1,7 +1,10 @@
 World-Name: "The Desert"
 Tile-Map: "desert.png"
 
-TileTrigger: 
-  - toWorld: "caves"
-    toCoords: [200, 200]
-    fromCoords: [0, 0]    #these are specific coords
+TileTrigger:
+  - toWorld: "beach"
+    toCoords: [460, 1220]
+    fromCoords: [460, -60]    #these are specific coords
+  - toWorld: "forest"
+    toCoords: [2254, 334]
+    fromCoords: [-60, 332]    #these are specific coords

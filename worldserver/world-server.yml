@@ -1,22 +1,11 @@
-
-
 #used to set a specific listen address, 127.0.0.1 means only local machines can connect
 # 0.0.0.0 means anyone can connect and a specific address means that all traffic must flow through that address
 listenAddress: "0.0.0.0"
-#portsRange currently ignored, the OS just picks a random port
-portRange: [8002, 8009]
-pingInterval: 20      #how often to send a ping
-pingTimeout: 20       #how lowang it waits for a response
 
 #the IP and port of the data server
 DataServer-IP: "127.0.0.1"
 DataServer-Port: 8001
 
-#the IP and port of the Communications server
+#the IP and port of the Communications server, which has two ports, one side for worlds, the other for players
 CommsServer-IP: "127.0.0.1"
 CommsServer-Port: 8010
-
-#Server ID and World Type, world type details what I should be so the server can boot up
-#both of these are currently ignored
-Server-ID: 1
-World-Type: "Forest"

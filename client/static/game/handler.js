@@ -4,14 +4,16 @@ export class Handler {
     constructor(){
 
     }
-    init(networkhandler, player, world, entityManager, inputManager, controlManager, assetManager, debugMenu){
+    init(gameengine, networkhandler, player, world, entityManager, inputManager, controlManager, packetHandler, assetManager, debugMenu){
         this.state = GAMESTATE.LOADING
+        this.game = gameengine;
         this.net = networkhandler;
         this.player = player;
         this.world = world;
         this.EM = entityManager;
         this.IM = inputManager;
         this.CM = controlManager;
+        this.PH = packetHandler;
         this.AM = assetManager;
         this.debug = debugMenu;
         this.GAME_WIDTH = 1500;

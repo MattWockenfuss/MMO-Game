@@ -37,6 +37,9 @@ class ClientSocket():
         self.x = None
         self.y = None
 
+        self.pendingSwitch = False
+
+
         print(f"NEW CLIENT: [{self.ip}:{self.port}] UUID: {self.UUID}")
 
     def tick(self, handler):
@@ -64,7 +67,7 @@ class ClientSocket():
         try:
             while True:
                 msg = await self.outbound.get()
-                print(f"SEND TO CLIENT [self.UUID] {msg}")
+                print(f"SEND TO CLIENT [{self.UUID}] {msg}")
                 await self.ws.send(msg)
         except ConnectionClosedOK:
             print(f"[{self.UUID}]'s session was closed gracefully")

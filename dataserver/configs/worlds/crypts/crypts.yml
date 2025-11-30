@@ -1,2 +1,10 @@
 World-Name: "Crypts"
 Tile-Map: "crypts.png"
+
+TileTrigger:
+  - toWorld: "forest"
+    toCoords: [1360, 16]
+    fromCoords: [1360, 1300]    #these are specific coords
+  - toWorld: "beach"
+    toCoords: [-10, 844]
+    fromCoords: [2304, 844]    #these are specific coords

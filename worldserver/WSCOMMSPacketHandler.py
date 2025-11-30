@@ -13,6 +13,7 @@
 
 '''
 
+import asyncio
 
 def registerACK(handler, d):
     nameID = d.get('nameID')
@@ -36,6 +37,7 @@ def switch_REP(handler, d):
 
     message = d.get("MESSAGE")
     ip = d.get("IP")  #this also has the port
+    CoordsTo = d.get("CoordsTo")
     UUID = d.get("UUID")
 
     player = handler.csm.players.get(UUID)
@@ -46,13 +48,24 @@ def switch_REP(handler, d):
     
     if message == "There is no server of type!":
         print(f"User '{player.username}' tried to switch worlds, but there is not world of that type!")
+        player.pendingSwitch = False
         return
     
     #okay so the player exists, and we got a world server IP back, send it to the client, 
 
     p = {
-        "IP": ip
+        "IP": ip,
+        "CoordsTo": CoordsTo
     }
     player.send('switch_execute', p)
     print(f"{player.username} is going to switch worlds!")
+    #lets cleanup the users
+    #player.pendingSwitch = False
 
+    asyncio.create_task(
+        handler.csm._forceDisconnect(
+            player,
+            code=4001,
+            reason=f"Switching to {CoordsTo}"
+        )
+    )

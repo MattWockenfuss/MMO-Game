@@ -1,25 +1,27 @@
 export default class NetworkHandler{
-    constructor(ipport){
+    constructor(handler, ipport){
+        this.handler = handler;
         this.ws = new WebSocket(`ws://${ipport}/`);
         this.inbound = [];
-        this._closeSubscribers = new Set();
 
-        this._onWSClose = (e) => {
-            for(const cb of this._closeSubscribers){
-                cb(e);
-            }
-        }
+        this._switchingClose = false;
+
+
         
         this.ws.onopen = () => {
             console.log("Connected to World Server!");
+        }
+        this.ws.onclose = (event) => {
+            console.log("[NetworkHandler] onclose", event.code, event.reason, "switchingClose =", this._switchingClose);
+            if(!this._switchingClose && this.handler != null){
+                this.handler.game.stop(event);
+            }
         }
         this.ws.onmessage = (event) => {
             //console.log(event.data);
             try {
                 const packet = JSON.parse(event.data);
                 //console.log(`${packet.type} : ${JSON.stringify(packet.data)}`);
-                //handlers[packet.type](packet.data);
-                //put on queue
                 this.inbound.push(packet);
             } catch (error){
                 console.error("[ERROR] Reading Packet => " + event.data);
@@ -27,29 +29,33 @@ export default class NetworkHandler{
             }
         }
         this.ws.onerror = (event) => {
-            console.error("[ERROR] ")
+            console.error(`[ERROR] ${event}`);
         }
-        this.ws.onclose = (event) => {
-            this._onWSClose(event);
 
-
-
-            //in here 'transfer' back to login page, stop game loop, etc..., reset everything
-            //display the reason on screen
-        }
     }
-    subscribeOnClose(cb){
-        this._closeSubscribers.add(cb);
-        // return an unsubscribe if we want? this is a crazy pattern i need to think about this
-        return () => this._closeSubscribers.delete(cb);
-    }
+
+
     close(code = 1000, reason = 'Client Quit'){
+        this._switchingClose = false;
+        console.log("[NetworkHandler] switchclose called, readyState =", this.ws.readyState);
         try {
             this.ws.close(code, reason);
         } catch {
-            console.log(`ERROR TRYING TO CLOSE SOCKET ${code}, ${reason}`);
+            console.log(`ERROR TRYING TO CLOSE SOCKET`);
         }
     }
+
+    switchclose(){
+        this._switchingClose = true;
+        //this function is called to close the current websocket so we can open another as we are switching worlds
+        try {
+            this.ws.close(1000, 'Switching Server!');
+        } catch {
+            console.log(`ERROR TRYING TO CLOSE SOCKET`);
+        }
+    }
+
+
     waitForOpen(timeout = 2000){
         if(this.ws.readyState === WebSocket.OPEN) return Promise.resolve();
         

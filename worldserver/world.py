@@ -45,7 +45,7 @@ class World:
         self.tilesDict = {}
         self.tileMapDict = {}
         self.staticsDict = {}
-        self.tileTriggers = {}
+        self.tileTriggers = []
 
         self.enemyHerds = []
         self.staticHoles = []
@@ -58,28 +58,26 @@ class World:
 
         #here we want to check if any of the players are at the world trigger points, set in the data server dictionary
         #if they are inside of the tile, then they will be transported
-        for trigger in self.tileTriggers:
-            #  trigger["toWorld"]  is the world type
-            #  trigger["toCoords"] are the coords we want them to have in the new world
-            #  trigger["fromCoords"]  the coords we want to check
-            cX, cY = trigger.get("fromCoords")
-            #we want to loop through all of the players on the server, check if they are touching this tile, if so
-            for UUID, player in handler.csm.players.items():
-                distanceFrom = math.sqrt(math.pow(player.x - cX, 2) + math.pow(player.y - cY, 2))
-                if distanceFrom <= 16:
-                    print(f"{distanceFrom} {player.username} ({player.x:.1f}, {player.y:.1f}) is triggering switch to {trigger.get("toWorld")}")
-                    #okay so we want to initiate a user to switch worlds? what do we do?
-                    # we tell the comms server, the comms server returns the IP for them,
-                    # we tell them the IP, they leave and join another server.
-                    p = {
-                        "UUID": player.UUID,
-                        "worldTo": trigger.get("toWorld")
-                    }
-                    handler.csc.sendMsg('switch', p)
+        if self.tileTriggers:
+            for trigger in self.tileTriggers:
+                #  trigger["toWorld"]  is the world type
+                #  trigger["toCoords"] are the coords we want them to have in the new world
+                #  trigger["fromCoords"]  the coords we want to check
+                cX, cY = trigger.get("fromCoords")
+                #we want to loop through all of the players on the server, check if they are touching this tile, if so
+                for UUID, player in handler.csm.players.items():
+                    if player.pendingSwitch: continue  #they have already sent a switch packet, wait for response before resending, prevents spam since we TCP
+                    distanceFrom = math.sqrt(math.pow(player.x - cX, 2) + math.pow(player.y - cY, 2))
                     
-
-            pass
-
+                    if distanceFrom <= 16:
+                        print(f"{distanceFrom} {player.username} ({player.x:.1f}, {player.y:.1f}) is triggering switch to {trigger.get("toWorld")}")
+                        p = {
+                            "UUID": player.UUID,
+                            "worldTo": trigger.get("toWorld"),
+                            "CoordsTo": trigger.get("toCoords")
+                        }
+                        handler.csc.sendMsg('switch', p)
+                        player.pendingSwitch = True
 
         for enemyHerd in self.enemyHerds:
             enemyHerd.tick(handler)
@@ -140,6 +138,7 @@ class World:
         self.tileMapDict = d.get("tileMap")
         self.staticsDict = {}
 
+
         for tile in d.get("tiles"):
             codename = tile.get('code-name')
             self.tilesDict[codename] = tile
@@ -147,7 +146,7 @@ class World:
         for static in d.get("statics"):
             codename = static.get('code-name')
             self.staticsDict[codename] = static
-
+ 
 
         #Okay, so stored all of the dictionaries needed, set the world data, including width and height
 
@@ -156,19 +155,17 @@ class World:
         self.worldData = base64.b64decode(worldData)
         self.width = self.worldDict.get("world-width")
         self.height = len(self.worldData) // self.width   # using // is integer division
-        
-
+    
 
         #okay so we loaded world data, width and height, stored dictionaries to send to clients, now load enemy herds and entities
-        for enemyHerd in self.worldDict.get("EnemyHerds"):
+        for enemyHerd in self.worldDict.get("EnemyHerds", {}):
             herd = EnemyHerd(enemyHerd)
             self.enemyHerds.append(herd)
-        
 
 
         # Next up, statics
 
-        world_statics = self.worldDict.get("StaticEntities")
+        world_statics = self.worldDict.get("StaticEntities", {})
 
         print(f"statics DB: {self.staticsDict}")
         print(f"static_entities.yml: {world_statics}")
@@ -177,8 +174,6 @@ class World:
             print(f"\t{eTypes}")
             for (x, y) in world_statics[eTypes]:
                 self.staticHoles.append(StaticEntityHole(eTypes, x, y))
-
-
+        
         #finally lets load the tile triggers,
         self.tileTriggers = self.worldDict.get("TileTrigger")
-        print(f"TILE TRIGGERS {self.tileTriggers}")

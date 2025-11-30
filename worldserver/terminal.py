@@ -171,6 +171,10 @@ class Terminal:
                 for sessID, player in list(handler.csm.players.items()):
                     handler.csm.kick(sessID, code = 1000, reason = "Kicked by Console!")
 
+            if cmd == "triggers":
+                for trigger in handler.world.tileTriggers:
+                    print(trigger)
+
 
             if cmd == "cls" or cmd == "clear":
                 if os.name == "nt":

@@ -55,7 +55,7 @@ form.addEventListener("submit", async (event) => {
     //alright we want to send this to the comms server? so 
     console.log(data);
     
-    const commsWS = new NetworkHandler(ipport);
+    const commsWS = new NetworkHandler(null, ipport);
     await commsWS.waitForOpen();
     commsWS.send("AUTH_REQ", data);
 
@@ -73,7 +73,7 @@ form.addEventListener("submit", async (event) => {
         //then we were authenticated!, lets connect to the world server!
         let worldserverIP = AUTH_REP.data.IP;
 
-        const worldServerWS = new NetworkHandler(worldserverIP);
+        const worldServerWS = new NetworkHandler(null, worldserverIP);
         await worldServerWS.waitForOpen();
         
         //we want to send the world server our data, username and color

@@ -37,6 +37,7 @@ class ClientSocketManager:
     
     async def cleanup(self, player, code=1000, reason="Unknown"):
         #first check if we already cleaned this guy, if we did, return
+        print(f"[DEBUG] cleanup called for {player.UUID} code={code} reason={reason}")
         sessID = player.UUID
         async with self._clean_lock:
             if sessID in self._cleaned:
@@ -108,7 +109,9 @@ class ClientSocketManager:
         except Exception as e:
             print(f"[Error] Handling Receiving and Sending for {key} {repr(e)}")
         finally:
+            print(f"[DEBUG] handleConnection finally for {player.UUID}")
             await player.ws.wait_closed()
+            print(f"[DEBUG] ws.wait_closed() done for {player.UUID}")
             await self.cleanup(player)
 
     async def start(self, ListenHost, Port, pingInterval, pingTimeout):

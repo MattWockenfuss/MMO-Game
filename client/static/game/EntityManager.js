@@ -12,6 +12,10 @@ export class EntityManager{
         }
     }
     render(ctx){
+        //how can i render all of the statics first?
+        
+
+
         for(const entity of this.entities){
             entity.render(ctx);
         }
@@ -52,5 +56,15 @@ export class EntityManager{
             }
         }
         return playerCount; // we have to add one to account for the current client
+    }
+    clearAllExceptPlayer(){
+        //this function is called when switching worlds and we need to delete all of the entities except for the player
+        //since were removing, go backwards
+
+        for(let i = this.entities.length; i >= 0; i--){
+            if(!(this.entities[i] instanceof Player)){
+                this.removeEntity(i);
+            }
+        }
     }
 }

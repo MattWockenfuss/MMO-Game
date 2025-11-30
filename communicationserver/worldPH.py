@@ -102,6 +102,7 @@ def switch(handler, d , worldclient):
     
     UUID = d.get("UUID")
     worldTo = d.get("worldTo")
+    CoordsTo = d.get("CoordsTo")
 
     #alright so a player is trying to switch, we have their UUID and the worldTo, lets send back the optimal server, or an error if no server
     #No Server of type
@@ -117,10 +118,11 @@ def switch(handler, d , worldclient):
         return
 
     #alright so there is a world of type, send them to it
-    print(f"User [{UUID}] from '{worldclient.nameID}' is switching worlds, sending them to '{handler.wcm.worldclients.get(uuidOfLowest)}'!")
+    print(f"User [{UUID}] from '{worldclient.nameID}' is switching worlds, sending them to '{handler.wcm.worldclients.get(uuidOfLowest).nameID}'!")
     p = {
         "MESSAGE": "Server Found!",
         "IP": handler.wcm.worldclients.get(uuidOfLowest).getIPString(),
+        "CoordsTo": CoordsTo,
         "UUID": UUID
 
     }
