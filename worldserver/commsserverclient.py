@@ -30,6 +30,8 @@ class CommsServerClient:
                         ph.registerACK(handler, d)
                     case "switch_REP":
                         ph.switch_REP(handler, d)
+                    case "heartbeat":
+                        ph.heartbeat(handler, d)
                     case _:
                         print(f"[ERROR] UNKNOWN PACKET TYPE")
             except Exception as e:

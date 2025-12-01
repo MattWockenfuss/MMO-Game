@@ -8,17 +8,6 @@ import websockets.exceptions as wsExceptions
 from worldclient import WorldClient
 import worldPH as ph
 
-# import logging
-
-# logging.basicConfig(
-#     format="%(asctime)s %(message)s",
-#     level=logging.DEBUG,
-# )
-
-# logger = logging.getLogger("websockets")
-# logger.setLevel(logging.DEBUG)
-# logger.addHandler(logging.StreamHandler())
-
 class WorldClientManager:
     def __init__(self):
         self.handler = None
@@ -30,30 +19,32 @@ class WorldClientManager:
         self.worldclients = {}
 
         self.defaultServer = None  #set in commserver.py, sets the default server to send players to when they connect, set in config.yml
+        self.heartbeat = None
 
+    ticks = 0
     def tick(self, handler):
+        self.ticks += 1
         for c in self.worldclients.values():
             c.tick(handler)
+            if self.ticks >= (self.heartbeat * 60):
+                #then send a heart beat
+                c.send('heartbeat', {"MESSAGE": "heartbeat test!"})
+                self.ticks = 0
 
 
     def getBestServer(self, servertype):
-        #given a servertype string, like 'desert' or 'caves' we want to return the UUID of the server with the lowest number of people
-
-        #alright so how do we do that?
-        #create a list of all the servers matching the type, find the one with the lowest player count
+        #  given a servertype string, like 'desert' or 'caves' 
+        #  we want to return the UUID of the server with the lowest number of people
 
         UUIDofLowest = None
         for UUID, server in self.worldclients.items():
-            #print(f"{UUID} {server.type} {servertype}")
             if UUIDofLowest is None and server.type == servertype:
                 UUIDofLowest = server.UUID
+
             if server.type == servertype:
-                #print(f"Checking Player Counts")
-                #print(f"Is {server.playerCount} < {self.worldclients[UUIDofLowest].playerCount}")
                 if server.playerCount < self.worldclients[UUIDofLowest].playerCount:
                     UUIDofLowest = server.UUID
-        
-        #alright so we either have the UUID of the first one, or the lowest one, we want to return that server's IP:Port
+                    
         if UUIDofLowest is None:
             return f"No Server of type '{servertype}'"
 

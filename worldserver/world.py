@@ -54,6 +54,7 @@ class World:
         self.width = 0
         self.height = 0
 
+    SWITCH_COOLDOWN_TICKS = 30   #each player can only send a request every 30 ticks, it starts at 0 on login
     def tick(self, handler):
 
         #here we want to check if any of the players are at the world trigger points, set in the data server dictionary
@@ -66,6 +67,7 @@ class World:
                 cX, cY = trigger.get("fromCoords")
                 #we want to loop through all of the players on the server, check if they are touching this tile, if so
                 for UUID, player in handler.csm.players.items():
+                    if player.ticksSinceSwitch < self.SWITCH_COOLDOWN_TICKS: continue
                     if player.pendingSwitch: continue  #they have already sent a switch packet, wait for response before resending, prevents spam since we TCP
                     distanceFrom = math.sqrt(math.pow(player.x - cX, 2) + math.pow(player.y - cY, 2))
                     

@@ -39,14 +39,14 @@ class Terminal:
 
             if cmd == 'players':
                 for wUUID, worldserver in  handler.wcm.worldclients.items():
-                    print(f"[{wUUID}-{worldserver.getIPString()}] {worldserver.nameID} has {worldserver.playerCount} player(s)")
+                    print(f"[{wUUID}-{worldserver.getIPString()}] {worldserver.nameID:12} has {worldserver.playerCount} player(s)")
                     for pUUID, playername in worldserver.players.items():
                         print(f"  - [{pUUID}] {playername}")
 
             if cmd == 'worlds':
                 #then we want to list all of the worlds, their IPs, their type and player count, 
                 for UUID, worldserver in handler.wcm.worldclients.items():
-                    print(f"[{UUID}-{worldserver.getIPString()}] Desired: {handler.wcm.desiredWorlds[worldserver.type]} {worldserver.playerCount} players, {worldserver.nameID}")
+                    print(f"[{UUID}-{worldserver.getIPString()}] {worldserver.nameID:12} Desired: {handler.wcm.desiredWorlds[worldserver.type]} {worldserver.playerCount} players ")
                 print(f"Players connect to a '{handler.wcm.defaultServer}' server on login!")
 
             if cmd == "cls" or cmd == "clear":

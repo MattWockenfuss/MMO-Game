@@ -104,10 +104,9 @@ class ClientSocketManager:
             async with asyncio.TaskGroup() as tg:
                 tg.create_task(player.handleReceive())
                 tg.create_task(player.handleSend())
-        except (wsExceptions.ConnectionClosedOK, wsExceptions.ConnectionClosedError) as e:
-            print(f"Client {player.UUID} disconnected!: {e.code} {e.reason}")
         except Exception as e:
-            print(f"[Error] Handling Receiving and Sending for {key} {repr(e)}")
+            uname = getattr(player, "username", "<unknown>")  #this getattr function is nice
+            print(f"[Error] Client '{uname}' threw an error, {repr(e)}")
         finally:
             print(f"[DEBUG] handleConnection finally for {player.UUID}")
             await player.ws.wait_closed()

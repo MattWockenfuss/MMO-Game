@@ -125,9 +125,9 @@ def login(handler, d, player):
         "tileMap": handler.world.tileMapDict,
         "statics": handler.world.staticsDict
     }
-    print(f"Tiles DICT: {handler.world.tilesDict}")
-    print(f"TilesMap DICT: {handler.world.tileMapDict}")
-    print(f"STATICS DICT: {handler.world.staticsDict}")
+    #print(f"Tiles DICT: {handler.world.tilesDict}")
+    #print(f"TilesMap DICT: {handler.world.tileMapDict}")
+    #print(f"STATICS DICT: {handler.world.staticsDict}")
     player.send('world', p)
 
 
@@ -136,7 +136,7 @@ def login(handler, d, player):
 
 
     for entity in handler.em.items:
-        print(entity.UUID)
+        #print(entity.UUID)
         if isinstance(entity, Enemy):
             #then this is an Enemy, build the appropriate packet
             px = {
@@ -170,7 +170,7 @@ def login(handler, d, player):
 
     player.send('enemy', enemies)
     player.send('static', statics)
-    print(f"ENEMIES: {enemies}")
+    #print(f"ENEMIES: {enemies}")
 
     for UUID, otherplayer in handler.csm.players.items():
         #here we are looping through all the clients, and if they didnt just log in, tell them
@@ -196,3 +196,4 @@ def login(handler, d, player):
 
             otherplayer.send("login", toOther)
             player.send("playerLOGIN", toPlayer)
+    player.state = "active"

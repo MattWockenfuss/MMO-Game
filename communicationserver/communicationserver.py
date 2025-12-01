@@ -61,6 +61,7 @@ class CommunicationServer:
         self.dataServerPort = yml.get("dataserverPORT")
 
         self.wcm.defaultServer = yml.get("defaultServer")
+        self.wcm.heartbeat = yml.get("worldHeartbeatInterval")
 
         print(f"World  IP: {self.worldListenAddress}:{self.worldListenPort}")
         print(f"Player IP: {self.playerListenAddress}:{self.playerListenPort}")

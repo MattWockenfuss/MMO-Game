@@ -1,6 +1,3 @@
-#the config for the comms server says what?
-#how many of each world type to load
-
 worldListenAddress: "0.0.0.0"
 worldListenPort: 8010
 
@@ -10,10 +7,9 @@ playerListenPort: 8011
 dataserverIP: "127.0.0.1"
 dataserverPORT: 8001
 
+#in seconds, how often do send a heartbeat to all connected world servers
+worldHeartbeatInterval: 10
 
-#alright, so we are setting up our world, we want to be able to tell it how many servers of each type, so what?
-#okay say the type and number of servers to setup? handle load balancing by sending to the lowest amount of players, 
-#currently it cant start any servers
 
 defaultServer: "desert"
 

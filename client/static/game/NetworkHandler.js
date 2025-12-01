@@ -12,8 +12,10 @@ export default class NetworkHandler{
             console.log("Connected to World Server!");
         }
         this.ws.onclose = (event) => {
+            const isSwitchClose = event.code === 4001 || event.reason.startsWith("Switching");
+
             console.log("[NetworkHandler] onclose", event.code, event.reason, "switchingClose =", this._switchingClose);
-            if(!this._switchingClose && this.handler != null){
+            if(!this._switchingClose && !isSwitchClose && this.handler != null){
                 this.handler.game.stop(event);
             }
         }

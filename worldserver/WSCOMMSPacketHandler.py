@@ -15,6 +15,19 @@
 
 import asyncio
 
+
+
+def heartbeat(handler, d):
+    #so we just recieved a heartbeat. 
+    #so just by being able to send it the server can confirm were alive.
+    #so now what?
+    #send back a list of players?
+    #what if a server closes and before the next heart beat a player gets send there.
+    #then we want the player to what?
+    #exit back to their home screen with server closed event
+    pass
+
+
 def registerACK(handler, d):
     nameID = d.get('nameID')
     worldType = d.get('type')
@@ -35,6 +48,7 @@ def registerACK(handler, d):
 def switch_REP(handler, d):
     print(f"{d}")
 
+
     message = d.get("MESSAGE")
     ip = d.get("IP")  #this also has the port
     CoordsTo = d.get("CoordsTo")
@@ -51,7 +65,14 @@ def switch_REP(handler, d):
         player.pendingSwitch = False
         return
     
+    if player.state != "active":
+        print(f"[SWITCH] Ignoring World switch from player who isnt fully logged in!")
+        player.pendingSwitch = False
+        return
+
     #okay so the player exists, and we got a world server IP back, send it to the client, 
+
+
 
     p = {
         "IP": ip,

@@ -37,12 +37,15 @@ class ClientSocket():
         self.x = None
         self.y = None
 
+        self.ticksSinceSwitch = 0
         self.pendingSwitch = False
+        self.state = "connecting"
 
 
         print(f"NEW CLIENT: [{self.ip}:{self.port}] UUID: {self.UUID}")
 
     def tick(self, handler):
+        self.ticksSinceSwitch += 1
         while not self.inbound.empty():
             msg = self.inbound.get_nowait()
             t = msg["type"]
@@ -60,21 +63,19 @@ class ClientSocket():
             'type': type,
             'data': data
         }
-        self.outbound.put_nowait(json.dumps(p))
+        self.outbound.put_nowait(p)
 
 
     async def handleSend(self):
         try:
             while True:
                 msg = await self.outbound.get()
-                print(f"SEND TO CLIENT [{self.UUID}] {msg}")
-                await self.ws.send(msg)
+                print(f"SENDING '{msg.get("type")}' TO CLIENT [{self.UUID}]")
+                await self.ws.send(json.dumps(msg))
         except ConnectionClosedOK:
-            print(f"[{self.UUID}]'s session was closed gracefully")
-            raise
+            print(f"[{self.UUID}]'s session was closed, ConnectionClosedOK")
         except ConnectionClosedError:
-            print(f"[ERROR] Sending {self.UUID} a msg")
-            raise
+            print(f"[{self.UUID}]'s session was closed, ConnectionClosedError")
         except Exception as e:
             print(f"[UNEXPECTED ERROR] Sending {self.UUID} a msg, {repr(e)}")
             raise
@@ -101,10 +102,9 @@ class ClientSocket():
                     print(f"[UUID:{self.UUID}  {self.ip}:{self.port}] MSG: {msg}")
                 self.inbound.put_nowait(decoded)
         except ConnectionClosedOK:
-            raise
+            print(f"[{self.UUID}]'s session was closed, ConnectionClosedOK")
         except ConnectionClosedError:
-            print(f"[ERROR] Receiving {self.UUID} a msg")
-            raise
+            print(f"[{self.UUID}]'s session was closed, ConnectionClosedError")
         except Exception as e:
             print(f"[UNEXPECTED ERROR] Receiving {self.UUID} a msg, {repr(e)}")
             raise
